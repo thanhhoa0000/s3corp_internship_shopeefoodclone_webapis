@@ -1,0 +1,35 @@
+services:
+
+  identity-api:
+    image: ${DOCKER_REGISTRY-}identity-api
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.Presentation/Dockerfile
+    ports:
+      - "5010:5010"
+      - "5011:5011"
+    depends_on:
+      - users-db
+    networks:
+      shopeefood-clone-net:
+
+  users-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "14331:1433"
+    volumes:
+      - users_data:/var/opt/mssql
+    networks:
+      shopeefood-clone-net:
+    restart: unless-stopped
+    
+volumes:
+  users_data:
+    
+networks:
+  shopeefood-clone-net:
+    driver: bridge

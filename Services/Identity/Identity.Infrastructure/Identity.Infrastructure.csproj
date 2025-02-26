@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>ShopeeFoodClone.WebApi.Identity.Infrastructure</RootNamespace>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Identity.Application\Identity.Application.csproj" />
+    </ItemGroup>
+
+</Project>
