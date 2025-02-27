@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="spf_users_db@localhost" uuid="62b49819-7603-4a11-8404-70711ef9b11d">
+    <data-source source="LOCAL" name="@localhost" uuid="81c58cb1-b333-4f56-bf11-1e6a60e48a20">
       <driver-ref>sqlserver.jb</driver-ref>
       <synchronize>true</synchronize>
-      <configured-by-url>true</configured-by-url>
       <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
-      <jdbc-url>Server=localhost,14331;Database=spf_users_db;User Id=sa;Password=MyPa55w0rd;TrustServerCertificate=True;</jdbc-url>
+      <jdbc-url>Server=localhost,14331</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

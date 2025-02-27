@@ -1,5 +1,15 @@
 services:
-
+  gateway-web:
+    image: ${DOCKER_REGISTRY-}webgateway
+    build:
+      context: .
+      dockerfile: Gateways/Web/Gateway.Web/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    networks:
+      shopeefood-clone-net:
+    
   identity-api:
     image: ${DOCKER_REGISTRY-}identity-api
     build:
@@ -26,10 +36,12 @@ services:
     networks:
       shopeefood-clone-net:
     restart: unless-stopped
-    
+
 volumes:
   users_data:
     
 networks:
   shopeefood-clone-net:
     driver: bridge
+    external: true
+

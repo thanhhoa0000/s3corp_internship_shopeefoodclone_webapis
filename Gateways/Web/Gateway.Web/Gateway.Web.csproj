@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <RootNamespace>ShopeeFoodClone.WebApi.Gateway.Web</RootNamespace>
+        <TargetFramework>net8.0</TargetFramework>
+        <UserSecretsId>c528a280-9d6f-4fa2-bf1d-de87ebc2ec88</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..\..</DockerfileContext>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Swashbuckle.AspNetCore"  />
+        <PackageReference Include="Ocelot" />
+        <PackageReference Include="NLog.Web.AspNetCore" />
+        <PackageReference Include="NLog" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+      <Content Include="..\..\..\jwt_properties.json">
+        <Link>jwt_properties.json</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\..\nlog.config">
+        <Link>nlog.config</Link>
+      </None>
+    </ItemGroup>
+
+</Project>
