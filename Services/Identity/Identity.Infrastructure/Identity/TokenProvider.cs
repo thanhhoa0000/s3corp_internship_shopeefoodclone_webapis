@@ -24,7 +24,7 @@ public class TokenProvider : ITokenProvider
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
         };
         claims.AddRange(roles.Select(role
-            => new Claim(ClaimTypes.Role, role.ToString())));
+            => new Claim("Role", role.ToString())));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

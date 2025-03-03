@@ -3,12 +3,10 @@
 public class UserService : IUserService
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly RoleManager<AppRole> _roleManager;
 
-    public UserService(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+    public UserService(UserManager<AppUser> userManager)
     {
         _userManager = userManager;
-        _roleManager = roleManager;
     }
 
     public async Task<bool> CheckPasswordAsync(AppUser user, string password)

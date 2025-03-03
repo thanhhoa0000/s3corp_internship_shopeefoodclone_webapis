@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Identity.Data;
-using LoginRequest = ShopeeFoodClone.WebApi.Identity.Application.Dtos.LoginRequest;
-
 namespace ShopeeFoodClone.WebApi.Identity.Presentation.Controllers
 {
     [ApiController]
@@ -10,9 +7,8 @@ namespace ShopeeFoodClone.WebApi.Identity.Presentation.Controllers
     {
         private readonly IIdentityService _service;
         private readonly ILogger<IdentityApiController> _logger;
-        private readonly IConfiguration _configuration;
         private Response _response;
-        private int _refreshTokenExpiryInDays;
+        private readonly int _refreshTokenExpiryInDays;
 
         public IdentityApiController(
             IIdentityService service,
@@ -21,9 +17,8 @@ namespace ShopeeFoodClone.WebApi.Identity.Presentation.Controllers
         {
             _service = service;
             _logger = logger;
-            _configuration = configuration;
             _response = new Response();
-            _refreshTokenExpiryInDays = _configuration.GetValue<int>("RefreshTokenLifeTimeInDays");
+            _refreshTokenExpiryInDays = configuration.GetValue<int>("RefreshTokenLifeTimeInDays");
         }
 
         [HttpPost("login")]
