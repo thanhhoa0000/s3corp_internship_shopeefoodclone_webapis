@@ -22,6 +22,19 @@ services:
       - users-db
     networks:
       shopeefood-clone-net:
+        
+  users-api:
+    image: ${DOCKER_REGISTRY-}users-api
+    build:
+      context: .
+      dockerfile: Services/Users/Users.Presentation/Dockerfile
+    ports:
+      - "5020:5020"
+      - "5021:5021"
+    depends_on:
+      - users-db
+    networks:
+      shopeefood-clone-net:
 
   users-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -44,4 +57,5 @@ networks:
   shopeefood-clone-net:
     driver: bridge
     external: true
+
 
