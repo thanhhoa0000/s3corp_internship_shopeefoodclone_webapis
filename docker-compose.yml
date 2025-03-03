@@ -23,6 +23,19 @@ services:
     networks:
       shopeefood-clone-net:
         
+  stores-api:
+    image: ${DOCKER_REGISTRY-}stores-api
+    build:
+      context: .
+      dockerfile: Services/Stores/Stores.Presentation/Dockerfile
+    ports:
+      - "5030:5030"
+      - "5031:5031"
+    depends_on:
+      - stores-db
+    networks:
+      shopeefood-clone-net:
+        
   users-api:
     image: ${DOCKER_REGISTRY-}users-api
     build:
@@ -49,9 +62,24 @@ services:
     networks:
       shopeefood-clone-net:
     restart: unless-stopped
+    
+  stores-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "14333:1433"
+    volumes:
+      - stores_data:/var/opt/mssql
+    networks:
+      shopeefood-clone-net:
+    restart: unless-stopped
 
 volumes:
   users_data:
+  stores_data:
     
 networks:
   shopeefood-clone-net:

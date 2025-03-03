@@ -1,6 +1,6 @@
 ﻿namespace ShopeeFoodClone.WebApi.Users.Infrastructure.Persistence.Repositories;
 
-public class Repository<T, TContext> : IRepository<T>, IDisposable 
+public class Repository<T, TContext> : IRepository<T> 
     where T : class, IEntity
     where TContext : DbContext
 {
