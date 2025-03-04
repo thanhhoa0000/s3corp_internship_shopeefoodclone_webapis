@@ -2,7 +2,7 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminOnly")]
     [ApiController]
-    [Route("api/v{version:apiVersion}/stores")]
+    [Route("api/v{version:apiVersion}/categories")]
     [ApiVersion(1)]
     public class CategoriesApiController : ControllerBase
     {

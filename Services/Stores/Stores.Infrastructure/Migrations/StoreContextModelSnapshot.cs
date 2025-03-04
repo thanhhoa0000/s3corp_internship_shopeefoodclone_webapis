@@ -69,8 +69,8 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly>("ClosingHour")
-                        .HasColumnType("date");
+                    b.Property<TimeOnly>("ClosingHour")
+                        .HasColumnType("time");
 
                     b.Property<string>("CoverImagePath")
                         .HasColumnType("nvarchar(max)");
@@ -80,11 +80,14 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateOnly>("OpeningHour")
-                        .HasColumnType("date");
+                    b.Property<TimeOnly>("OpeningHour")
+                        .HasColumnType("time");
 
                     b.Property<double>("Rating")
                         .HasColumnType("float");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

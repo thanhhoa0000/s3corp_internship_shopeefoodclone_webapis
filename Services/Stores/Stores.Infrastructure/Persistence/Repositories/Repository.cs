@@ -16,8 +16,16 @@ public class Repository<T, TContext> : IRepository<T>
 
     public async Task CreateAsync(T entity)
     {
-        await _dbSet.AddAsync(entity);
-        await SaveAsync();
+        var existingEntity = await _dbSet.FindAsync(entity.Id);
+        if (existingEntity == null)
+        {
+            await _dbSet.AddAsync(entity);
+            await SaveAsync();
+        }
+        else
+        {
+            _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+        }
     }
 
     public async Task<T>

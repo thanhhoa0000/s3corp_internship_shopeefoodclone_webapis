@@ -2,16 +2,19 @@
 
 public class StoreService : IStoreService
 {
-    private readonly IStoreRepository _repository;
+    private readonly IStoreRepository _storeRepository;
+    private readonly ICategoryRepository _categoryRepository;
     private readonly HttpContext _httpContext;
     private readonly IMapper _mapper;
 
     public StoreService(
         IStoreRepository repository,
+        ICategoryRepository categoryRepository,
         IHttpContextAccessor httpContextAccessor,
         IMapper mapper)
     {
-        _repository = repository;
+        _storeRepository = repository;
+        _categoryRepository = categoryRepository;
         _httpContext = httpContextAccessor.HttpContext!;
         _mapper = mapper;
     }
@@ -28,7 +31,7 @@ public class StoreService : IStoreService
 
         try
         {
-            var stores = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var stores = await _storeRepository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             var pagination = new Pagination()
             {
@@ -52,6 +55,42 @@ public class StoreService : IStoreService
     }
 
     /// <summary>
+    /// Get stores list by owner's userId
+    /// </summary>
+    /// <param name="userId">The owner's userId</param>
+    /// <param name="pageSize">Pages number to get roles</param>
+    /// <param name="pageNumber">Page number to start with</param>
+    /// <returns>The stores list</returns>
+    public async Task<Response> GetAllByUserIdAsync(Guid userId, int pageSize = 0, int pageNumber = 1)
+    {
+        var response = new Response();
+
+        try
+        {
+            var stores = await _storeRepository.GetAllAsync(s => s.UserId == userId, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            
+            var pagination = new Pagination()
+            {
+                PageSize = pageSize,
+                PageNumber = pageNumber,
+            };
+            
+            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
+            
+            response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
+            
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+            
+            return response;
+        }
+    }
+
+    /// <summary>
     /// Get a store
     /// </summary>
     /// <param name="storeId">The ID of the store</param>
@@ -62,7 +101,7 @@ public class StoreService : IStoreService
 
         try
         {
-            var store = await _repository.GetAsync(s => s.Id == storeId, tracked: false);
+            var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
             
             response.Body = _mapper.Map<StoreDto>(store);
             
@@ -89,14 +128,18 @@ public class StoreService : IStoreService
         try
         {
             var store = _mapper.Map<Store>(request.Store);
-            var categories = _mapper.Map<ICollection<Category>>(request.Categories);
+            var cateIds = request.Categories.Select(c => c.Id).ToList();
+            
+            var existingCategories = (await _categoryRepository.GetAllAsync(c => cateIds.Contains(c.Id))).ToList();
 
-            foreach (var category in categories)
+            if (existingCategories.Count != cateIds.Count)
             {
-                store.Categories.Add(category);
+                response.IsSuccessful = false;
+                response.Message = "One or more categories do not exist!";
             }
             
-            await _repository.CreateAsync(store);
+            store.Categories = existingCategories;
+            await _storeRepository.CreateAsync(store);
             
             response.Body = _mapper.Map<StoreDto>(store);
             
@@ -124,7 +167,7 @@ public class StoreService : IStoreService
         {
             var store = _mapper.Map<Store>(storeDto);
             
-            await _repository.UpdateAsync(store);
+            await _storeRepository.UpdateAsync(store);
             
             response.Body = _mapper.Map<StoreDto>(store);
             
@@ -150,9 +193,9 @@ public class StoreService : IStoreService
 
         try
         {
-            var store = await _repository.GetAsync(s => s.Id == storeId, tracked: false);
+            var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
             
-            await _repository.RemoveAsync(store);
+            await _storeRepository.RemoveAsync(store);
             
             response.Body = _mapper.Map<StoreDto>(store);
             

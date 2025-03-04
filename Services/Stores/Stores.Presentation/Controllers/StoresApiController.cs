@@ -1,5 +1,6 @@
 namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
 {
+    [AllowAnonymous]
     [Authorize(AuthenticationSchemes = "Bearer", Policy = "VendorOnly")]
     [ApiController]
     [Route("api/v{version:apiVersion}/stores")]
@@ -17,7 +18,8 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             _response = new Response();
         }
         
-        [HttpGet]
+        [Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminOnly")]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll([FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
         {
             try
@@ -35,7 +37,27 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
                 return BadRequest("Error(s) occured when getting the stores!");
             }
         }
+
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetAllByUserId([FromRoute] Guid userId, [FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
+        {
+            try
+            {
+                _logger.LogInformation($"Getting the stores of user {userId}...");
+                
+                _response = await _service.GetAllByUserIdAsync(userId: userId, pageSize: pageSize, pageNumber: pageNumber);
+                
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                
+                return BadRequest("Error(s) occured when getting the stores!");
+            }
+        }
         
+        [Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminAndVendorOnly")]
         [HttpGet("{storeId:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid storeId)
         {

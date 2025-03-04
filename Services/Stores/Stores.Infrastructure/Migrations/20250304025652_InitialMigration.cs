@@ -29,10 +29,11 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    OpeningHour = table.Column<DateOnly>(type: "date", nullable: false),
-                    ClosingHour = table.Column<DateOnly>(type: "date", nullable: false),
+                    OpeningHour = table.Column<TimeOnly>(type: "time", nullable: false),
+                    ClosingHour = table.Column<TimeOnly>(type: "time", nullable: false),
                     CoverImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Rating = table.Column<double>(type: "float", nullable: false)
                 },

@@ -13,6 +13,10 @@ public static partial class AppExtensions
             options.AddPolicy(
                 "VendorOnly",
                 policy => policy.RequireClaim("Role", "Vendor"));
+            
+            options.AddPolicy(
+                "AdminAndVendorOnly",
+                policy => policy.RequireClaim("Role", "Admin", "Vendor"));
         });
 
         return services;
