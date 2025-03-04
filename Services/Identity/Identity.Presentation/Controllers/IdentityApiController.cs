@@ -37,9 +37,9 @@ namespace ShopeeFoodClone.WebApi.Identity.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when signing the user in!");
+                return BadRequest("Error(s) occurred when signing the user in!");
             }
         }
 
@@ -54,7 +54,7 @@ namespace ShopeeFoodClone.WebApi.Identity.Presentation.Controllers
 
                 if (_response.Message.Contains("Refresh token is expired!"))
                 {
-                    _logger.LogError("Error(s) occured: \n---\n{error}", _response.Message);
+                    _logger.LogError("Error(s) occurred: \n---\n{error}", _response.Message);
                     
                     return BadRequest("Refresh token is expired!");
                 }
@@ -64,9 +64,9 @@ namespace ShopeeFoodClone.WebApi.Identity.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when signing the user in with the refresh token!");
+                return BadRequest("Error(s) occurred when signing the user in with the refresh token!");
             }
         }
 
@@ -81,18 +81,18 @@ namespace ShopeeFoodClone.WebApi.Identity.Presentation.Controllers
 
                 if (!_response.IsSuccessful)
                 {
-                    _logger.LogError("Error(s) occured: \n---\n{error}", _response.Message);
+                    _logger.LogError("Error(s) occurred: \n---\n{error}", _response.Message);
 
-                    return BadRequest("Error(s) occured when registering the user!");
+                    return BadRequest("Error(s) occurred when registering the user!");
                 }
                 
                 return Ok(_response);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
 
-                return BadRequest("Error(s) occured when registering the user!");
+                return BadRequest("Error(s) occurred when registering the user!");
             }
         }
     }

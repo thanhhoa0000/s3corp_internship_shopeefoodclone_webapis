@@ -32,9 +32,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when getting the stores!");
+                return BadRequest("Error(s) occurred when getting the stores!");
             }
         }
 
@@ -51,13 +51,13 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when getting the stores!");
+                return BadRequest("Error(s) occurred when getting the stores!");
             }
         }
         
-        [Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminAndVendorOnly")]
+        [AllowAnonymous]
         [HttpGet("{storeId:guid}")]
         public async Task<IActionResult> GetById([FromRoute] Guid storeId)
         {
@@ -71,9 +71,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when getting the store!");
+                return BadRequest("Error(s) occurred when getting the store!");
             }
         }
         
@@ -90,9 +90,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when creating the store!");
+                return BadRequest("Error(s) occurred when creating the store!");
             }
         }
         
@@ -109,9 +109,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when updating the store!");
+                return BadRequest("Error(s) occurred when updating the store!");
             }
         }
         
@@ -128,9 +128,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when deleting the store!");
+                return BadRequest("Error(s) occurred when deleting the store!");
             }
         }
     }

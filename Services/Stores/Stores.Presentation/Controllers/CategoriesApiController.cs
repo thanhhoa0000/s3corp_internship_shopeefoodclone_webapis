@@ -30,9 +30,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when getting the categories!");
+                return BadRequest("Error(s) occurred when getting the categories!");
             }
         }
         
@@ -49,9 +49,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when getting the category!");
+                return BadRequest("Error(s) occurred when getting the category!");
             }
         }
         
@@ -68,9 +68,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when creating the category!");
+                return BadRequest("Error(s) occurred when creating the category!");
             }
         }
         
@@ -87,9 +87,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when updating the category!");
+                return BadRequest("Error(s) occurred when updating the category!");
             }
         }
         
@@ -106,9 +106,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when deleting the category!");
+                return BadRequest("Error(s) occurred when deleting the category!");
             }
         }
     }

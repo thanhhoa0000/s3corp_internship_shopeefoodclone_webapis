@@ -45,10 +45,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Areas\CategoriesApiController\Controllers\" />
-      <Folder Include="Areas\CategoriesApiController\Data\" />
-      <Folder Include="Areas\CategoriesApiController\Models\" />
-      <Folder Include="Areas\CategoriesApiController\Views\" />
       <Folder Include="Controllers\" />
     </ItemGroup>
 
