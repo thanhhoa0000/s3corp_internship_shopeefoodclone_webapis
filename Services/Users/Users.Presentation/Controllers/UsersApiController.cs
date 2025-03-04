@@ -30,9 +30,9 @@ namespace ShopeeFoodClone.WebApi.Users.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when getting the users!");
+                return BadRequest("Error(s) occurred when getting the users!");
             }
         }
 
@@ -49,9 +49,9 @@ namespace ShopeeFoodClone.WebApi.Users.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when getting the user!");
+                return BadRequest("Error(s) occurred when getting the user!");
             }
         }
 
@@ -68,9 +68,9 @@ namespace ShopeeFoodClone.WebApi.Users.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when creating the user!");
+                return BadRequest("Error(s) occurred when creating the user!");
             }
         }
 
@@ -87,9 +87,9 @@ namespace ShopeeFoodClone.WebApi.Users.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when updating the user!");
+                return BadRequest("Error(s) occurred when updating the user!");
             }
         }
 
@@ -106,9 +106,9 @@ namespace ShopeeFoodClone.WebApi.Users.Presentation.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error(s) occured: \n---\n{error}", ex);
+                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
                 
-                return BadRequest("Error(s) occured when deleting the user!");
+                return BadRequest("Error(s) occurred when deleting the user!");
             }
         }
     }

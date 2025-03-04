@@ -17,8 +17,6 @@ try
 
     builder.Services.AddOcelot();
     
-    //builder.Services.Replace(ServiceDescriptor.Singleton<IClaimsParser, RoleClaimParser>());
-    
     builder.Services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

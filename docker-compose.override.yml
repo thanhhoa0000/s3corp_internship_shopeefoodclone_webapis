@@ -25,3 +25,21 @@ services:
       ASPNETCORE_Kestrel__Certificates__Default__Path: "/home/app/.aspnet/https/Users.API.pfx"
     volumes:
       - ./certs/.aspnet/https/Users.API.pfx:/home/app/.aspnet/https/Users.API.pfx:ro
+  
+  stores-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "https://+:5031;http://+:5030"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${HTTPS_DEV_CERTS_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/home/app/.aspnet/https/Stores.API.pfx"
+    volumes:
+      - ./certs/.aspnet/https/Stores.API.pfx:/home/app/.aspnet/https/Stores.API.pfx:ro
+  
+  products-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "https://+:5041;http://+:5040"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${HTTPS_DEV_CERTS_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/home/app/.aspnet/https/Products.API.pfx"
+    volumes:
+      - ./certs/.aspnet/https/Products.API.pfx:/home/app/.aspnet/https/Products.API.pfx:ro

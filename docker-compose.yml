@@ -1,6 +1,6 @@
 services:
   gateway-web:
-    image: ${DOCKER_REGISTRY-}webgateway
+    image: ${DOCKER_REGISTRY-}web-gateway
     build:
       context: .
       dockerfile: Gateways/Web/Gateway.Web/Dockerfile
@@ -20,6 +20,32 @@ services:
       - "5011:5011"
     depends_on:
       - users-db
+    networks:
+      shopeefood-clone-net:
+        
+  stores-api:
+    image: ${DOCKER_REGISTRY-}stores-api
+    build:
+      context: .
+      dockerfile: Services/Stores/Stores.Presentation/Dockerfile
+    ports:
+      - "5030:5030"
+      - "5031:5031"
+    depends_on:
+      - stores-db
+    networks:
+      shopeefood-clone-net:
+        
+  products-api:
+    image: ${DOCKER_REGISTRY-}products-api
+    build:
+      context: .
+      dockerfile: Services/Products/Products.Presentation/Dockerfile
+    ports:
+      - "5040:5040"
+      - "5041:5041"
+    depends_on:
+      - products-db
     networks:
       shopeefood-clone-net:
         
@@ -49,9 +75,39 @@ services:
     networks:
       shopeefood-clone-net:
     restart: unless-stopped
+    
+  stores-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "14333:1433"
+    volumes:
+      - stores_data:/var/opt/mssql
+    networks:
+      shopeefood-clone-net:
+    restart: unless-stopped
+    
+  products-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "14334:1433"
+    volumes:
+      - products_data:/var/opt/mssql
+    networks:
+      shopeefood-clone-net:
+    restart: unless-stopped
 
 volumes:
   users_data:
+  stores_data:
+  products_data:
     
 networks:
   shopeefood-clone-net:
