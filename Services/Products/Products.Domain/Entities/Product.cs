@@ -15,6 +15,8 @@ public class Product : IEntity
     public int BookingCount { get; set; } = 0;
     public string? CoverImagePath { get; set; }
     [Required]
+    [Range(1, double.MaxValue)]
+    [Column(TypeName = "decimal(18,0)")]
     public decimal Price { get; set; }
     public Guid ConcurrencyStamp { get; set; }
 }

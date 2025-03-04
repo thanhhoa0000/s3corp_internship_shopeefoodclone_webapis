@@ -14,6 +14,7 @@ public class ProductDto
     public int BookingCount { get; set; } = 0;
     public string? CoverImagePath { get; set; }
     [Required]
+    [Range(1, double.MaxValue)]
     public decimal Price { get; set; }
     public Guid ConcurrencyStamp { get; set; }
 }
