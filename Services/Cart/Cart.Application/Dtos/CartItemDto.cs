@@ -1,8 +1,7 @@
-﻿namespace ShopeeFoodClone.WebApi.Cart.Domain.Entities;
+﻿namespace ShopeeFoodClone.WebApi.Cart.Application.Dtos;
 
-public class CartItem
+public class CartItemDto
 {
-    [Key]
     public int Index { get; set; }
     public Guid CartHeaderId { get; set; }
     public Guid ProductId { get; set; }
@@ -10,7 +9,6 @@ public class CartItem
     public int Quantity { get; set; }
     [Required]
     [Range(1, double.MaxValue)]
-    [Column(TypeName = "decimal(18,0)")]
     public decimal Price { get; set; }
-    public required CartHeader CartHeader { get; set; }
+    public CartHeaderDto? CartHeader { get; set; }
 }
