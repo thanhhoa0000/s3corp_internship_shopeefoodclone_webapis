@@ -8,4 +8,5 @@ public interface IProductService
     Task<Response> CreateAsync(ProductDto productDto);
     Task<Response> RemoveAsync(Guid productId);
     Task<Response> UpdateAsync(ProductDto productDto);
+    Task HandleProductRequest(ProductInfoRequest request);
 }

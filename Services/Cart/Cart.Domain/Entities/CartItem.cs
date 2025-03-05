@@ -1,9 +1,9 @@
 ﻿namespace ShopeeFoodClone.WebApi.Cart.Domain.Entities;
 
-public class CartItem
+public class CartItem : IEntity
 {
     [Key]
-    public int Index { get; set; }
+    public Guid Id { get; set; }
     public Guid CartHeaderId { get; set; }
     public Guid ProductId { get; set; }
     [Required]

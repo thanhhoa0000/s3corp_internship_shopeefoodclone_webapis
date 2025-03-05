@@ -9,7 +9,19 @@ services:
       - "5001:5001"
     networks:
       shopeefood-clone-net:
-    
+        
+  event-bus:
+    image: rabbitmq:3-management
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    networks:
+      shopeefood-clone-net:
+        
   identity-api:
     image: ${DOCKER_REGISTRY-}identity-api
     build:
@@ -33,6 +45,19 @@ services:
       - "5031:5031"
     depends_on:
       - stores-db
+    networks:
+      shopeefood-clone-net:
+      
+  cart-api:
+    image: ${DOCKER_REGISTRY-}cart-api
+    build:
+      context: .
+      dockerfile: Services/Cart/Cart.Presentation/Dockerfile
+    ports:
+      - "5050:5050"
+      - "5051:5051"
+    depends_on:
+      - cart-db
     networks:
       shopeefood-clone-net:
         
@@ -89,6 +114,20 @@ services:
     networks:
       shopeefood-clone-net:
     restart: unless-stopped
+  
+  cart-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "14335:1433"
+    volumes:
+      - cart_data:/var/opt/mssql
+    networks:
+      shopeefood-clone-net:
+    restart: unless-stopped
     
   products-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -108,6 +147,7 @@ volumes:
   users_data:
   stores_data:
   products_data:
+  cart_data:
     
 networks:
   shopeefood-clone-net:

@@ -11,6 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
       <ProjectReference Include="..\Cart.Domain\Cart.Domain.csproj" />
     </ItemGroup>
 
