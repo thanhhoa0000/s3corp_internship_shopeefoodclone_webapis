@@ -3,12 +3,21 @@
 public class ProductService : IProductService
 {
     private readonly IProductRepository _repository;
+    private readonly IRabbitMqPublisher _publisher;
+    private readonly IRabbitMqSubscriber _subscriber;
     private readonly HttpContext _httpContext;
     private readonly IMapper _mapper;
 
-    public ProductService(IProductRepository repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+    public ProductService(
+        IProductRepository repository,
+        IRabbitMqPublisher publisher,
+        IRabbitMqSubscriber subscriber,
+        IHttpContextAccessor httpContextAccessor, 
+        IMapper mapper)
     {
         _repository = repository;
+        _publisher = publisher;
+        _subscriber = subscriber;
         _httpContext = httpContextAccessor.HttpContext!;
         _mapper = mapper;
     }
@@ -202,5 +211,15 @@ public class ProductService : IProductService
             
             return response;
         }
+    }
+    
+    public async Task HandleProductRequest(ProductInfoRequest request){
+        var products = await _repository.GetAllAsync(p => request.ProductIds!.Contains(p.Id), tracked: false);
+        var response = new ProductInfoResponse
+        {
+            Products = _mapper.Map<IEnumerable<ProductDto>>(products)
+        };
+        
+        _publisher.Publish(response, "product_info_response");
     }
 }

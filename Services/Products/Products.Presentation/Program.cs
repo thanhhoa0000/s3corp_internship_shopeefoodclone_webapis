@@ -25,6 +25,7 @@ try
         });
 
     builder.Services.AddAspVersioningService();
+    builder.Services.AddRabbitMqServices(builder.Configuration);
     builder.Services.AddInfrastructure(builder.Configuration);
     
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -4,7 +4,7 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <AspVersioningVersion>8.1.0</AspVersioningVersion>
     <AspnetVersion>8.0.12</AspnetVersion>
-    <MicrosoftExtensionsVersion>8.0.2</MicrosoftExtensionsVersion>
+    <MicrosoftExtensionsVersion>9.0.0</MicrosoftExtensionsVersion>
     <EfVersion>8.0.12</EfVersion>
     <NLogVersion>5.4.0</NLogVersion>
   </PropertyGroup>
@@ -42,5 +42,6 @@
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="6.8.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
     <PackageVersion Include="Ocelot" Version="22.0.1" />
+    <PackageVersion Include="RabbitMQ.Client" Version="7.1.1" />
   </ItemGroup>
 </Project>

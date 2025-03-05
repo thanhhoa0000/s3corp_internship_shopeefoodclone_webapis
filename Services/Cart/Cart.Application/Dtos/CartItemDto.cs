@@ -2,7 +2,7 @@
 
 public class CartItemDto
 {
-    public int Index { get; set; }
+    public Guid Id { get; set; }
     public Guid CartHeaderId { get; set; }
     public Guid ProductId { get; set; }
     [Required]

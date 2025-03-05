@@ -22,3 +22,5 @@ global using ShopeeFoodClone.WebApi.Products.Infrastructure;
 
 global using ShopeeFoodClone.WebApi.Products.Application.Dtos;
 global using ShopeeFoodClone.WebApi.Products.Application.Interfaces;
+
+global using ShopeeFoodClone.WebApi.EventBus.RabbitMQ;
