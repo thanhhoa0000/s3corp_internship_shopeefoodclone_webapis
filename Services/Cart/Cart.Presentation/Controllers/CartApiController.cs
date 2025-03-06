@@ -1,5 +1,6 @@
 namespace ShopeeFoodClone.WebApi.Cart.Presentation.Controllers;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "CustomerOnly")]
 [ApiController]
 [Route("api/v{version:apiVersion}/cart")]
 [ApiVersion(1)]

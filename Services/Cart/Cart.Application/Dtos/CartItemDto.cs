@@ -2,7 +2,7 @@
 
 public class CartItemDto
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public Guid CartHeaderId { get; set; }
     public Guid ProductId { get; set; }
     [Required]

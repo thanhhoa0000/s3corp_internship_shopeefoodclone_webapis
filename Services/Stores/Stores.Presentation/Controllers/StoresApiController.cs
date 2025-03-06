@@ -18,7 +18,7 @@ public class StoresApiController : ControllerBase
     
     [HttpGet("{province}")]
     public async Task<IActionResult> GetByLocation(
-        GetStoreByLocationRequest request,
+        [FromBody] GetStoreByLocationRequest request,
         int pageSize = 12, 
         int pageNumber = 1)
     {
@@ -47,9 +47,6 @@ public class StoresApiController : ControllerBase
         try
         {
             var province = request.LocationRequest.Province;
-            var district = request.LocationRequest.District;
-            var ward = request.LocationRequest.Ward;
-            var street = request.LocationRequest.Street;
             
             _logger.LogInformation($"Getting the stores of category {request.CategoryName} in province/city {province}...");
             

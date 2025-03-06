@@ -2,7 +2,7 @@
 
 public class CartHeaderDto
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public Guid CustomerId { get; set; }
     [Required]
     [Range(1, double.MaxValue)]

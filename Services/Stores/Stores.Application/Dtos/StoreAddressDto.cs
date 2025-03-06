@@ -2,7 +2,7 @@
 
 public class StoreAddressDto
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public Guid StoreId { get; set; }
     [Required]
     [MaxLength(50)]

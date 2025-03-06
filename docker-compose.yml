@@ -61,6 +61,19 @@ services:
     networks:
       shopeefood-clone-net:
         
+  orders-api:
+    image: ${DOCKER_REGISTRY-}orders-api
+    build:
+      context: .
+      dockerfile: Services/Orders/Orders.Presentation/Dockerfile
+    ports:
+      - "5060:5060"
+      - "5061:5061"
+    depends_on:
+      - orders-db
+    networks:
+      shopeefood-clone-net:
+        
   products-api:
     image: ${DOCKER_REGISTRY-}products-api
     build:
@@ -129,6 +142,20 @@ services:
       shopeefood-clone-net:
     restart: unless-stopped
     
+  orders-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "14336:1433"
+    volumes:
+      - orders_data:/var/opt/mssql
+    networks:
+      shopeefood-clone-net:
+    restart: unless-stopped
+    
   products-db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
@@ -148,10 +175,9 @@ volumes:
   stores_data:
   products_data:
   cart_data:
+  orders_data:
     
 networks:
   shopeefood-clone-net:
     driver: bridge
     external: true
-
-
