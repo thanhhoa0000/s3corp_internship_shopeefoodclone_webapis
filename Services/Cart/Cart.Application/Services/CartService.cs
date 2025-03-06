@@ -4,28 +4,19 @@ public class CartService : ICartService
 {
     private readonly ICartRepository _cartHeaderRepository;
     private readonly ICartItemRepository _cartItemRepository;
-    private readonly IRabbitMqPublisher _publisher;
-    private readonly IRabbitMqSubscriber _subscriber;
-    private IEnumerable<ProductDto> _cachedProducts = new List<ProductDto>();
+    private readonly IProductService _productService;
     private readonly IMapper _mapper;
 
     public CartService(
         ICartRepository cartHeaderRepository, 
         ICartItemRepository cartItemRepository,
-        IRabbitMqPublisher publisher,
-        IRabbitMqSubscriber subscriber,
+        IProductService productService,
         IMapper mapper)
     {
         _cartHeaderRepository = cartHeaderRepository;
         _cartItemRepository = cartItemRepository;
-        _publisher = publisher;
-        _subscriber = subscriber;
+        _productService = productService;
         _mapper = mapper;
-        
-        _subscriber.Subscribe<ProductInfoResponse>("product_info_response", response =>
-        {
-            _cachedProducts = response.Products!;
-        });
     }
 
     /// <summary>
@@ -58,49 +49,18 @@ public class CartService : ICartService
             cart.CartItems = _mapper
                 .Map<ICollection<CartItemDto>>(
                     await _cartItemRepository.GetAllAsync(i => i.CartHeaderId == cart.CartHeader.Id, tracked: false));
-
-            var missingProductIds = cart.CartItems
-                .Where(item => !_cachedProducts.Any(p => p.Id == item.ProductId))
-                .Select(item => item.ProductId)
-                .ToList();
-
-            if (missingProductIds.Any())
-            {
-                LoadProductInfoForCart(missingProductIds);
-                
-                int maxRetries = 10;
-                for (int attempt = 0; attempt < maxRetries; attempt++)
-                {
-                    missingProductIds = cart.CartItems
-                        .Where(item => !_cachedProducts.Any(p => p.Id == item.ProductId))
-                        .Select(item => item.ProductId)
-                        .ToList();
-
-                    if (!missingProductIds.Any())
-                        break;
-
-                    LoadProductInfoForCart(missingProductIds);
-                    Console.WriteLine($"Retrying fetch for missing products... Attempt {attempt + 1}/{maxRetries}");
-                    await Task.Delay(1000);
-                }
-
-            }
             
             foreach (var item in cart.CartItems)
             {
-                var product = _cachedProducts.FirstOrDefault(p => p.Id == item.ProductId);
-
-                if (product is null)
-                {
-                    Console.WriteLine($"Warning: ProductId {item.ProductId} is still missing.");
-                    continue;
-                }
-
-                item.ProductId = product.Id;
-                cart.CartHeader.TotalPrice += (item.Quantity * product.Price);
+                var responseFromProductApi = await _productService.GetProductAsync(item.ProductId);
+                
+                var productDto = JsonSerializer.Deserialize<ProductDto>(
+                    Convert.ToString(responseFromProductApi!.Body)!,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                item.Product = productDto;
+                cart.CartHeader.TotalPrice += (item.Quantity * item.Product!.Price);
             }
-
-
             
             response.Body = cart;
             
@@ -213,15 +173,5 @@ public class CartService : ICartService
         }
 
         return response;
-    }
-
-    
-    /// <summary>
-    /// Load product information from EventBus
-    /// </summary>
-    /// <param name="productIds">Needed products' ID for cart</param>
-    public void LoadProductInfoForCart(IEnumerable<Guid> productIds)
-    {
-        _publisher.Publish(new ProductInfoRequest { ProductIds = productIds }, "product_info_request");
     }
 }

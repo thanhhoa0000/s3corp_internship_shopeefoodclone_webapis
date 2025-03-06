@@ -65,10 +65,6 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<TimeOnly>("ClosingHour")
                         .HasColumnType("time");
 
@@ -94,6 +90,47 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                     b.ToTable("Stores");
                 });
 
+            modelBuilder.Entity("ShopeeFoodClone.WebApi.Stores.Domain.Entities.StoreAddress", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("HouseNumber")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Ward")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId")
+                        .IsUnique();
+
+                    b.ToTable("StoreAddresses");
+                });
+
             modelBuilder.Entity("CategoryStore", b =>
                 {
                     b.HasOne("ShopeeFoodClone.WebApi.Stores.Domain.Entities.Category", null)
@@ -106,6 +143,23 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("StoresId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ShopeeFoodClone.WebApi.Stores.Domain.Entities.StoreAddress", b =>
+                {
+                    b.HasOne("ShopeeFoodClone.WebApi.Stores.Domain.Entities.Store", "Store")
+                        .WithOne("StoreAddress")
+                        .HasForeignKey("ShopeeFoodClone.WebApi.Stores.Domain.Entities.StoreAddress", "StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("ShopeeFoodClone.WebApi.Stores.Domain.Entities.Store", b =>
+                {
+                    b.Navigation("StoreAddress")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

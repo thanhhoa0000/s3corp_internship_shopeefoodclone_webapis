@@ -3,13 +3,11 @@
 public class RoleManagementService : IRoleManagementService
 {
     private readonly IRoleRepository _repository;
-    private readonly HttpContext _httpContext;
     private readonly IMapper _mapper;
 
-    public RoleManagementService(IRoleRepository repository, IHttpContextAccessor httpContextAccessor, IMapper mapper)
+    public RoleManagementService(IRoleRepository repository, IMapper mapper)
     {
         _repository = repository;
-        _httpContext = httpContextAccessor.HttpContext!;
         _mapper = mapper;
     }
     
@@ -26,14 +24,6 @@ public class RoleManagementService : IRoleManagementService
         try
         {
             var roles = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-
-            var pagination = new Pagination()
-            {
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-            };
-            
-            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
             
             response.Body = _mapper.Map<IEnumerable<AppRoleDto>>(roles);
             

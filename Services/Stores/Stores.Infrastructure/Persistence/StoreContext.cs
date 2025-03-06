@@ -4,15 +4,14 @@ public class StoreContext(DbContextOptions<StoreContext> options) : DbContext(op
 {
     public DbSet<Store> Stores { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<StoreAddress> StoreAddresses { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<Store>()
-            .HasMany(s => s.Categories)
-            .WithMany(c => c.Stores);
-
+        builder.ApplyConfiguration(new StoreConfiguration());
         builder.ApplyConfiguration(new CategoryConfiguration());
+        builder.ApplyConfiguration(new StoreAddressConfiguration());
     }
 }

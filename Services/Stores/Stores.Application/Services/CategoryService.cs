@@ -3,16 +3,13 @@
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _repository;
-    private readonly HttpContext _httpContext;
     private readonly IMapper _mapper;
 
     public CategoryService(
         ICategoryRepository repository,
-        IHttpContextAccessor httpContextAccessor,
         IMapper mapper)
     {
         _repository = repository;
-        _httpContext = httpContextAccessor.HttpContext!;
         _mapper = mapper;
     }
     
@@ -29,14 +26,6 @@ public class CategoryService : ICategoryService
         try
         {
             var categories = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-            
-            var pagination = new Pagination()
-            {
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-            };
-            
-            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
             
             response.Body = _mapper.Map<IEnumerable<CategoryDto>>(categories);
             

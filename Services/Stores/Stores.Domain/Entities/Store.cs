@@ -9,13 +9,12 @@ public class Store : IEntity
     [Required, MinLength(10), MaxLength(50)]
     public required string Name { get; set; }
     [Required]
-    public required string Address { get; set; }
-    [Required]
     public TimeOnly OpeningHour { get; set; }
     [Required]
     public TimeOnly ClosingHour { get; set; }
     public string? CoverImagePath { get; set; }
     public double Rating { get; set; } = 0.0;
     
+    public required StoreAddress StoreAddress { get; set; }
     public ICollection<Category> Categories { get; set; } = new List<Category>();
 }

@@ -10,5 +10,6 @@ public class CartItemDto
     [Required]
     [Range(1, double.MaxValue)]
     public decimal Price { get; set; }
+    public ProductDto? Product { get; set; }
     public CartHeaderDto? CartHeader { get; set; }
 }

@@ -1,76 +1,75 @@
-namespace ShopeeFoodClone.WebApi.Cart.Presentation.Controllers
+namespace ShopeeFoodClone.WebApi.Cart.Presentation.Controllers;
+
+[ApiController]
+[Route("api/v{version:apiVersion}/cart")]
+[ApiVersion(1)]
+public class CartApiController : ControllerBase
 {
-    [ApiController]
-    [Route("api/v{version:apiVersion}/cart")]
-    [ApiVersion(1)]
-    public class CartApiController : ControllerBase
+    private readonly ICartService _service;
+    private readonly ILogger<CartApiController> _logger;
+    private Response _response;
+
+    public CartApiController(ICartService service, ILogger<CartApiController> logger)
     {
-        private readonly ICartService _service;
-        private readonly ILogger<CartApiController> _logger;
-        private Response _response;
+        _service = service;
+        _logger = logger;
+        _response = new Response();
+    }
 
-        public CartApiController(ICartService service, ILogger<CartApiController> logger)
+    [HttpGet("user/{userId:guid}")]
+    public async Task<IActionResult> GetCart([FromRoute] Guid userId)
+    {
+        try
         {
-            _service = service;
-            _logger = logger;
-            _response = new Response();
+            _logger.LogInformation($"Getting the cart of customer {userId}...");
+            
+            _response = await _service.GetCartAsync(customerId: userId);
+            
+            return Ok(_response);
         }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the cart!");
+        }
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddToCart([FromBody] CartDto cartDto)
+    {
+        try
+        {
+            _logger.LogInformation("Adding item to the cart...");
+            
+            _response = await _service.AddToCartAsync(cartDto);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when adding item to the cart!");
+        }
+    }
 
-        [HttpGet("user/{userId:guid}")]
-        public async Task<IActionResult> GetCart([FromRoute] Guid userId)
+    [HttpDelete("item/{itemId:guid}")]
+    public async Task<IActionResult> RemoveFromCart([FromRoute] Guid itemId)
+    {
+        try
         {
-            try
-            {
-                _logger.LogInformation($"Getting the cart of customer {userId}...");
-                
-                _response = await _service.GetCartAsync(customerId: userId);
-                
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
-                
-                return BadRequest("Error(s) occurred when getting the cart!");
-            }
+            _logger.LogInformation("Removing item from the cart...");
+            
+            _response = await _service.RemoveFromCartAsync(itemId);
+            
+            return Ok(_response);
         }
-        
-        [HttpPost]
-        public async Task<IActionResult> AddToCart([FromBody] CartDto cartDto)
+        catch (Exception ex)
         {
-            try
-            {
-                _logger.LogInformation("Adding item to the cart...");
-                
-                _response = await _service.AddToCartAsync(cartDto);
-                
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
-                
-                return BadRequest("Error(s) occurred when adding item to the cart!");
-            }
-        }
-
-        [HttpDelete("item/{itemId:guid}")]
-        public async Task<IActionResult> RemoveFromCart([FromRoute] Guid itemId)
-        {
-            try
-            {
-                _logger.LogInformation("Removing item from the cart...");
-                
-                _response = await _service.RemoveFromCartAsync(itemId);
-                
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
-                
-                return BadRequest("Error(s) occurred when removing item from the cart!");
-            }
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when removing item from the cart!");
         }
     }
 }

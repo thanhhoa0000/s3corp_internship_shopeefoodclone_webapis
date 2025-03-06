@@ -10,5 +10,6 @@ public class StoresMappingProfile : Profile
             .ForMember(dest => 
                 dest.Stores, 
                 opt => opt.MapFrom(src => src.Stores));
+        CreateMap<StoreAddress, StoreAddressDto>().ReverseMap();
     }
 }

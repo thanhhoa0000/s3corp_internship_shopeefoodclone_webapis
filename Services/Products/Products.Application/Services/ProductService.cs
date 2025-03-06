@@ -3,82 +3,30 @@
 public class ProductService : IProductService
 {
     private readonly IProductRepository _repository;
-    private readonly IRabbitMqPublisher _publisher;
-    private readonly IRabbitMqSubscriber _subscriber;
-    private readonly HttpContext _httpContext;
     private readonly IMapper _mapper;
 
     public ProductService(
         IProductRepository repository,
-        IRabbitMqPublisher publisher,
-        IRabbitMqSubscriber subscriber,
-        IHttpContextAccessor httpContextAccessor, 
         IMapper mapper)
     {
         _repository = repository;
-        _publisher = publisher;
-        _subscriber = subscriber;
-        _httpContext = httpContextAccessor.HttpContext!;
         _mapper = mapper;
-    }
-    
-    /// <summary>
-    /// Get list of products
-    /// </summary>
-    /// <param name="pageSize">Pages number to get roles</param>
-    /// <param name="pageNumber">Page number to start with</param>
-    /// <returns>The products list</returns>
-    public async Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1)
-    {
-        var response = new Response();
-
-        try
-        {
-            var products = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-            
-            var pagination = new Pagination()
-            {
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-            };
-            
-            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
-            
-            response.Body = _mapper.Map<IEnumerable<ProductDto>>(products);
-            
-            return response;
-        }
-        catch (Exception ex)
-        {
-            response.IsSuccessful = false;
-            response.Message = ex.Message;
-
-            return response;
-        }
     }
     
     /// <summary>
     /// Get list of products by store ID
     /// </summary>
     /// <param name="storeId">The store ID to get products</param>
-    /// <param name="pageSize">Pages number to get roles</param>
+    /// <param name="pageSize">Maximum products per page</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The products list</returns>
-    public async Task<Response> GetAllByStoreIdAsync(Guid storeId, int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetAllByStoreIdAsync(Guid storeId, int pageSize = 12, int pageNumber = 1)
     {
         var response = new Response();
 
         try
         {
             var products = await _repository.GetAllAsync(p => p.StoreId == storeId, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-            
-            var pagination = new Pagination()
-            {
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-            };
-            
-            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
             
             response.Body = _mapper.Map<IEnumerable<ProductDto>>(products);
             
@@ -211,15 +159,5 @@ public class ProductService : IProductService
             
             return response;
         }
-    }
-    
-    public async Task HandleProductRequest(ProductInfoRequest request){
-        var products = await _repository.GetAllAsync(p => request.ProductIds!.Contains(p.Id), tracked: false);
-        var response = new ProductInfoResponse
-        {
-            Products = _mapper.Map<IEnumerable<ProductDto>>(products)
-        };
-        
-        _publisher.Publish(response, "product_info_response");
     }
 }
