@@ -3,23 +3,20 @@
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _repository;
-    private readonly HttpContext _httpContext;
     private readonly IMapper _mapper;
 
     public CategoryService(
         ICategoryRepository repository,
-        IHttpContextAccessor httpContextAccessor,
         IMapper mapper)
     {
         _repository = repository;
-        _httpContext = httpContextAccessor.HttpContext!;
         _mapper = mapper;
     }
     
     /// <summary>
     /// Get list of categories
     /// </summary>
-    /// <param name="pageSize">Pages number to get roles</param>
+    /// <param name="pageSize">Pages number to get categories</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The categories list</returns>
     public async Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1)
@@ -29,14 +26,6 @@ public class CategoryService : ICategoryService
         try
         {
             var categories = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-            
-            var pagination = new Pagination()
-            {
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-            };
-            
-            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
             
             response.Body = _mapper.Map<IEnumerable<CategoryDto>>(categories);
             

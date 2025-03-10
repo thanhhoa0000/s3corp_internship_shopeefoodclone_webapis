@@ -11,6 +11,11 @@ try
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
     
+    builder.Services.AddAuthenticationConfiguration(builder.Configuration);
+    builder.Services.AddAuthorizationConfiguration();
+    
+    builder.Configuration.AddJsonFile("jwt_properties.json", optional: false, reloadOnChange: true);
+    
     builder.Services.AddHttpContextAccessor();
     
     builder.Services.AddControllers()

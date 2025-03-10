@@ -10,5 +10,10 @@ public class StoresMappingProfile : Profile
             .ForMember(dest => 
                 dest.Stores, 
                 opt => opt.MapFrom(src => src.Stores));
+        CreateMap<AdministrativeRegion, AdministrativeRegionDto>().ReverseMap();
+        CreateMap<AdministrativeUnit, AdministrativeUnitDto>().ReverseMap();
+        CreateMap<Province, ProvinceDto>().ReverseMap();
+        CreateMap<District, DistrictDto>().ReverseMap();
+        CreateMap<Ward, WardDto>().ReverseMap();
     }
 }

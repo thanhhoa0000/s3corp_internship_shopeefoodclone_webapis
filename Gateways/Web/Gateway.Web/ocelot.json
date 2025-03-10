@@ -116,7 +116,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/stores/all",
+      "DownstreamPathTemplate":"/api/v1/stores/{province}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -124,14 +124,21 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/stores/all",
+      "UpstreamPathTemplate": "/stores/{province}",
       "UpstreamHttpMethod": [ "GET" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      },
-      "RouteClaimsRequirement": {
-        "Role": "Admin"
-      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/stores/{province}/{category}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/stores/{province}/{category}",
+      "UpstreamHttpMethod": [ "GET" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -214,13 +221,39 @@
         }
       ],
       "UpstreamPathTemplate": "/categories",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "UpstreamHttpMethod": [ "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
         "Role": "Admin"
       },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/categories",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/provinces",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/provinces",
+      "UpstreamHttpMethod": [ "GET" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -234,25 +267,6 @@
       ],
       "UpstreamPathTemplate": "/categories/{cateId}",
       "UpstreamHttpMethod": [ "GET", "DELETE" ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer"
-      },
-      "RouteClaimsRequirement": {
-        "Role": "Admin"
-      },
-      "DangerousAcceptAnyServerCertificateValidator": true
-    },
-    {
-      "DownstreamPathTemplate":"/api/v1/products/all",
-      "DownstreamScheme": "https",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "products-api",
-          "Port": 5041
-        }
-      ],
-      "UpstreamPathTemplate": "/products/all",
-      "UpstreamHttpMethod": [ "GET" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
@@ -336,6 +350,12 @@
       ],
       "UpstreamPathTemplate": "/cart/user/{userId}",
       "UpstreamHttpMethod": [ "GET" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Customer"
+      },
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -349,6 +369,12 @@
       ],
       "UpstreamPathTemplate": "/cart",
       "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Customer"
+      },
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -362,6 +388,12 @@
       ],
       "UpstreamPathTemplate": "/cart/item/{itemId}",
       "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Customer"
+      },
       "DangerousAcceptAnyServerCertificateValidator": true
     }
   ],

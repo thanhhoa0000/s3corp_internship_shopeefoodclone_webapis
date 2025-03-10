@@ -40,7 +40,7 @@ public class IdentityService : IIdentityService
             if (!isUserValid)
             {
                 response.IsSuccessful = false;
-                response.Message = "Invalid credentials!";
+                response.Message = "Username or password is incorrect!";
 
                 return response;
             }

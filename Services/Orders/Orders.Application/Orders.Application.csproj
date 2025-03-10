@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>ShopeeFoodClone.WebApi.Orders.Application</RootNamespace>
+        <TargetFramework>net8.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+        <PackageReference Include="AutoMapper" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\EventBus\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
+      <ProjectReference Include="..\Orders.Domain\Orders.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

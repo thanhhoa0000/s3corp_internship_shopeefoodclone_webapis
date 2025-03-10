@@ -44,6 +44,15 @@ services:
     volumes:
       - ./certs/.aspnet/https/Cart.API.pfx:/home/app/.aspnet/https/Cart.API.pfx:ro
   
+  orders-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "https://+:5061;http://+:5060"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${HTTPS_DEV_CERTS_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/home/app/.aspnet/https/Orders.API.pfx"
+    volumes:
+      - ./certs/.aspnet/https/Orders.API.pfx:/home/app/.aspnet/https/Orders.API.pfx:ro
+  
   products-api:
     environment:
       ASPNETCORE_ENVIRONMENT: "Development"

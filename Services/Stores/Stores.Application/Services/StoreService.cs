@@ -4,56 +4,89 @@ public class StoreService : IStoreService
 {
     private readonly IStoreRepository _storeRepository;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly HttpContext _httpContext;
     private readonly IMapper _mapper;
 
     public StoreService(
         IStoreRepository repository,
         ICategoryRepository categoryRepository,
-        IHttpContextAccessor httpContextAccessor,
         IMapper mapper)
     {
         _storeRepository = repository;
         _categoryRepository = categoryRepository;
-        _httpContext = httpContextAccessor.HttpContext!;
         _mapper = mapper;
     }
 
     /// <summary>
-    /// Get list of stores
+    /// Get list of stores base on location
     /// </summary>
-    /// <param name="pageSize">Pages number to get roles</param>
+    /// <param name="request">Location to get</param>
+    /// <param name="pageSize">Maximum number of stores per page</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The stores list</returns>
-    public async Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetByLocationAsync(GetStoreByLocationRequest request, int pageSize = 12,
+        int pageNumber = 1)
     {
         var response = new Response();
 
         try
         {
-            var stores = await _storeRepository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            Expression<Func<Store, bool>> filter = x =>
+                (string.IsNullOrEmpty(request.Ward) || x.Ward!.FullName == request.Ward) &&
+                (string.IsNullOrEmpty(request.District) || x.Ward!.District!.FullName == request.District) &&
+                (string.IsNullOrEmpty(request.Province) || x.Ward!.District!.Province!.FullName == request.Province);
             
-            var pagination = new Pagination()
-            {
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-            };
-            
-            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
+            var stores = await _storeRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
-            
-            return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-
-            return response;
         }
+        
+        return response;
     }
 
+    /// <summary>
+    /// Get list of stores base on location and category
+    /// </summary>
+    /// <param name="request">Location and category name to get</param>
+    /// <param name="pageSize">Maximum number of stores per page</param>
+    /// <param name="pageNumber">Page number to start with</param>
+    /// <returns>The stores list</returns>
+    public async Task<Response> GetByLocationAndCategoryAsync(
+        GetStoreRequest request,
+        int pageSize = 12, int pageNumber = 1)
+    {
+        var response = new Response();
+
+        try
+        {
+            var province = request.LocationRequest.Province;
+            var district = request.LocationRequest.District;
+            var ward = request.LocationRequest.Ward;
+            
+            Expression<Func<Store, bool>> filter = x => 
+                (string.IsNullOrEmpty(ward) || x.Ward!.FullName == ward) &&
+                (string.IsNullOrEmpty(district) || x.Ward!.District!.FullName == district) &&
+                (string.IsNullOrEmpty(province) || x.Ward!.District!.Province!.FullName == province) &&
+                (x.Categories.Any(c => c.Name == request.CategoryName));
+            
+            var stores = await _storeRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
+            
+            response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+        }
+        
+        return response;
+    }
+    
+    
     /// <summary>
     /// Get stores list by owner's userId
     /// </summary>
@@ -61,21 +94,13 @@ public class StoreService : IStoreService
     /// <param name="pageSize">Pages number to get roles</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The stores list</returns>
-    public async Task<Response> GetAllByUserIdAsync(Guid userId, int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetAllByUserIdAsync(Guid userId, int pageSize = 12, int pageNumber = 1)
     {
         var response = new Response();
 
         try
         {
             var stores = await _storeRepository.GetAllAsync(s => s.UserId == userId, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-            
-            var pagination = new Pagination()
-            {
-                PageSize = pageSize,
-                PageNumber = pageNumber,
-            };
-            
-            _httpContext.Response.Headers["X-Pagination"] = JsonSerializer.Serialize(pagination);
             
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
             
@@ -139,6 +164,9 @@ public class StoreService : IStoreService
             }
             
             store.Categories = existingCategories;
+            var ward = _mapper.Map<Ward>(request.Ward);
+            store.Ward = ward;
+            store.WardCode = ward.Code;
             await _storeRepository.CreateAsync(store);
             
             response.Body = _mapper.Map<StoreDto>(store);
@@ -148,7 +176,7 @@ public class StoreService : IStoreService
         catch (Exception ex)
         {
             response.IsSuccessful = false;
-            response.Message = ex.Message;
+            response.Message = ex.ToString();
             
             return response;
         }

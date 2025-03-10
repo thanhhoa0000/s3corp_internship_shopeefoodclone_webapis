@@ -9,14 +9,6 @@
       <jdbc-url>Server=localhost,14331;Database=spf_users_db;User Id=sa;Password=MyPa55w0rd;TrustServerCertificate=True;</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="spf_stores_db@localhost" uuid="92a0b419-d41c-411c-af98-bc57dcb66720">
-      <driver-ref>sqlserver.jb</driver-ref>
-      <synchronize>true</synchronize>
-      <configured-by-url>true</configured-by-url>
-      <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
-      <jdbc-url>Server=localhost,14333;Database=spf_stores_db;User Id=sa;Password=MyPa55w0rd;TrustServerCertificate=True;</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
     <data-source source="LOCAL" name="spf_products_db@localhost" uuid="edc2c7f2-d2a4-441a-a930-33fedc32f226">
       <driver-ref>sqlserver.jb</driver-ref>
       <synchronize>true</synchronize>
@@ -31,6 +23,22 @@
       <configured-by-url>true</configured-by-url>
       <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
       <jdbc-url>Server=localhost,14335;Database=spf_cart_db;User Id=sa;Password=MyPa55w0rd;TrustServerCertificate=True;</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="spf_orders_db@localhost" uuid="a9bb129b-3ea9-4665-9eac-ef33a6507bf3">
+      <driver-ref>sqlserver.jb</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
+      <jdbc-url>Server=localhost,14336;Database=spf_orders_db;User Id=sa;Password=MyPa55w0rd;TrustServerCertificate=True;</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+    <data-source source="LOCAL" name="spf_stores_db@localhost" uuid="def918b8-dc53-4dc2-afb6-c349979006f8">
+      <driver-ref>sqlserver.jb</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>com.jetbrains.jdbc.sqlserver.SqlServerDriver</jdbc-driver>
+      <jdbc-url>Server=localhost,14333;Database=spf_stores_db;User Id=sa;Password=MyPa55w0rd;TrustServerCertificate=True;</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

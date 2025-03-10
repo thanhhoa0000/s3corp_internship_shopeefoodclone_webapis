@@ -3,7 +3,7 @@
 public class Product : IEntity
 {
     [Key]
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
     public Guid StoreId { get; set; }
     [Required, MinLength(10), MaxLength(50)]
     public required string Name { get; set; }

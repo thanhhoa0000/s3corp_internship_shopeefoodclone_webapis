@@ -37,6 +37,9 @@
       <Content Include="..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+      <Content Include="..\..\..\jwt_properties.json">
+        <Link>jwt_properties.json</Link>
+      </Content>
     </ItemGroup>
     <ItemGroup>
       <None Include="..\..\..\nlog.config">
