@@ -11,10 +11,9 @@ public class StoreConfiguration : IEntityTypeConfiguration<Store>
             .WithMany(c => c.Stores);
         
         builder
-            .HasOne(s => s.StoreAddress)
-            .WithOne(s => s.Store)
-            .HasForeignKey<StoreAddress>(s => s.StoreId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .IsRequired();
+            .HasOne(s => s.Ward)
+            .WithMany()
+            .HasForeignKey(s => s.WardCode)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

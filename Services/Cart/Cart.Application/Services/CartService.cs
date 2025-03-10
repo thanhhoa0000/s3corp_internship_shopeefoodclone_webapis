@@ -87,7 +87,7 @@ public class CartService : ICartService
         try
         {
             var cartItemDto = cartDto.CartItems.First();
-            CartHeader? cartHeaderFromDb = await _cartHeaderRepository.GetAsync(
+            var cartHeaderFromDb = await _cartHeaderRepository.GetAsync(
                 c => c.CustomerId == cartDto.CartHeader!.CustomerId);
 
             // Fix: Create cart header and ensure it's not null
@@ -103,6 +103,30 @@ public class CartService : ICartService
 
             if (cartItemFromDb is null)
             {
+                var responseFromProductApi = await _productService.GetProductAsync(cartItemDto.ProductId);
+                
+                var productDto = JsonSerializer.Deserialize<ProductDto>(
+                    Convert.ToString(responseFromProductApi!.Body)!,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                cartItemDto.Product = productDto;
+
+                if (cartItemDto.Product!.StoreId != cartHeaderFromDb.StoreId)
+                {
+                    var oldCartItems =
+                        await _cartItemRepository.GetAllAsync(i => i.CartHeaderId == cartHeaderFromDb.Id);
+
+                    foreach (var item in oldCartItems)
+                    {
+                        await _cartItemRepository.RemoveAsync(item);
+                    }
+
+                    cartDto.CartHeader!.StoreId = cartItemDto.Product!.StoreId;
+                    cartHeaderFromDb.StoreId = cartItemDto.Product!.StoreId;
+                    
+                    await _cartHeaderRepository.UpdateAsync(cartHeaderFromDb);
+                }
+                
                 var newCartItem = _mapper.Map<CartItem>(cartItemDto);
                 newCartItem.CartHeaderId = cartHeaderFromDb.Id;
                 newCartItem.Id = Guid.NewGuid();
@@ -155,7 +179,7 @@ public class CartService : ICartService
 
             var cartItemsQuantity = (await _cartItemRepository
                     .GetAllAsync(i => i.CartHeaderId == cartHeader.Id))
-                .Count();
+                    .Count();
 
             await _cartItemRepository.RemoveAsync(cartItem);
 

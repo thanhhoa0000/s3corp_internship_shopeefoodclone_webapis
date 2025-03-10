@@ -221,13 +221,39 @@
         }
       ],
       "UpstreamPathTemplate": "/categories",
-      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "UpstreamHttpMethod": [ "POST", "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
         "Role": "Admin"
       },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/categories",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/provinces",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/provinces",
+      "UpstreamHttpMethod": [ "GET" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {

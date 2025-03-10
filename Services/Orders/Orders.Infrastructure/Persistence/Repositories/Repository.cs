@@ -74,9 +74,9 @@ public class Repository<T, TContext> : IRepository<T>
         if (pageSize > 0)
             query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
 
-        IEnumerable<T> usersList = await query.ToListAsync();
+        IEnumerable<T> entitiesList = await query.ToListAsync();
 
-        return usersList;            
+        return entitiesList;            
     }
 
     public async Task UpdateAsync(T entity)

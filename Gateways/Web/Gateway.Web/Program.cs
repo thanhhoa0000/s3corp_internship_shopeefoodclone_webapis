@@ -6,6 +6,18 @@ logger.Debug($"Initializing {apiName}...\n-----\n");
 try 
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowFrontend",
+            policy =>
+            {
+                policy.WithOrigins("https://localhost:7001") // Allow only frontend URL
+                    .WithMethods("GET") // Allow only GET requests
+                    .AllowAnyHeader();
+            });
+    });
+
     
     // Use NLog
     builder.Logging.ClearProviders();
@@ -45,6 +57,8 @@ try
     builder.Services.AddSwaggerGen();
 
     var app = builder.Build();
+    
+    app.UseCors("AllowFrontend");
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())

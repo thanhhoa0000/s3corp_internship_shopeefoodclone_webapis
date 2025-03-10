@@ -4,7 +4,12 @@ public class StoreContext(DbContextOptions<StoreContext> options) : DbContext(op
 {
     public DbSet<Store> Stores { get; set; }
     public DbSet<Category> Categories { get; set; }
-    public DbSet<StoreAddress> StoreAddresses { get; set; }
+    public DbSet<SubCategory> SubCategories { get; set; }
+    public DbSet<AdministrativeRegion> AdministrativeRegions { get; set; }
+    public DbSet<AdministrativeUnit> AdministrativeUnits { get; set; }
+    public DbSet<Province> Provinces { get; set; }
+    public DbSet<District> Districts { get; set; }
+    public DbSet<Ward> Wards { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -12,6 +17,9 @@ public class StoreContext(DbContextOptions<StoreContext> options) : DbContext(op
 
         builder.ApplyConfiguration(new StoreConfiguration());
         builder.ApplyConfiguration(new CategoryConfiguration());
-        builder.ApplyConfiguration(new StoreAddressConfiguration());
+        builder.ApplyConfiguration(new SubCategoryConfiguration());
+        builder.ApplyConfiguration(new ProvinceConfiguration());
+        builder.ApplyConfiguration(new DistrictConfiguration());
+        builder.ApplyConfiguration(new WardConfiguration());
     }
 }

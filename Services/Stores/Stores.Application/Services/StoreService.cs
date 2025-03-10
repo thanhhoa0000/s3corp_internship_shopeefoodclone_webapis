@@ -4,18 +4,15 @@ public class StoreService : IStoreService
 {
     private readonly IStoreRepository _storeRepository;
     private readonly ICategoryRepository _categoryRepository;
-    private readonly IStoreAddressRepository _storeAddressRepository;
     private readonly IMapper _mapper;
 
     public StoreService(
         IStoreRepository repository,
         ICategoryRepository categoryRepository,
-        IStoreAddressRepository storeAddressRepository,
         IMapper mapper)
     {
         _storeRepository = repository;
         _categoryRepository = categoryRepository;
-        _storeAddressRepository = storeAddressRepository;
         _mapper = mapper;
     }
 
@@ -33,11 +30,10 @@ public class StoreService : IStoreService
 
         try
         {
-            Expression<Func<Store, bool>> filter = x => 
-                (string.IsNullOrEmpty(request.Province) || x.StoreAddress.Province == request.Province) &&
-                (string.IsNullOrEmpty(request.District) || x.StoreAddress.District == request.District) &&
-                (string.IsNullOrEmpty(request.Ward) || x.StoreAddress.Ward == request.Ward) &&
-                (string.IsNullOrEmpty(request.Street) || x.StoreAddress.Street == request.Street);
+            Expression<Func<Store, bool>> filter = x =>
+                (string.IsNullOrEmpty(request.Ward) || x.Ward!.FullName == request.Ward) &&
+                (string.IsNullOrEmpty(request.District) || x.Ward!.District!.FullName == request.District) &&
+                (string.IsNullOrEmpty(request.Province) || x.Ward!.District!.Province!.FullName == request.Province);
             
             var stores = await _storeRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
             
@@ -70,13 +66,11 @@ public class StoreService : IStoreService
             var province = request.LocationRequest.Province;
             var district = request.LocationRequest.District;
             var ward = request.LocationRequest.Ward;
-            var street = request.LocationRequest.Street;
             
             Expression<Func<Store, bool>> filter = x => 
-                (string.IsNullOrEmpty(province) || x.StoreAddress.Province == province) &&
-                (string.IsNullOrEmpty(district) || x.StoreAddress.District == district) &&
-                (string.IsNullOrEmpty(ward) || x.StoreAddress.Ward == ward) &&
-                (string.IsNullOrEmpty(street) || x.StoreAddress.Street == street) &&
+                (string.IsNullOrEmpty(ward) || x.Ward!.FullName == ward) &&
+                (string.IsNullOrEmpty(district) || x.Ward!.District!.FullName == district) &&
+                (string.IsNullOrEmpty(province) || x.Ward!.District!.Province!.FullName == province) &&
                 (x.Categories.Any(c => c.Name == request.CategoryName));
             
             var stores = await _storeRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
@@ -170,12 +164,10 @@ public class StoreService : IStoreService
             }
             
             store.Categories = existingCategories;
+            var ward = _mapper.Map<Ward>(request.Ward);
+            store.Ward = ward;
+            store.WardCode = ward.Code;
             await _storeRepository.CreateAsync(store);
-            
-            var storeAddress = _mapper.Map<StoreAddress>(request.Address);
-            storeAddress.StoreId = store.Id;
-            store.StoreAddress = storeAddress;
-            await _storeAddressRepository.CreateAsync(storeAddress);
             
             response.Body = _mapper.Map<StoreDto>(store);
             

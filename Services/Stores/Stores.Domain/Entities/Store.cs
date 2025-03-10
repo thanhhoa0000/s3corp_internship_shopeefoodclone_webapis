@@ -6,6 +6,10 @@ public class Store : IEntity
     public Guid Id { get; set; } = Guid.NewGuid();
     [Required]
     public Guid UserId { get; set; }
+    [MaxLength(20)]
+    public string? WardCode { get; set; }
+    [MaxLength(100)]
+    public string? StreetName { get; set; }
     [Required, MinLength(10), MaxLength(50)]
     public required string Name { get; set; }
     [Required]
@@ -15,6 +19,6 @@ public class Store : IEntity
     public string? CoverImagePath { get; set; }
     public double Rating { get; set; } = 0.0;
     
-    public required StoreAddress StoreAddress { get; set; }
+    public Ward? Ward { get; set; }
     public ICollection<Category> Categories { get; set; } = new List<Category>();
 }

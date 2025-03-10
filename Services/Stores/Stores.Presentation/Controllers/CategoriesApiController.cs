@@ -6,17 +6,20 @@ namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers;
 [ApiVersion(1)]
 public class CategoriesApiController : ControllerBase
 {
-    private readonly ICategoryService _service;
+    private readonly ICategoryService _categoryService;
+    private readonly ISubCategoryService _subCategoryService;
     private readonly ILogger<CategoriesApiController> _logger;
     private Response _response;
 
-    public CategoriesApiController(ICategoryService service, ILogger<CategoriesApiController> logger)
+    public CategoriesApiController(ICategoryService categoryService, ISubCategoryService subCategoryService, ILogger<CategoriesApiController> logger)
     {
-        _service = service;
+        _categoryService = categoryService;
+        _subCategoryService = subCategoryService;
         _logger = logger;
         _response = new Response();
     }
     
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
     {
@@ -24,7 +27,7 @@ public class CategoriesApiController : ControllerBase
         {
             _logger.LogInformation("Getting the categories...");
             
-            _response = await _service.GetAllAsync(pageSize:  pageSize, pageNumber: pageNumber);
+            _response = await _categoryService.GetAllAsync(pageSize: pageSize, pageNumber: pageNumber);
             
             return Ok(_response);
         }
@@ -43,7 +46,7 @@ public class CategoriesApiController : ControllerBase
         {
             _logger.LogInformation("Getting the category...");
             
-            _response = await _service.GetAsync(cateId);
+            _response = await _categoryService.GetAsync(cateId);
             
             return Ok(_response);
         }
@@ -60,9 +63,9 @@ public class CategoriesApiController : ControllerBase
     {
         try
         {
-            _logger.LogInformation($"Creating category {categoryDto.Id}");
+            _logger.LogInformation($"Creating category {categoryDto.Id}...");
             
-            _response = await _service.CreateAsync(categoryDto);
+            _response = await _categoryService.CreateAsync(categoryDto);
             
             return Ok(_response);
         }
@@ -79,9 +82,9 @@ public class CategoriesApiController : ControllerBase
     {
         try
         {
-            _logger.LogInformation($"Updating category {category.Id}");
+            _logger.LogInformation($"Updating category {category.Id}...");
             
-            _response = await _service.UpdateAsync(category);
+            _response = await _categoryService.UpdateAsync(category);
             
             return Ok(_response);
         }
@@ -98,9 +101,9 @@ public class CategoriesApiController : ControllerBase
     {
         try
         {
-            _logger.LogInformation($"Deleting category {cateId}");
+            _logger.LogInformation($"Deleting category {cateId}...");
             
-            _response = await _service.RemoveAsync(cateId);
+            _response = await _categoryService.RemoveAsync(cateId);
             
             return Ok(_response);
         }
@@ -109,6 +112,101 @@ public class CategoriesApiController : ControllerBase
             _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
             
             return BadRequest("Error(s) occurred when deleting the category!");
+        }
+    }
+
+    [HttpGet("{cateId:guid}/sub-categories")]
+    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromRoute] Guid cateId, [FromQuery] int pageSize = 12, [FromQuery] int pageNumber = 1)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting sub-categories of category {cateId}...");
+
+            _response = await _subCategoryService.GetAllAsync(cateId: cateId, pageSize: pageSize, pageNumber: pageNumber);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the sub-categories!");
+        }
+    }
+    
+    [HttpGet("{cateId:guid}/sub-categories/{subCategoryId:guid}")]
+    public async Task<IActionResult> GetSubCategory([FromRoute] Guid subCategoryId)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting sub-category {subCategoryId}...");
+
+            _response = await _subCategoryService.GetAsync(subCateId: subCategoryId);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the sub-category!");
+        }
+    }
+    
+    [HttpPost("{cateId:guid}/sub-categories")]
+    public async Task<IActionResult> CreateSubCategory([FromBody] CreateSubCategoryRequest request)
+    {
+        try
+        {
+            _logger.LogInformation($"Creating sub-category {request.SubCategoryDto.Id}...");
+
+            _response = await _subCategoryService.CreateAsync(request);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the sub-category!");
+        }
+    }
+    
+    [HttpPut("{cateId:guid}/sub-categories")]
+    public async Task<IActionResult> CreateSubCategory([FromBody] SubCategoryDto subCategoryDto)
+    {
+        try
+        {
+            _logger.LogInformation($"Updating sub-category {subCategoryDto.Id}...");
+
+            _response = await _subCategoryService.UpdateAsync(subCategoryDto);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when updating the sub-category!");
+        }
+    }
+    
+    [HttpDelete("{cateId:guid}/sub-categories/{subCategoryId:guid}")]
+    public async Task<IActionResult> DeleteSubCategory([FromRoute] Guid subCategoryId)
+    {
+        try
+        {
+            _logger.LogInformation($"Deleting sub-category {subCategoryId}...");
+
+            _response = await _subCategoryService.RemoveAsync(subCateId: subCategoryId);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when deleting the sub-category!");
         }
     }
 }

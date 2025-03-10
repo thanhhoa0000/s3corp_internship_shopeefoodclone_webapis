@@ -49,6 +49,9 @@ namespace ShopeeFoodClone.WebApi.Orders.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,0)");
 

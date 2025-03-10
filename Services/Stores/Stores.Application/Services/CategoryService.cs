@@ -16,7 +16,7 @@ public class CategoryService : ICategoryService
     /// <summary>
     /// Get list of categories
     /// </summary>
-    /// <param name="pageSize">Pages number to get roles</param>
+    /// <param name="pageSize">Pages number to get categories</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The categories list</returns>
     public async Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1)

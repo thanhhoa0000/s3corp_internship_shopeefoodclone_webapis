@@ -1,6 +1,7 @@
 namespace ShopeeFoodClone.WebApi.Users.Presentation.Controllers;
 
-[Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminOnly")]
+[AllowAnonymous]
+[Authorize]
 [ApiController]
 [Route("api/v{version:apiVersion}/users")]
 [ApiVersion(1)]
@@ -17,6 +18,7 @@ public class UsersApiController : ControllerBase
         _response = new Response();
     }
 
+    [Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminOnly")]
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
     {
@@ -55,6 +57,7 @@ public class UsersApiController : ControllerBase
         }
     }
 
+    [Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminOnly")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateUserRequest request)
     {
