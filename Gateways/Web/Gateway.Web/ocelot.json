@@ -125,7 +125,7 @@
         }
       ],
       "UpstreamPathTemplate": "/stores/{province}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
