@@ -18,6 +18,8 @@ public class Store : IEntity
     public TimeOnly ClosingHour { get; set; }
     public string? CoverImagePath { get; set; }
     public double Rating { get; set; } = 0.0;
+    public int Sold { get; set; } = 0;
+    public bool IsPromoted { get; set; } = false;
     
     public Ward? Ward { get; set; }
     public ICollection<Category> Categories { get; set; } = new List<Category>();

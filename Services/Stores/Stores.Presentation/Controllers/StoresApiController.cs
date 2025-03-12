@@ -16,11 +16,11 @@ public class StoresApiController : ControllerBase
         _response = new Response();
     }
     
-    [HttpGet("{province}")]
+    [HttpPost("{province}")]
     public async Task<IActionResult> GetByLocation(
         [FromBody] GetStoreByLocationRequest request,
-        int pageSize = 12, 
-        int pageNumber = 1)
+        [FromQuery] int pageSize = 12, 
+        [FromQuery] int pageNumber = 1)
     {
         try
         {
