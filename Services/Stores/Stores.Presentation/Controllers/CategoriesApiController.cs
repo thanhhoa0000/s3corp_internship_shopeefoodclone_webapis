@@ -39,6 +39,7 @@ public class CategoriesApiController : ControllerBase
         }
     }
     
+    [AllowAnonymous]
     [HttpGet("{cateId:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid cateId)
     {
@@ -47,6 +48,26 @@ public class CategoriesApiController : ControllerBase
             _logger.LogInformation("Getting the category...");
             
             _response = await _categoryService.GetAsync(cateId);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the category!");
+        }
+    }
+    
+    [AllowAnonymous]
+    [HttpGet("{name}")]
+    public async Task<IActionResult> GetByCodeName([FromRoute] string name)
+    {
+        try
+        {
+            _logger.LogInformation("Getting the category...");
+            
+            _response = await _categoryService.GetByCodeNameAsync(name);
             
             return Ok(_response);
         }
@@ -115,6 +136,7 @@ public class CategoriesApiController : ControllerBase
         }
     }
 
+    [AllowAnonymous]
     [HttpGet("{cateId:guid}/sub-categories")]
     public async Task<IActionResult> GetSubCategoriesByCategoryId([FromRoute] Guid cateId, [FromQuery] int pageSize = 12, [FromQuery] int pageNumber = 1)
     {
@@ -123,6 +145,26 @@ public class CategoriesApiController : ControllerBase
             _logger.LogInformation($"Getting sub-categories of category {cateId}...");
 
             _response = await _subCategoryService.GetAllAsync(cateId: cateId, pageSize: pageSize, pageNumber: pageNumber);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the sub-categories!");
+        }
+    }
+    
+    [AllowAnonymous]
+    [HttpGet("{cateName}/sub-categories")]
+    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromRoute] string cateName, [FromQuery] int pageSize = 12, [FromQuery] int pageNumber = 1)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting sub-categories of category {cateName}...");
+
+            _response = await _subCategoryService.GetAllByCodeNameAsync(cateName: cateName, pageSize: pageSize, pageNumber: pageNumber);
             
             return Ok(_response);
         }

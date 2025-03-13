@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShopeeFoodClone.WebApi.Stores.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using ShopeeFoodClone.WebApi.Stores.Infrastructure.Persistence;
 namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    partial class StoreContextModelSnapshot : ModelSnapshot
+    [Migration("20250313031132_AddCodeNameColumnForCategories")]
+    partial class AddCodeNameColumnForCategories
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -109,9 +112,6 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CodeName")
-                        .IsUnique();
 
                     b.HasIndex("Name")
                         .IsUnique();

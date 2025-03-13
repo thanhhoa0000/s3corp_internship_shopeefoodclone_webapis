@@ -74,7 +74,7 @@ public class StoreService : IStoreService
                 (string.IsNullOrEmpty(ward) || x.Ward!.CodeName == ward) &&
                 (string.IsNullOrEmpty(district) || x.Ward!.District!.CodeName == district) &&
                 (string.IsNullOrEmpty(province) || x.Ward!.District!.Province!.CodeName == province) &&
-                (x.Categories.Any(c => c.Name == request.CategoryName));
+                (x.Categories.Any(c => c.CodeName == request.CategoryName));
             
             var stores = await _storeRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
             

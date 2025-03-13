@@ -65,6 +65,32 @@ public class CategoryService : ICategoryService
             return response;
         }
     }
+    
+    /// <summary>
+    /// Get a category
+    /// </summary>
+    /// <param name="name">The code name of the category</param>
+    /// <returns>The category</returns>
+    public async Task<Response> GetByCodeNameAsync(string name)
+    {
+        var response = new Response();
+
+        try
+        {
+            var category = await _repository.GetAsync(s => s.CodeName == name, tracked: false);
+            
+            response.Body = _mapper.Map<CategoryDto>(category);
+            
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+            
+            return response;
+        }
+    }
 
     /// <summary>
     /// Create a category
@@ -116,6 +142,8 @@ public class CategoryService : ICategoryService
             }
             
             var categoryToUpdate = _mapper.Map<Category>(categoryDto);
+            
+            categoryToUpdate.ConcurrencyStamp = Guid.NewGuid();
             
             await _repository.UpdateAsync(categoryToUpdate);
             

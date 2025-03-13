@@ -18,13 +18,14 @@ public class StoresApiController : ControllerBase
     
     [HttpPost("{province}")]
     public async Task<IActionResult> GetByLocation(
+        string province,
         [FromBody] GetStoreByLocationRequest request,
         [FromQuery] int pageSize = 12, 
         [FromQuery] int pageNumber = 1)
     {
         try
         {
-            _logger.LogInformation($"Getting the stores in province/city {request.Province}...");
+            _logger.LogInformation($"Getting the stores in province/city {province}...");
 
             _response = await _service.GetByLocationAsync(request, pageSize: pageSize, pageNumber: pageNumber);
 
@@ -38,7 +39,7 @@ public class StoresApiController : ControllerBase
         }
     }
 
-    [HttpGet("{province}/{category}")]
+    [HttpPost("{province}/{category}")]
     public async Task<IActionResult> GetByLocationAndCategory(
         [FromBody] GetStoreRequest request, 
         int pageSize = 12, 
