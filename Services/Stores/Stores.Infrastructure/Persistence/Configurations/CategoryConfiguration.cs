@@ -7,5 +7,6 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.HasKey(x => x.Id);
         
         builder.HasIndex(c => c.Name).IsUnique();
+        builder.HasIndex(c => c.CodeName).IsUnique();
     }
 }
