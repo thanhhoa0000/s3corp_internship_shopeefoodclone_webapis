@@ -1,20 +1,20 @@
 ﻿namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Persistence.Repositories;
 
-public class LocationRepository : ILocationRepository
+public class LocationRepository<TLocation> : ILocationRepository<TLocation> where TLocation : class
 {
     private readonly StoreContext _context;
-    private readonly DbSet<Ward> _dbSet;
+    private readonly DbSet<TLocation> _dbSet;
     private bool _disposed = false;
 
     public LocationRepository(StoreContext context)
     {
         _context = context;
-        _dbSet = _context.Set<Ward>();
+        _dbSet = _context.Set<TLocation>();
     }
 
-    public async Task<Ward> GetWardByCodeAsync(Expression<Func<Ward, bool>>? filter = null, bool tracked = true)
+    public async Task<TLocation> GetByCodeAsync(Expression<Func<TLocation, bool>>? filter = null, bool tracked = true)
     {
-        IQueryable<Ward> query = _dbSet;
+        IQueryable<TLocation> query = _dbSet;
 
         if (!tracked)
             query = query.AsNoTracking();
@@ -22,9 +22,32 @@ public class LocationRepository : ILocationRepository
         if (filter is not null)
             query = query.Where(filter);
 
-        Ward? ward = await query.FirstOrDefaultAsync();
+        TLocation? location = await query.FirstOrDefaultAsync();
 
-        return ward!;
+        return location!;
+    }
+    
+    public async Task<IEnumerable<TLocation>>
+        GetAllAsync(
+            Expression<Func<TLocation, bool>>? filter = null,
+            bool tracked = true,
+            int pageSize = 0,
+            int pageNumber = 1)
+    {
+        IQueryable<TLocation> query = _dbSet;
+
+        if (!tracked)
+            query = query.AsNoTracking();
+
+        if (filter is not null)
+            query = query.Where(filter);
+
+        if (pageSize > 0)
+            query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
+
+        IEnumerable<TLocation> locationsList = await query.ToListAsync();
+
+        return locationsList;            
     }
     
     public async Task SaveAsync()

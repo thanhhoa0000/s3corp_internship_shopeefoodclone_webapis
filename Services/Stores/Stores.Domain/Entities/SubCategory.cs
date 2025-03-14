@@ -13,4 +13,5 @@ public class SubCategory : IEntity
     public Guid ConcurrencyStamp { get; set; }
     
     public Category? Category { get; set; }
+    public ICollection<Store> Stores { get; set; } = new List<Store>();
 }

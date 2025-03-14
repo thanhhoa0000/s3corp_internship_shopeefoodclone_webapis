@@ -29,12 +29,18 @@ public class Repository<T, TContext> : IRepository<T>
     }
 
     public async Task<T>
-        GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true)
+        GetAsync(
+            Expression<Func<T, bool>>? filter = null, 
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            bool tracked = true)
     {
         IQueryable<T> query = _dbSet;
 
         if (!tracked)
             query = query.AsNoTracking();
+        
+        if (include is not null)
+            query = include(query);
 
         if (filter is not null)
             query = query.Where(filter);
@@ -47,6 +53,7 @@ public class Repository<T, TContext> : IRepository<T>
     public async Task<IEnumerable<T>>
         GetAllAsync(
             Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
             bool tracked = true,
             int pageSize = 0,
             int pageNumber = 1)
@@ -55,6 +62,9 @@ public class Repository<T, TContext> : IRepository<T>
 
         if (!tracked)
             query = query.AsNoTracking();
+        
+        if (include is not null)
+            query = include(query);
 
         if (filter is not null)
             query = query.Where(filter);

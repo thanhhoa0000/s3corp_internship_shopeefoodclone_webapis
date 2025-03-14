@@ -9,6 +9,4 @@ public class Category : IEntity
     [Required, MinLength(2), MaxLength(50)]
     public required string CodeName { get; set; }
     public Guid ConcurrencyStamp  { get; set; }
-    
-    public ICollection<Store> Stores { get; set; } = new List<Store>();
 }
