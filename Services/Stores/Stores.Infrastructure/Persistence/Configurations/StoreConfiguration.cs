@@ -7,7 +7,7 @@ public class StoreConfiguration : IEntityTypeConfiguration<Store>
         builder.HasKey(x => x.Id);
         
         builder
-            .HasMany(s => s.Categories)
+            .HasMany(s => s.SubCategories)
             .WithMany(c => c.Stores);
         
         builder

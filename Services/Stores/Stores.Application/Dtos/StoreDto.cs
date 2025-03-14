@@ -21,5 +21,5 @@ public class StoreDto
     public bool IsPromoted { get; set; } = false;
     
     public WardDto? Ward { get; set; }
-    public ICollection<CategoryDto> Categories { get; set; } = new List<CategoryDto>();
+    public ICollection<SubCategoryDto> SubCategories { get; set; } = new List<SubCategoryDto>();
 }

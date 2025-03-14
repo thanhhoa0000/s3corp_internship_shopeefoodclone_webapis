@@ -1,3 +1,3 @@
 ﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Dtos;
 
-public record CreateStoreRequest(StoreDto Store, ICollection<CategoryDto> Categories, Ward Ward);
+public sealed record CreateStoreRequest(StoreDto Store, List<Guid> SubCateIds, string WardCode);

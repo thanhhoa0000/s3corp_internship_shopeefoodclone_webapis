@@ -6,6 +6,7 @@ public static class DependencyInjection
     {
         services.AddScoped<IStoreService, StoreService>();
         services.AddScoped<IProvinceService, ProvinceService>();
+        services.AddScoped<IDistrictService, DistrictService>();
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ISubCategoryService, SubCategoryService>();
         services.AddAutoMapper(typeof(StoresMappingProfile));

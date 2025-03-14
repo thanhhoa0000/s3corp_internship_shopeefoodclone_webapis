@@ -22,5 +22,5 @@ public class Store : IEntity
     public bool IsPromoted { get; set; } = false;
     
     public Ward? Ward { get; set; }
-    public ICollection<Category> Categories { get; set; } = new List<Category>();
+    public ICollection<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
 }

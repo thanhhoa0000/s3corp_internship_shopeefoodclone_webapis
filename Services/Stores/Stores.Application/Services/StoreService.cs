@@ -1,21 +1,23 @@
-﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
 
 public class StoreService : IStoreService
 {
     private readonly IStoreRepository _storeRepository;
-    private readonly ICategoryRepository _categoryRepository;
-    private readonly ILocationRepository _locationRepository;
+    private readonly ISubCategoryRepository _subCategoryRepository;
+    private readonly IWardRepository _wardRepository;
     private readonly IMapper _mapper;
 
     public StoreService(
         IStoreRepository repository,
-        ICategoryRepository categoryRepository,
-        ILocationRepository locationRepository,
+        ISubCategoryRepository subCategoryRepository,
+        IWardRepository wardRepository,
         IMapper mapper)
     {
         _storeRepository = repository;
-        _categoryRepository = categoryRepository;
-        _locationRepository = locationRepository;
+        _subCategoryRepository = subCategoryRepository;
+        _wardRepository = wardRepository;
         _mapper = mapper;
     }
 
@@ -69,14 +71,26 @@ public class StoreService : IStoreService
             var province = request.LocationRequest.Province;
             var district = request.LocationRequest.District;
             var ward = request.LocationRequest.Ward;
+
+            Func<IQueryable<Store>, IQueryable<Store>>? include = query =>
+                query
+                    .Include(s => s.Ward)
+                    .ThenInclude(w => w!.District)
+                    .ThenInclude(d => d!.Province)
+                    .Include(s => s.SubCategories)
+                    .ThenInclude(sc => sc.Category);
             
             Expression<Func<Store, bool>> filter = x => 
                 (string.IsNullOrEmpty(ward) || x.Ward!.CodeName == ward) &&
                 (string.IsNullOrEmpty(district) || x.Ward!.District!.CodeName == district) &&
                 (string.IsNullOrEmpty(province) || x.Ward!.District!.Province!.CodeName == province) &&
-                (x.Categories.Any(c => c.CodeName == request.CategoryName));
+                (x.SubCategories.Any(c => c.Category!.CodeName == request.CategoryName));
             
-            var stores = await _storeRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
+            var stores = await _storeRepository.GetAllAsync(
+                filter: filter, 
+                include: include,
+                pageSize: pageSize, 
+                pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
         }
@@ -156,21 +170,22 @@ public class StoreService : IStoreService
         try
         {
             var store = _mapper.Map<Store>(request.Store);
-            var cateIds = request.Categories.Select(c => c.Id).ToList();
             
-            var existingCategories = (await _categoryRepository.GetAllAsync(c => cateIds.Contains(c.Id))).ToList();
+            var existingSubCategories = (await _subCategoryRepository.GetAllAsync(c => request.SubCateIds.Contains(c.Id))).ToList();
 
-            if (existingCategories.Count != cateIds.Count)
+            if (existingSubCategories.Count != request.SubCateIds.Count)
             {
                 response.IsSuccessful = false;
                 response.Message = "One or more categories do not exist!";
             }
             
-            store.Categories = existingCategories;
-            var ward = await _locationRepository.GetWardByCodeAsync(
-                w => w.Code == request.Ward.Code);
+            store.SubCategories = existingSubCategories;
+            var ward = await _wardRepository.GetByCodeAsync(
+                w => w.Code == request.WardCode);
             store.Ward = ward;
             store.WardCode = ward.Code;
+            store.Id = Guid.NewGuid();
+            store.CoverImagePath = $"/stores/{store.Id}/cover-img.jpg";
             await _storeRepository.CreateAsync(store);
             
             response.Body = _mapper.Map<StoreDto>(store);
