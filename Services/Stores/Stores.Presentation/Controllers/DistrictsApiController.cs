@@ -19,13 +19,13 @@ public class DistrictsApiController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
+    public async Task<IActionResult> GetAll([FromQuery] string province, [FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
     {
         try
         {
             _logger.LogInformation("Getting the districts...");
             
-            _response = await _service.GetAllAsync(pageSize:  pageSize, pageNumber: pageNumber);
+            _response = await _service.GetAllByProvinceAsync(province: province, pageSize:  pageSize, pageNumber: pageNumber);
             
             return Ok(_response);
         }

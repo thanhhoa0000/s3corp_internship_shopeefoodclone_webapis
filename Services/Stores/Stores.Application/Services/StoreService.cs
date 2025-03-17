@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
+﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
 
 public class StoreService : IStoreService
 {
@@ -232,7 +230,7 @@ public class StoreService : IStoreService
     /// <summary>
     /// Deleted the store
     /// </summary>
-    /// <param name="storeId">The store'ID to delete</param>
+    /// <param name="storeId">The store's ID to delete</param>
     /// <returns>The deleted store</returns>
     public async Task<Response> RemoveAsync(Guid storeId)
     {

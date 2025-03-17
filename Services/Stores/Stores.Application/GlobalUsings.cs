@@ -2,6 +2,7 @@
 global using System.Linq.Expressions;
 
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.EntityFrameworkCore;
 
 global using AutoMapper;
 
@@ -12,3 +13,4 @@ global using ShopeeFoodClone.WebApi.Stores.Application.Mappings;
 
 global using ShopeeFoodClone.WebApi.Stores.Domain.Interfaces;
 global using ShopeeFoodClone.WebApi.Stores.Domain.Entities;
+global using ShopeeFoodClone.WebApi.Stores.Domain.Enums;
