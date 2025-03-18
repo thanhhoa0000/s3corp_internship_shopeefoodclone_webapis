@@ -3,7 +3,6 @@
 public class CollectionDto
 {
     public Guid Id { get; set; }
-    public Guid StoreId { get; set; }
     [Required, MaxLength(150)]
     public required string Name { get; set; }
     public string? CoverImagePath { get; set; }

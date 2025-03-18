@@ -1,7 +1,7 @@
 namespace ShopeeFoodClone.WebApi.Stores.Presentation.Controllers;
 
 [ApiController]
-[Route("api/v{version:apiVersion}/stores")]
+[Route("api/v{version:apiVersion}/collections")]
 [ApiVersion(1)]
 public class CollectionsApiController : ControllerBase
 {

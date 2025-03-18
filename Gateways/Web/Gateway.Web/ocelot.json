@@ -240,7 +240,7 @@
         }
       ],
       "UpstreamPathTemplate": "/collections/{province}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -253,7 +253,7 @@
         }
       ],
       "UpstreamPathTemplate": "/collections/{province}/{categoryName}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {

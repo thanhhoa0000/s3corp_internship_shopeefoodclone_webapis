@@ -68,9 +68,11 @@ public class Repository<T, TContext> : IRepository<T>
 
         if (filter is not null)
             query = query.Where(filter);
-
+        
         if (pageSize > 0)
             query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
+        
+        Console.WriteLine(query.ToQueryString());
 
         IEnumerable<T> entitiesList = await query.ToListAsync();
 

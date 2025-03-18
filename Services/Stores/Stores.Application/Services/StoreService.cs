@@ -26,19 +26,28 @@ public class StoreService : IStoreService
     /// <param name="pageSize">Maximum number of stores per page</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The stores list</returns>
-    public async Task<Response> GetByLocationAsync(GetStoreByLocationRequest request, int pageSize = 12,
+    public async Task<Response> GetByLocationAsync(GetStoreByLocationRequest request, int pageSize = 0,
         int pageNumber = 1)
     {
         var response = new Response();
 
         try
         {
-            Expression<Func<Store, bool>> filter = x =>
-                (string.IsNullOrEmpty(request.Ward) || x.Ward!.CodeName == request.Ward) &&
-                (string.IsNullOrEmpty(request.District) || x.Ward!.District!.CodeName == request.District) &&
-                (string.IsNullOrEmpty(request.Province) || x.Ward!.District!.Province!.CodeName == request.Province);
+            Func<IQueryable<Store>, IQueryable<Store>>? include = query =>
+                query
+                    .Include(s => s.Ward)
+                    .ThenInclude(w => w!.District)
+                    .ThenInclude(d => d!.Province)
+                    .Include(s => s.SubCategories)
+                    .ThenInclude(sc => sc.Category)
+                    .Where(s => s.Ward!.CodeName == "da_kao");
             
-            var stores = await _storeRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
+            // Expression<Func<Store, bool>> filter = x => 
+            //     (string.IsNullOrEmpty(request.Ward) || (x.Ward!.CodeName == request.Ward)) &&
+            //     (string.IsNullOrEmpty(request.District) || (x.Ward!.District!.CodeName == request.District)) &&
+            //     (string.IsNullOrEmpty(request.Province) || (x.Ward!.District!.Province!.CodeName == request.Province));
+            
+            var stores = await _storeRepository.GetAllAsync(include: include, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
         }

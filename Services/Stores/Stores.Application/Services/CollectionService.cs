@@ -84,7 +84,7 @@ public class CollectionService : ICollectionService
                 (string.IsNullOrEmpty(ward) || x.Stores!.Any(s => s.Ward!.CodeName == ward)) &&
                 (string.IsNullOrEmpty(district) || x.Stores!.Any(s => s.Ward!.District!.CodeName == district)) &&
                 (string.IsNullOrEmpty(province) || x.Stores!.Any(s => s.Ward!.District!.Province!.CodeName == province)) &&
-                (x.Stores!.Any(s => s.SubCategories.Any(c => c.CodeName == request.CategoryName)));
+                (x.Stores!.Any(s => s.SubCategories.Any(c => c.Category!.CodeName == request.CategoryName)));
             
             var collections = await _collectionRepository.GetAllAsync(
                 filter: filter, 
