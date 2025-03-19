@@ -65,7 +65,7 @@ public class Repository<T, TContext> : IRepository<T>
         
         if (include is not null)
             query = include(query);
-
+        
         if (filter is not null)
             query = query.Where(filter);
         

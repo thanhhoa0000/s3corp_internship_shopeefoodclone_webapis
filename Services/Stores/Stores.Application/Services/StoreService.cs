@@ -1,4 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
+﻿using Microsoft.IdentityModel.Tokens;
+
+namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
 
 public class StoreService : IStoreService
 {
@@ -26,28 +28,44 @@ public class StoreService : IStoreService
     /// <param name="pageSize">Maximum number of stores per page</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The stores list</returns>
-    public async Task<Response> GetByLocationAsync(GetStoreByLocationRequest request, int pageSize = 0,
-        int pageNumber = 1)
+    public async Task<Response> GetByLocationAsync(GetStoreByLocationRequest request, int pageSize = 0, int pageNumber = 1)
     {
         var response = new Response();
 
         try
         {
+            var province = request.Province;
+            var district = request.District;
+            var ward = request.Ward;
+
+            // Expression<Func<Store, bool>> filter;
+            
             Func<IQueryable<Store>, IQueryable<Store>>? include = query =>
                 query
                     .Include(s => s.Ward)
                     .ThenInclude(w => w!.District)
                     .ThenInclude(d => d!.Province)
                     .Include(s => s.SubCategories)
-                    .ThenInclude(sc => sc.Category)
-                    .Where(s => s.Ward!.CodeName == "da_kao");
+                    .ThenInclude(sc => sc.Category);
             
-            // Expression<Func<Store, bool>> filter = x => 
-            //     (string.IsNullOrEmpty(request.Ward) || (x.Ward!.CodeName == request.Ward)) &&
-            //     (string.IsNullOrEmpty(request.District) || (x.Ward!.District!.CodeName == request.District)) &&
-            //     (string.IsNullOrEmpty(request.Province) || (x.Ward!.District!.Province!.CodeName == request.Province));
+            // if (ward.IsNullOrEmpty() && district.IsNullOrEmpty())
+            //     filter = s => s.Ward!.District!.Province!.Code == province;
+            // else if (ward.IsNullOrEmpty() && !district.IsNullOrEmpty())
+            //     filter = s => 
+            //         s.Ward!.District!.Province!.Code == district && 
+            //         s.Ward!.District!.Province!.Code == province;
+            // else
+            //     filter = s => 
+            //         s.Ward!.Code == ward &&
+            //         s.Ward!.District!.Province!.Code == district && 
+            //         s.Ward!.District!.Province!.Code == province;
             
-            var stores = await _storeRepository.GetAllAsync(include: include, pageSize: pageSize, pageNumber: pageNumber);
+            Expression<Func<Store, bool>> filter = x => 
+                (ward.IsNullOrEmpty() || (x.Ward!.Code == ward)) &&
+                (district.IsNullOrEmpty() || (x.Ward!.District!.Code == district)) &&
+                (province.IsNullOrEmpty() || (x.Ward!.District!.Province!.Code == province));
+            
+            var stores = await _storeRepository.GetAllAsync(filter: filter, include: include, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
         }
@@ -88,9 +106,9 @@ public class StoreService : IStoreService
                     .ThenInclude(sc => sc.Category);
             
             Expression<Func<Store, bool>> filter = x => 
-                (string.IsNullOrEmpty(ward) || x.Ward!.CodeName == ward) &&
-                (string.IsNullOrEmpty(district) || x.Ward!.District!.CodeName == district) &&
-                (string.IsNullOrEmpty(province) || x.Ward!.District!.Province!.CodeName == province) &&
+                (ward.IsNullOrEmpty() || x.Ward!.Code == ward) &&
+                (district.IsNullOrEmpty() || x.Ward!.District!.Code == district) &&
+                (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
                 (x.SubCategories.Any(c => c.Category!.CodeName == request.CategoryName));
             
             var stores = await _storeRepository.GetAllAsync(

@@ -24,7 +24,7 @@ public class DistrictService : IDistrictService
 
         try
         {
-            var districts = await _repository.GetAllAsync(d => d.Province!.CodeName == province, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var districts = await _repository.GetAllAsync(d => d.Province!.Code == province, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<DistrictDto>>(districts);
         }

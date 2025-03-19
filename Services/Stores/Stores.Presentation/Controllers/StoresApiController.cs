@@ -16,7 +16,7 @@ public class StoresApiController : ControllerBase
         _response = new Response();
     }
     
-    [HttpPost("{province}")]
+    [HttpPost("location/{province}")]
     public async Task<IActionResult> GetByLocation(
         string province,
         [FromBody] GetStoreByLocationRequest request,
@@ -39,7 +39,7 @@ public class StoresApiController : ControllerBase
         }
     }
 
-    [HttpPost("{province}/{category}")]
+    [HttpPost("location/{province}/category/{category}")]
     public async Task<IActionResult> GetByLocationAndCategory(
         [FromBody] GetStoreRequest request, 
         int pageSize = 12, 

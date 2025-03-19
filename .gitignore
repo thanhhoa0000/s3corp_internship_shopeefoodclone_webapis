@@ -1,4 +1,5 @@
 .vs/*
 .idea/*
 **/obj/
+jwt_properties.json
 .env

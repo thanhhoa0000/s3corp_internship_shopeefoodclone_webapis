@@ -116,7 +116,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/stores/{province}",
+      "DownstreamPathTemplate":"/api/v1/stores/location/{province}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -124,12 +124,12 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/stores/{province}",
+      "UpstreamPathTemplate": "/stores/location/{province}",
       "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/stores/{province}/{category}",
+      "DownstreamPathTemplate":"/api/v1/stores/location/{province}/category/{category}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -137,7 +137,7 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/stores/{province}/{category}",
+      "UpstreamPathTemplate": "/stores/location/{province}/category/{category}",
       "UpstreamHttpMethod": [ "GET" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
@@ -231,7 +231,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/collections/{province}",
+      "DownstreamPathTemplate":"/api/v1/collections/location/{province}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -239,12 +239,12 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/collections/{province}",
+      "UpstreamPathTemplate": "/collections/location/{province}",
       "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/collections/{province}/{categoryName}",
+      "DownstreamPathTemplate":"/api/v1/collections/location/{province}/category/{categoryName}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -252,7 +252,7 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/collections/{province}/{categoryName}",
+      "UpstreamPathTemplate": "/collections/location/{province}/category/{categoryName}",
       "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },

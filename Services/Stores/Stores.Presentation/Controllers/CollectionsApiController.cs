@@ -18,7 +18,7 @@ public class CollectionsApiController : ControllerBase
         _response = new Response();
     }
     
-    [HttpPost("{province}")]
+    [HttpPost("location/{province}")]
     public async Task<IActionResult> GetByLocation(
         string province,
         [FromBody] GetCollectionsByLocationRequest request,
@@ -41,7 +41,7 @@ public class CollectionsApiController : ControllerBase
         }
     }
 
-    [HttpPost("{province}/{category}")]
+    [HttpPost("location/{province}/category/{category}")]
     public async Task<IActionResult> GetByLocationAndCategory(
         [FromBody] GetCollectionsRequest request, 
         int pageSize = 12, 
