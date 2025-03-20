@@ -18,13 +18,19 @@ public class RolesApiController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
+    public async Task<IActionResult> GetAll([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
     {
         try
         {
+            var request = new GetRolesRequest()
+            {
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
+            
             _logger.LogInformation("Getting the roles...");
             
-            _response = await _service.GetAllAsync(pageSize:  pageSize, pageNumber: pageNumber);
+            _response = await _service.GetAllAsync(request);
             
             return Ok(_response);
         }

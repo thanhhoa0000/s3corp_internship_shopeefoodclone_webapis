@@ -1,3 +1,3 @@
 ﻿namespace ShopeeFoodClone.WebApi.Cart.Domain.Interfaces;
 
-public interface ICartRepository : IRepository<CartHeader> { }
+public interface ICartRepository : IRepository<CartHeader>;

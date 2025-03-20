@@ -1,6 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Users.Application.Dtos;
+﻿namespace ShopeeFoodClone.WebApi.Users.Application.Requests;
 
-public class CreateUserRequest
+public sealed class CreateUserRequest
 {
     public required AppUserDto User { get; set; }
     [DataType(DataType.Password)]

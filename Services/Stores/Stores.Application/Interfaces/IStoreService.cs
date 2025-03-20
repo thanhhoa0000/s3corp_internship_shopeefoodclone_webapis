@@ -2,9 +2,8 @@
 
 public interface IStoreService
 {
-    Task<Response> GetByLocationAsync(GetStoreByLocationRequest request, int pageSize = 0, int pageNumber = 1);
-    Task<Response> GetByLocationAndCategoryAsync(GetStoreRequest request, int pageSize = 0, int pageNumber = 1);
-    Task<Response> GetAllByUserIdAsync(Guid userId, int pageSize = 0, int pageNumber = 1);
+    Task<Response> GetByLocationAndCategoryAsync(GetStoresRequest request);
+    Task<Response> GetAllByVendorIdAsync(GetStoresByVendorIdRequest request);
     Task<Response> GetAsync(Guid storeId);
     Task<Response> CreateAsync(CreateStoreRequest request);
     Task<Response> RemoveAsync(Guid storeId);

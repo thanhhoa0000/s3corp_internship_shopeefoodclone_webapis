@@ -22,4 +22,6 @@ global using ShopeeFoodClone.WebApi.Stores.Infrastructure.Persistence;
 global using ShopeeFoodClone.WebApi.Stores.Infrastructure;
 
 global using ShopeeFoodClone.WebApi.Stores.Application.Dtos;
+global using ShopeeFoodClone.WebApi.Stores.Application.Requests;
+global using ShopeeFoodClone.WebApi.Stores.Application.Responses;
 global using ShopeeFoodClone.WebApi.Stores.Application.Interfaces;

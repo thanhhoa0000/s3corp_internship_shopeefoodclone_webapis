@@ -14,16 +14,19 @@ public class RoleManagementService : IRoleManagementService
     /// <summary>
     /// Get list of roles
     /// </summary>
-    /// <param name="pageSize">Pages number to get roles</param>
-    /// <param name="pageNumber">Page number to start with</param>
+    /// <param name="request">Information needed to get roles</param>
     /// <returns>List of roles</returns>
-    public async Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetAllAsync(GetRolesRequest request)
     {
         var response = new Response();
         
         try
         {
-            var roles = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
+            var roles = 
+                await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<AppRoleDto>>(roles);
             

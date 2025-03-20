@@ -18,60 +18,24 @@ public class CollectionService : ICollectionService
         _wardRepository = wardRepository;
         _mapper = mapper;
     }
-
-    /// <summary>
-    /// Get list of collections base on location
-    /// </summary>
-    /// <param name="request">Location to get</param>
-    /// <param name="pageSize">Maximum number of collections per page</param>
-    /// <param name="pageNumber">Page number to start with</param>
-    /// <returns>The stores list</returns>
-    public async Task<Response> GetByLocationAsync(
-        GetCollectionsByLocationRequest request, 
-        int pageSize = 0,
-        int pageNumber = 1)
-    {
-        var response = new Response();
-
-        try
-        {
-            Expression<Func<Collection, bool>> filter = x =>
-                (string.IsNullOrEmpty(request.Ward) || x.Stores!.Any(s => s.Ward!.CodeName == request.Ward)) &&
-                (string.IsNullOrEmpty(request.District) || x.Stores!.Any(s => s.Ward!.District!.CodeName == request.District)) &&
-                (string.IsNullOrEmpty(request.Province) || x.Stores!.Any(s => s.Ward!.District!.Province!.CodeName == request.Province));
-            
-            var collections = await _collectionRepository.GetAllAsync(filter: filter, pageSize: pageSize, pageNumber: pageNumber);
-            
-            response.Body = _mapper.Map<IEnumerable<CollectionDto>>(collections);
-        }
-        catch (Exception ex)
-        {
-            response.IsSuccessful = false;
-            response.Message = ex.Message;
-        }
-        
-        return response;
-    }
     
     /// <summary>
     /// Get list of collections base on location and category
     /// </summary>
     /// <param name="request">Location and category name to get</param>
-    /// <param name="pageSize">Maximum number of collections per page</param>
-    /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The collections list</returns>
-    public async Task<Response> GetByLocationAndCategoryAsync(
-        GetCollectionsRequest request,
-        int pageSize = 12,
-        int pageNumber = 1)
+    public async Task<Response> GetByLocationAndCategoryAsync(GetCollectionsRequest request)
     {
         var response = new Response();
 
         try
         {
-            var province = request.LocationRequest.Province;
+            var province = request.LocationRequest!.Province;
             var district = request.LocationRequest.District;
             var ward = request.LocationRequest.Ward;
+            var categoryName = request.CategoryName;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
 
             Func<IQueryable<Collection>, IQueryable<Collection>>? include = query =>
                 query
@@ -81,16 +45,14 @@ public class CollectionService : ICollectionService
                     .ThenInclude(d => d!.Province);
             
             Expression<Func<Collection, bool>> filter = x => 
-                (string.IsNullOrEmpty(ward) || x.Stores!.Any(s => s.Ward!.CodeName == ward)) &&
-                (string.IsNullOrEmpty(district) || x.Stores!.Any(s => s.Ward!.District!.CodeName == district)) &&
-                (string.IsNullOrEmpty(province) || x.Stores!.Any(s => s.Ward!.District!.Province!.CodeName == province)) &&
-                (x.Stores!.Any(s => s.SubCategories.Any(c => c.Category!.CodeName == request.CategoryName)));
+                (province.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.Code == province)) &&
+                (district.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.District!.Code == district)) &&
+                (ward.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.District!.Province!.Code == ward)) &&
+                (categoryName.IsNullOrEmpty() || x.Stores!.Any(s => s.SubCategories.Any(c => c.Category!.CodeName == categoryName)));
             
-            var collections = await _collectionRepository.GetAllAsync(
-                filter: filter, 
-                include: include,
-                pageSize: pageSize, 
-                pageNumber: pageNumber);
+            var collections = 
+                await _collectionRepository
+                    .GetAllAsync(filter: filter, include: include, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<CollectionDto>>(collections);
         }

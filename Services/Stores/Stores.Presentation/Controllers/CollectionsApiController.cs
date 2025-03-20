@@ -18,42 +18,36 @@ public class CollectionsApiController : ControllerBase
         _response = new Response();
     }
     
-    [HttpPost("location/{province}")]
-    public async Task<IActionResult> GetByLocation(
-        string province,
-        [FromBody] GetCollectionsByLocationRequest request,
+    [HttpGet]
+    public async Task<IActionResult> GetByLocationAndCategory(
+        [FromQuery] string? province,
+        [FromQuery] string? district,
+        [FromQuery] string? ward,
+        [FromQuery] string? category,
         [FromQuery] int pageSize = 12, 
         [FromQuery] int pageNumber = 1)
     {
         try
         {
-            _logger.LogInformation($"Getting the collections in province/city {province}...");
-
-            _response = await _service.GetByLocationAsync(request, pageSize: pageSize, pageNumber: pageNumber);
-
-            return Ok(_response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            var request = new GetCollectionsRequest()
+            {
+                LocationRequest = new LocationRequest()
+                {
+                    Province = province,
+                    District = district,
+                    Ward = ward,
+                },
+                CategoryName = category,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
             
-            return BadRequest("Error(s) occurred when getting the collections!");
-        }
-    }
-
-    [HttpPost("location/{province}/category/{category}")]
-    public async Task<IActionResult> GetByLocationAndCategory(
-        [FromBody] GetCollectionsRequest request, 
-        int pageSize = 12, 
-        int pageNumber = 1)
-    {
-        try
-        {
-            var province = request.LocationRequest.Province;
+            if (category is null)
+                _logger.LogInformation($"Getting the collections in province/city {province}...");
+            else
+                _logger.LogInformation($"Getting the collections of category {request.CategoryName} in province/city {province}...");
             
-            _logger.LogInformation($"Getting the collection of category {request.CategoryName} in province/city {province}...");
-            
-            _response = await _service.GetByLocationAndCategoryAsync(request, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _service.GetByLocationAndCategoryAsync(request);
             
             return Ok(_response);
         }
@@ -61,7 +55,7 @@ public class CollectionsApiController : ControllerBase
         {
             _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
             
-            return BadRequest("Error(s) occurred when getting the collections!");
+            return BadRequest("Error(s) occurred when getting the stores!");
         }
     }
     
@@ -90,7 +84,7 @@ public class CollectionsApiController : ControllerBase
     {
         try
         {
-            _logger.LogInformation($"Creating collection {request.Collection.Id}");
+            _logger.LogInformation($"Creating collection {request.Collection!.Id}");
             
             _response = await _service.CreateAsync(request);
             
@@ -124,6 +118,7 @@ public class CollectionsApiController : ControllerBase
         }
     }
     
+    // TODO: Soft deleting?
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
     [HttpDelete("{collectionId:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid collectionId)

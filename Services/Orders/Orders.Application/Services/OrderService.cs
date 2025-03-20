@@ -1,4 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Orders.Application.Services;
+﻿using Microsoft.IdentityModel.Tokens;
+
+namespace ShopeeFoodClone.WebApi.Orders.Application.Services;
 
 public class OrderService : IOrderService
 {
@@ -27,16 +29,31 @@ public class OrderService : IOrderService
 
         try
         {
+            var customerId = request.CustomerId;
+            var status = request.Status;
+            var sortingOrder = request.SortingOrder;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+
+            Expression<Func<Order, bool>> filter = x =>
+                (x.CustomerId == customerId) &&
+                (status.ToString().IsNullOrEmpty() || x.OrderStatus == status);
+
+            Func<IQueryable<Order>, IQueryable<Order>>? include = query =>
+                query.Include(o => o.OrderDetails);
+            
+            Func<IQueryable<Order>, IOrderedQueryable<Order>>? orderBy = query =>
+                query.OrderBy(o => o.OrderDate);
+            
             var orders = 
                 await _orderHeaderRepository.GetAllAsync(
-                    filter: o
-                        => (o.CustomerId == request.CustomerId) && 
-                           (string.IsNullOrEmpty(request.Status.ToString()) || o.OrderStatus == request.Status),
-                    include: q 
-                        => q.Include(o => o.OrderDetails),
-                    orderBy: q => q.OrderBy(o => o.OrderDate),
-                    orderByDescending: request.SortingOrder == SortingOrder.Descending,
-                    tracked: false);
+                    filter: filter,
+                    include: include,
+                    orderBy: orderBy,
+                    orderByDescending: sortingOrder == SortingOrder.Descending,
+                    tracked: false,
+                    pageSize: pageSize,
+                    pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<OrderDto>>(orders);
         }

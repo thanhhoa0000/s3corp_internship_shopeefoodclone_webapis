@@ -22,80 +22,22 @@ public class StoreService : IStoreService
     }
 
     /// <summary>
-    /// Get list of stores base on location
-    /// </summary>
-    /// <param name="request">Location to get</param>
-    /// <param name="pageSize">Maximum number of stores per page</param>
-    /// <param name="pageNumber">Page number to start with</param>
-    /// <returns>The stores list</returns>
-    public async Task<Response> GetByLocationAsync(GetStoreByLocationRequest request, int pageSize = 0, int pageNumber = 1)
-    {
-        var response = new Response();
-
-        try
-        {
-            var province = request.Province;
-            var district = request.District;
-            var ward = request.Ward;
-
-            // Expression<Func<Store, bool>> filter;
-            
-            Func<IQueryable<Store>, IQueryable<Store>>? include = query =>
-                query
-                    .Include(s => s.Ward)
-                    .ThenInclude(w => w!.District)
-                    .ThenInclude(d => d!.Province)
-                    .Include(s => s.SubCategories)
-                    .ThenInclude(sc => sc.Category);
-            
-            // if (ward.IsNullOrEmpty() && district.IsNullOrEmpty())
-            //     filter = s => s.Ward!.District!.Province!.Code == province;
-            // else if (ward.IsNullOrEmpty() && !district.IsNullOrEmpty())
-            //     filter = s => 
-            //         s.Ward!.District!.Province!.Code == district && 
-            //         s.Ward!.District!.Province!.Code == province;
-            // else
-            //     filter = s => 
-            //         s.Ward!.Code == ward &&
-            //         s.Ward!.District!.Province!.Code == district && 
-            //         s.Ward!.District!.Province!.Code == province;
-            
-            Expression<Func<Store, bool>> filter = x => 
-                (ward.IsNullOrEmpty() || (x.Ward!.Code == ward)) &&
-                (district.IsNullOrEmpty() || (x.Ward!.District!.Code == district)) &&
-                (province.IsNullOrEmpty() || (x.Ward!.District!.Province!.Code == province));
-            
-            var stores = await _storeRepository.GetAllAsync(filter: filter, include: include, pageSize: pageSize, pageNumber: pageNumber);
-            
-            response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
-        }
-        catch (Exception ex)
-        {
-            response.IsSuccessful = false;
-            response.Message = ex.Message;
-        }
-        
-        return response;
-    }
-
-    /// <summary>
     /// Get list of stores base on location and category
     /// </summary>
     /// <param name="request">Location and category name to get</param>
-    /// <param name="pageSize">Maximum number of stores per page</param>
-    /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The stores list</returns>
-    public async Task<Response> GetByLocationAndCategoryAsync(
-        GetStoreRequest request,
-        int pageSize = 12, int pageNumber = 1)
+    public async Task<Response> GetByLocationAndCategoryAsync(GetStoresRequest request)
     {
         var response = new Response();
 
         try
         {
-            var province = request.LocationRequest.Province;
+            var province = request.LocationRequest!.Province;
             var district = request.LocationRequest.District;
             var ward = request.LocationRequest.Ward;
+            var categoryName = request.CategoryName;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
 
             Func<IQueryable<Store>, IQueryable<Store>>? include = query =>
                 query
@@ -104,19 +46,19 @@ public class StoreService : IStoreService
                     .ThenInclude(d => d!.Province)
                     .Include(s => s.SubCategories)
                     .ThenInclude(sc => sc.Category);
-            
-            Expression<Func<Store, bool>> filter = x => 
+
+            Expression<Func<Store, bool>> filter = x =>
                 (ward.IsNullOrEmpty() || x.Ward!.Code == ward) &&
                 (district.IsNullOrEmpty() || x.Ward!.District!.Code == district) &&
                 (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
-                (x.SubCategories.Any(c => c.Category!.CodeName == request.CategoryName));
-            
+                (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName));
+
             var stores = await _storeRepository.GetAllAsync(
-                filter: filter, 
+                filter: filter,
                 include: include,
-                pageSize: pageSize, 
+                pageSize: pageSize,
                 pageNumber: pageNumber);
-            
+
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
         }
         catch (Exception ex)
@@ -124,35 +66,41 @@ public class StoreService : IStoreService
             response.IsSuccessful = false;
             response.Message = ex.Message;
         }
-        
+
         return response;
     }
-    
-    
+
+
     /// <summary>
-    /// Get stores list by owner's userId
+    /// Get stores list by vendor's userId
     /// </summary>
-    /// <param name="userId">The owner's userId</param>
-    /// <param name="pageSize">Pages number to get roles</param>
-    /// <param name="pageNumber">Page number to start with</param>
+    /// <param name="request">The vendor's userId</param>
     /// <returns>The stores list</returns>
-    public async Task<Response> GetAllByUserIdAsync(Guid userId, int pageSize = 12, int pageNumber = 1)
+    public async Task<Response> GetAllByVendorIdAsync(GetStoresByVendorIdRequest request)
     {
         var response = new Response();
 
         try
         {
-            var stores = await _storeRepository.GetAllAsync(s => s.UserId == userId, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-            
+            var vendorId = request.VendorId;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+
+            Expression<Func<Store, bool>> filter = x => x.UserId == vendorId;
+
+            var stores =
+                await _storeRepository
+                    .GetAllAsync(filter: filter, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -169,16 +117,16 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
-            
+
             response.Body = _mapper.Map<StoreDto>(store);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -195,15 +143,16 @@ public class StoreService : IStoreService
         try
         {
             var store = _mapper.Map<Store>(request.Store);
-            
-            var existingSubCategories = (await _subCategoryRepository.GetAllAsync(c => request.SubCateIds.Contains(c.Id))).ToList();
+
+            var existingSubCategories =
+                (await _subCategoryRepository.GetAllAsync(c => request.SubCateIds.Contains(c.Id))).ToList();
 
             if (existingSubCategories.Count != request.SubCateIds.Count)
             {
                 response.IsSuccessful = false;
                 response.Message = "One or more categories do not exist!";
             }
-            
+
             store.SubCategories = existingSubCategories;
             var ward = await _wardRepository.GetByCodeAsync(
                 w => w.Code == request.WardCode);
@@ -212,16 +161,16 @@ public class StoreService : IStoreService
             store.Id = Guid.NewGuid();
             store.CoverImagePath = $"/stores/{store.Id}/cover-img.jpg";
             await _storeRepository.CreateAsync(store);
-            
+
             response.Body = _mapper.Map<StoreDto>(store);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
-            response.Message = ex.ToString();
-            
+            response.Message = ex.Message;
+
             return response;
         }
     }
@@ -237,19 +186,20 @@ public class StoreService : IStoreService
 
         try
         {
+            // TODO: check existance, and state with corresponding behaviours (Validation model)
             var store = _mapper.Map<Store>(storeDto);
-            
+
             await _storeRepository.UpdateAsync(store);
-            
+
             response.Body = _mapper.Map<StoreDto>(store);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -266,18 +216,18 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
-            
+
             await _storeRepository.RemoveAsync(store);
-            
+
             response.Body = _mapper.Map<StoreDto>(store);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }

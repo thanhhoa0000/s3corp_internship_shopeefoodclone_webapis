@@ -19,14 +19,23 @@ public class ProductsApiController : ControllerBase
     }
     
     [AllowAnonymous]
-    [HttpGet("from-store/{storeId}")]
-    public async Task<IActionResult> GetAllByStoreId([FromRoute] Guid storeId, int pageSize = 12, int pageNumber = 1)
+    [HttpGet("store/{storeId}")]
+    public async Task<IActionResult> GetAllByStoreId(
+        [FromRoute] Guid storeId, [FromQuery] int pageSize = 12,
+        [FromQuery] int pageNumber = 1)
     {
         try
         {
+            var request = new GetStoresRequest()
+            {
+                StoreId = storeId,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
+            
             _logger.LogInformation($"Getting the products of store {storeId}...");
             
-            _response = await _service.GetAllByStoreIdAsync(storeId: storeId, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _service.GetAllByStoreIdAsync(request);
             
             return Ok(_response);
         }

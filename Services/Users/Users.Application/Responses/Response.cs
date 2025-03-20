@@ -1,6 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Dtos;
+﻿namespace ShopeeFoodClone.WebApi.Users.Application.Responses;
 
-public class Response
+public sealed class Response
 {
     public object? Body { get; set; }
     public bool IsSuccessful { get; set; } = true;
