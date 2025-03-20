@@ -7,6 +7,8 @@ global using Microsoft.AspNetCore.Http;
 global using AutoMapper;
 
 global using ShopeeFoodClone.WebApi.Products.Application.Dtos;
+global using ShopeeFoodClone.WebApi.Products.Application.Requests;
+global using ShopeeFoodClone.WebApi.Products.Application.Responses;
 global using ShopeeFoodClone.WebApi.Products.Application.Interfaces;
 global using ShopeeFoodClone.WebApi.Products.Application.Services;
 global using ShopeeFoodClone.WebApi.Products.Application.Mappings;

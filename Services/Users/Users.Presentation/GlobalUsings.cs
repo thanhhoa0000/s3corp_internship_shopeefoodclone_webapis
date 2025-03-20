@@ -15,6 +15,8 @@ global using Asp.Versioning;
 global using ShopeeFoodClone.WebApi.Users.Presentation.Configurations;
 
 global using ShopeeFoodClone.WebApi.Users.Application.Dtos;
+global using ShopeeFoodClone.WebApi.Users.Application.Requests;
+global using ShopeeFoodClone.WebApi.Users.Application.Responses;
 global using ShopeeFoodClone.WebApi.Users.Application.Interfaces;
 
 global using ShopeeFoodClone.WebApi.Users.Infrastructure.Persistence;

@@ -2,7 +2,7 @@
 
 public interface IRoleManagementService
 {
-    Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1);
+    Task<Response> GetAllAsync(GetRolesRequest request);
     Task<Response> GetAsync(Guid roleId);
     Task<Response> CreateAsync(string roleName);
     Task<Response> RemoveAsync(Guid roleId);

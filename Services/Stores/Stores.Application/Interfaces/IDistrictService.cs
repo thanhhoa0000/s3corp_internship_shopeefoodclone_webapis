@@ -2,5 +2,5 @@
 
 public interface IDistrictService
 {
-    Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1);
+    Task<Response> GetAllByProvinceAsync(string province, int pageSize = 0, int pageNumber = 1);
 }

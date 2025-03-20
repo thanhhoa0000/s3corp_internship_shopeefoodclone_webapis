@@ -14,18 +14,19 @@ public class DistrictService : IDistrictService
     /// <summary>
     /// Get list of districts
     /// </summary>
+    /// <param name="province">The province to get districts</param>
     /// <param name="pageSize">Pages number to get districts</param>
     /// <param name="pageNumber">Page number to start with</param>
     /// <returns>The districts list</returns>
-    public async Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetAllByProvinceAsync(string province, int pageSize = 0, int pageNumber = 1)
     {
         var response = new Response();
 
         try
         {
-            var districts = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var districts = await _repository.GetAllAsync(d => d.Province!.Code == province, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
-            response.Body = _mapper.Map<IEnumerable<ProvinceDto>>(districts);
+            response.Body = _mapper.Map<IEnumerable<DistrictDto>>(districts);
         }
         catch (Exception ex)
         {

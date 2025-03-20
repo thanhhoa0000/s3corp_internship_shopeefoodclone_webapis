@@ -13,45 +13,41 @@ public class StoresApiController : ControllerBase
     {
         _service = service;
         _logger = logger;
+        
         _response = new Response();
     }
-    
-    [HttpPost("{province}")]
-    public async Task<IActionResult> GetByLocation(
-        string province,
-        [FromBody] GetStoreByLocationRequest request,
+
+    // TODO: post
+    [HttpGet]
+    public async Task<IActionResult> GetByLocationAndCategory(
+        [FromQuery] string? province,
+        [FromQuery] string? district,
+        [FromQuery] string? ward,
+        [FromQuery] string? category,
         [FromQuery] int pageSize = 12, 
         [FromQuery] int pageNumber = 1)
     {
         try
         {
-            _logger.LogInformation($"Getting the stores in province/city {province}...");
-
-            _response = await _service.GetByLocationAsync(request, pageSize: pageSize, pageNumber: pageNumber);
-
-            return Ok(_response);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            var request = new GetStoresRequest()
+            {
+                LocationRequest = new LocationRequest()
+                {
+                    Province = province,
+                    District = district,
+                    Ward = ward,
+                },
+                CategoryName = category,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
             
-            return BadRequest("Error(s) occurred when getting the stores!");
-        }
-    }
-
-    [HttpPost("{province}/{category}")]
-    public async Task<IActionResult> GetByLocationAndCategory(
-        [FromBody] GetStoreRequest request, 
-        int pageSize = 12, 
-        int pageNumber = 1)
-    {
-        try
-        {
-            var province = request.LocationRequest.Province;
+            if (category is null)
+                _logger.LogInformation($"Getting the stores in province/city {province}...");
+            else
+                _logger.LogInformation($"Getting the stores of category {request.CategoryName} in province/city {province}...");
             
-            _logger.LogInformation($"Getting the stores of category {request.CategoryName} in province/city {province}...");
-            
-            _response = await _service.GetByLocationAndCategoryAsync(request, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _service.GetByLocationAndCategoryAsync(request);
             
             return Ok(_response);
         }
@@ -64,14 +60,24 @@ public class StoresApiController : ControllerBase
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminAndVendorOnly")]
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetAllByUserId([FromRoute] Guid userId, int pageSize = 12, int pageNumber = 1)
+    [HttpGet("vendor/{vendorId}")]
+    public async Task<IActionResult> GetAllByUserId(
+        [FromRoute] Guid vendorId, 
+        [FromQuery] int pageSize = 12,
+        [FromQuery] int pageNumber = 1)
     {
         try
         {
-            _logger.LogInformation($"Getting the stores of user {userId}...");
+            _logger.LogInformation($"Getting the stores of user {vendorId}...");
+
+            var request = new GetStoresByVendorIdRequest()
+            {
+                VendorId = vendorId,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
             
-            _response = await _service.GetAllByUserIdAsync(userId: userId, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _service.GetAllByVendorIdAsync(request);
             
             return Ok(_response);
         }

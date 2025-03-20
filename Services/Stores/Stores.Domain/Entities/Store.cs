@@ -23,4 +23,5 @@ public class Store : IEntity
     
     public Ward? Ward { get; set; }
     public ICollection<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
+    public ICollection<Collection> Collections { get; set; } = new List<Collection>();
 }

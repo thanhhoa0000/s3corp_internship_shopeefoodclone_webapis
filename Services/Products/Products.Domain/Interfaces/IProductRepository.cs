@@ -1,3 +1,3 @@
 ﻿namespace ShopeeFoodClone.WebApi.Products.Domain.Interfaces;
 
-public interface IProductRepository : IRepository<Product> { }
+public interface IProductRepository : IRepository<Product>;

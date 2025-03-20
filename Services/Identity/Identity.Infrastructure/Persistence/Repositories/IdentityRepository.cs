@@ -45,7 +45,6 @@ public class IdentityRepository : IIdentityRepository
         if (filter is not null)
             query = query.Where(filter);
 
-
         RefreshToken? refreshToken = await query.FirstOrDefaultAsync();
 
         return refreshToken!;

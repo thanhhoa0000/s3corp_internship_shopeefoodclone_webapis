@@ -19,16 +19,19 @@ public class UserManagementService : IUserManagementService
     /// <summary>
     /// Get list of users
     /// </summary>
-    /// <param name="pageSize">Pages number to get users</param>
-    /// <param name="pageNumber">Page number to start with</param>
+    /// <param name="request">Information needed to get users</param>
     /// <returns>List of user</returns>
-    public async Task<Response> GetAllAsync(int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetAllAsync(GetUsersRequest request)
     {
         var response = new Response();
         
         try
         {
-            var users = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
+            var users = 
+                await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<AppUserDto>>(users);
             

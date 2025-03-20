@@ -1,0 +1,9 @@
+{
+    "JwtProperties": {
+        "Issuer": "shopeefood-clone-auth",
+        "Audience": "shopeefood-clone-client",
+        "Key": "yhYrgIZ1hVK+UK0Bep/WquEsfNLS21O8n113ZSLPV2M=",
+        "Expiration": 1
+    },
+    "RefreshTokenLifeTimeInDays": 7
+}

@@ -1,5 +1,6 @@
 ﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Dtos;
 
+// TODO: Generalize the request for create and update
 public class StoreDto
 {
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -22,4 +23,5 @@ public class StoreDto
     
     public WardDto? Ward { get; set; }
     public ICollection<SubCategoryDto> SubCategories { get; set; } = new List<SubCategoryDto>();
+    public ICollection<CollectionDto> Collections { get; set; } = new List<CollectionDto>();
 }

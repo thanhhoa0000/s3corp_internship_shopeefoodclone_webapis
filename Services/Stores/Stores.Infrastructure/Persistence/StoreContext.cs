@@ -3,6 +3,7 @@
 public class StoreContext(DbContextOptions<StoreContext> options) : DbContext(options)
 {
     public DbSet<Store> Stores { get; set; }
+    public DbSet<Collection> Collections { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<SubCategory> SubCategories { get; set; }
     public DbSet<AdministrativeRegion> AdministrativeRegions { get; set; }
@@ -16,6 +17,7 @@ public class StoreContext(DbContextOptions<StoreContext> options) : DbContext(op
         base.OnModelCreating(builder);
 
         builder.ApplyConfiguration(new StoreConfiguration());
+        builder.ApplyConfiguration(new CollectionConfiguration());
         builder.ApplyConfiguration(new CategoryConfiguration());
         builder.ApplyConfiguration(new SubCategoryConfiguration());
         builder.ApplyConfiguration(new ProvinceConfiguration());

@@ -11,6 +11,7 @@ public class StoresMappingProfile : Profile
                 dest.Stores, 
                 opt => opt.MapFrom(src => src.Stores));
         CreateMap<Category, CategoryDto>().ReverseMap();
+        CreateMap<Collection, CollectionDto>().ReverseMap();
         CreateMap<AdministrativeRegion, AdministrativeRegionDto>().ReverseMap();
         CreateMap<AdministrativeUnit, AdministrativeUnitDto>().ReverseMap();
         CreateMap<Province, ProvinceDto>().ReverseMap();

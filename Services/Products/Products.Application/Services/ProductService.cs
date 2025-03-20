@@ -16,17 +16,21 @@ public class ProductService : IProductService
     /// <summary>
     /// Get list of products by store ID
     /// </summary>
-    /// <param name="storeId">The store ID to get products</param>
-    /// <param name="pageSize">Maximum products per page</param>
-    /// <param name="pageNumber">Page number to start with</param>
+    /// <param name="request">The store ID to get products</param>
     /// <returns>The products list</returns>
-    public async Task<Response> GetAllByStoreIdAsync(Guid storeId, int pageSize = 12, int pageNumber = 1)
+    public async Task<Response> GetAllByStoreIdAsync(GetStoresRequest request)
     {
         var response = new Response();
 
         try
         {
-            var products = await _repository.GetAllAsync(p => p.StoreId == storeId, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var storeId = request.StoreId;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
+            var products = 
+                await _repository
+                    .GetAllAsync(p => p.StoreId == storeId, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<ProductDto>>(products);
             

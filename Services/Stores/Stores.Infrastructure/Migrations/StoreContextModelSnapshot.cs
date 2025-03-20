@@ -22,6 +22,21 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CollectionStore", b =>
+                {
+                    b.Property<Guid>("CollectionsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("StoresId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CollectionsId", "StoresId");
+
+                    b.HasIndex("StoresId");
+
+                    b.ToTable("CollectionStore");
+                });
+
             modelBuilder.Entity("ShopeeFoodClone.WebApi.Stores.Domain.Entities.AdministrativeRegion", b =>
                 {
                     b.Property<byte>("Id")
@@ -102,6 +117,31 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("ShopeeFoodClone.WebApi.Stores.Domain.Entities.Collection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CoverImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<DateOnly>("StartDate")
+                        .HasColumnType("date");
+
+                    b.Property<byte>("State")
+                        .HasColumnType("tinyint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Collections");
                 });
 
             modelBuilder.Entity("ShopeeFoodClone.WebApi.Stores.Domain.Entities.District", b =>
@@ -324,6 +364,21 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                     b.HasIndex("SubCategoriesId");
 
                     b.ToTable("StoreSubCategory");
+                });
+
+            modelBuilder.Entity("CollectionStore", b =>
+                {
+                    b.HasOne("ShopeeFoodClone.WebApi.Stores.Domain.Entities.Collection", null)
+                        .WithMany()
+                        .HasForeignKey("CollectionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopeeFoodClone.WebApi.Stores.Domain.Entities.Store", null)
+                        .WithMany()
+                        .HasForeignKey("StoresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ShopeeFoodClone.WebApi.Stores.Domain.Entities.District", b =>

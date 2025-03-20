@@ -16,6 +16,8 @@ public static class DependencyInjection
             ));
         
         services.AddScoped<IStoreRepository, StoreRepository>();
+        services.AddScoped<ICollectionRepository, CollectionRepository>();
+        services.AddScoped<IWardRepository, WardRepository>();
         services.AddScoped<IProvinceRepository, ProvinceRepository>();
         services.AddScoped<IDistrictRepository, DistrictRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();

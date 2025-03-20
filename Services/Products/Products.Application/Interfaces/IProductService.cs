@@ -2,7 +2,7 @@
 
 public interface IProductService
 {
-    Task<Response> GetAllByStoreIdAsync(Guid storeId, int pageSize = 0, int pageNumber = 1);
+    Task<Response> GetAllByStoreIdAsync(GetStoresRequest request);
     Task<Response> GetAsync(Guid productId);
     Task<Response> CreateAsync(ProductDto productDto);
     Task<Response> RemoveAsync(Guid productId);
