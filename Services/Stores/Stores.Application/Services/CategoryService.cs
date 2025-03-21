@@ -132,6 +132,14 @@ public class CategoryService : ICategoryService
         try
         {
             var category = await _repository.GetAsync(s => s.Id == categoryDto.Id, tracked: false);
+
+            if (category is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Category not found!";
+                
+                return response;
+            }
             
             if (category.ConcurrencyStamp != categoryDto.ConcurrencyStamp)
             {
@@ -172,6 +180,14 @@ public class CategoryService : ICategoryService
         try
         {
             var category = await _repository.GetAsync(s => s.Id == cateId, tracked: false);
+            
+            if (category is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Category not found!";
+                
+                return response;
+            }
             
             await _repository.RemoveAsync(category);
             

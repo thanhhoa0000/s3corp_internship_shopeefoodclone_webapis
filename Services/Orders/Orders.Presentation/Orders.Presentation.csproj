@@ -50,4 +50,8 @@
       <ProjectReference Include="..\Orders.Infrastructure\Orders.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+    </ItemGroup>
+
 </Project>

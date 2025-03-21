@@ -12,8 +12,8 @@ try
         options.AddPolicy("AllowFrontend",
             policy =>
             {
-                policy.WithOrigins("https://localhost:7001") // Allow only frontend URL
-                    .WithMethods("GET") // Allow only GET requests
+                policy.WithOrigins("https://localhost:7001")
+                    .WithMethods("GET", "POST")
                     .AllowAnyHeader();
             });
     });

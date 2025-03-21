@@ -19,16 +19,18 @@ public class SubCategoryService : ISubCategoryService
     /// <summary>
     /// Get list of subCategories
     /// </summary>
-    /// <param name="cateId">The main category that the sub-categories belong to</param>
-    /// <param name="pageSize">Pages number to get subCategories</param>
-    /// <param name="pageNumber">Page number to start with</param>
+    /// <param name="request">The main category that the sub-categories belong to</param>
     /// <returns>The subCategories list</returns>
-    public async Task<Response> GetAllAsync(Guid cateId, int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetAllByCategoryIdAsync(GetSubCategoriesRequest request)
     {
         var response = new Response();
 
         try
         {
+            var cateId = request.CategoryId;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
             var subCategories = await _subCategoryRepository.GetAllAsync(
                 filter: s => s.CategoryId == cateId, 
                 tracked: false,
@@ -56,16 +58,18 @@ public class SubCategoryService : ISubCategoryService
     /// <summary>
     /// Get list of subCategories
     /// </summary>
-    /// <param name="cateName">The main category that the sub-categories belong to</param>
-    /// <param name="pageSize">Pages number to get subCategories</param>
-    /// <param name="pageNumber">Page number to start with</param>
+    /// <param name="request">The main category that the sub-categories belong to</param>
     /// <returns>The subCategories list</returns>
-    public async Task<Response> GetAllByCodeNameAsync(string cateName, int pageSize = 0, int pageNumber = 1)
+    public async Task<Response> GetAllByCategoryCodeNameAsync(GetSubCategoriesRequest request)
     {
         var response = new Response();
 
         try
         {
+            var cateName = request.CategoryName;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
             var subCategories = await _subCategoryRepository.GetAllAsync(
                 filter: s => s.Category!.CodeName == cateName, 
                 tracked: false,
@@ -159,7 +163,16 @@ public class SubCategoryService : ISubCategoryService
 
         try
         {
-            var subCategory = await _subCategoryRepository.GetAsync(s => s.Id == subCategoryDto.Id, tracked: false);
+            var subCategory = 
+                await _subCategoryRepository.GetAsync(s => s.Id == subCategoryDto.Id, tracked: false);
+
+            if (subCategory is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "SubCategory not found!";
+                
+                return response;
+            }
 
             if (subCategory.ConcurrencyStamp != subCategoryDto.ConcurrencyStamp)
             {
@@ -200,6 +213,14 @@ public class SubCategoryService : ISubCategoryService
         try
         {
             var subCategory = await _subCategoryRepository.GetAsync(s => s.Id == subCateId, tracked: false);
+            
+            if (subCategory is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "SubCategory not found!";
+                
+                return response;
+            }
             
             await _subCategoryRepository.RemoveAsync(subCategory);
 

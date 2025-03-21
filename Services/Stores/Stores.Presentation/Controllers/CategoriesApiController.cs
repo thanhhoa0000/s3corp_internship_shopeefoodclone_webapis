@@ -137,14 +137,18 @@ public class CategoriesApiController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("{cateId:guid}/sub-categories")]
-    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromRoute] Guid cateId, [FromQuery] int pageSize = 12, [FromQuery] int pageNumber = 1)
+    [HttpPost("sub-categories/get-by-cateId")]
+    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromBody] GetSubCategoriesRequest request)
     {
         try
         {
+            var cateId = request.CategoryId;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
             _logger.LogInformation($"Getting sub-categories of category {cateId}...");
 
-            _response = await _subCategoryService.GetAllAsync(cateId: cateId, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _subCategoryService.GetAllByCategoryIdAsync(request);
             
             return Ok(_response);
         }
@@ -157,14 +161,18 @@ public class CategoriesApiController : ControllerBase
     }
     
     [AllowAnonymous]
-    [HttpGet("{cateName}/sub-categories")]
-    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromRoute] string cateName, [FromQuery] int pageSize = 12, [FromQuery] int pageNumber = 1)
+    [HttpPost("sub-categories/get-by-cateName")]
+    public async Task<IActionResult> GetSubCategoriesByCategoryName([FromBody] GetSubCategoriesRequest request)
     {
         try
         {
+            var cateName = request.CategoryName;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
             _logger.LogInformation($"Getting sub-categories of category {cateName}...");
 
-            _response = await _subCategoryService.GetAllByCodeNameAsync(cateName: cateName, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _subCategoryService.GetAllByCategoryCodeNameAsync(request);
             
             return Ok(_response);
         }

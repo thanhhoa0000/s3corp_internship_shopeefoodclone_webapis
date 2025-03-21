@@ -2,9 +2,11 @@
 
 public interface IProductService
 {
-    Task<Response> GetAllByStoreIdAsync(GetStoresRequest request);
+    Task<Response> GetAllByStoreIdAsync(GetProductsRequest request);
     Task<Response> GetAsync(Guid productId);
-    Task<Response> CreateAsync(ProductDto productDto);
+    Task<Response> CreateAsync(CreateProductRequest request);
     Task<Response> RemoveAsync(Guid productId);
-    Task<Response> UpdateAsync(ProductDto productDto);
+    Task<Response> VendorDeleteAsync(Guid productId);
+    Task<Response> VendorUpdateAsync(VendorUpdateProductRequest request);
+    Task<Response> VendorChangeProductStateAsync(VendorUpdateProductStateRequest request);
 }

@@ -238,11 +238,20 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                     b.Property<TimeOnly>("ClosingHour")
                         .HasColumnType("time");
 
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("CoverImagePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<bool>("IsPromoted")
                         .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -257,6 +266,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
 
                     b.Property<int>("Sold")
                         .HasColumnType("int");
+
+                    b.Property<byte>("State")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("StreetName")
                         .HasMaxLength(100)

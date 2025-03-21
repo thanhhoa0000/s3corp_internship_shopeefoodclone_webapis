@@ -1,5 +1,23 @@
 # This is a generated file. Not intended for manual editing.
 services:
+  cart-api:
+    build:
+      context: "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis"
+      dockerfile: "Services/Cart/Cart.Presentation/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Cart.Presentation.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "cart-api:dev"
+    ports: []
+    volumes:
+    - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis\\Services\\Cart\\Cart.Presentation:/app:rw"
+    - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis:/src:rw"
+    - "C:\\Users\\hoa.nguyen\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
   gateway-web:
     build:
       context: "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis"
@@ -11,7 +29,7 @@ services:
     - "/app/bin/Debug/net8.0/Gateway.Web.dll"
     environment:
       DOTNET_USE_POLLING_FILE_WATCHER: "true"
-    image: "webgateway:dev"
+    image: "web-gateway:dev"
     ports: []
     volumes:
     - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis\\Gateways\\Web\\Gateway.Web:/app:rw"
@@ -34,6 +52,43 @@ services:
     volumes:
     - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis\\Services\\Identity\\\
       Identity.Presentation:/app:rw"
+    - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis:/src:rw"
+    - "C:\\Users\\hoa.nguyen\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
+  orders-api:
+    build:
+      context: "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis"
+      dockerfile: "Services/Orders/Orders.Presentation/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Orders.Presentation.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "orders-api:dev"
+    ports: []
+    volumes:
+    - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis\\Services\\Orders\\Orders.Presentation:/app:rw"
+    - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis:/src:rw"
+    - "C:\\Users\\hoa.nguyen\\.nuget\\packages:/home/app/.nuget/packages"
+    working_dir: "/app"
+  products-api:
+    build:
+      context: "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis"
+      dockerfile: "Services/Products/Products.Presentation/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Products.Presentation.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "products-api:dev"
+    ports: []
+    volumes:
+    - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis\\Services\\Products\\\
+      Products.Presentation:/app:rw"
     - "D:\\Internship\\Code\\Demo\\ShopeeFood_Clone\\WebApis:/src:rw"
     - "C:\\Users\\hoa.nguyen\\.nuget\\packages:/home/app/.nuget/packages"
     working_dir: "/app"

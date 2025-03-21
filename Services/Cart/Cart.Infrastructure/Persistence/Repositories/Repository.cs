@@ -28,7 +28,7 @@ public class Repository<T, TContext> : IRepository<T>
         }
     }
 
-    public async Task<T>
+    public async Task<T?>
         GetAsync(Expression<Func<T, bool>>? filter = null, bool tracked = true)
     {
         IQueryable<T> query = _dbSet;
@@ -41,7 +41,7 @@ public class Repository<T, TContext> : IRepository<T>
 
         T? T = await query.FirstOrDefaultAsync();
 
-        return T!;
+        return T;
     }
 
     public async Task<IEnumerable<T>>

@@ -28,7 +28,7 @@ public class Repository<T, TContext> : IRepository<T>
         }
     }
 
-    public async Task<T>
+    public async Task<T?>
         GetAsync(
             Expression<Func<T, bool>>? filter = null, 
             Func<IQueryable<T>, IQueryable<T>>? include = null,
@@ -47,7 +47,7 @@ public class Repository<T, TContext> : IRepository<T>
 
         T? T = await query.FirstOrDefaultAsync();
 
-        return T!;
+        return T;
     }
 
     public async Task<IEnumerable<T>>
@@ -71,8 +71,6 @@ public class Repository<T, TContext> : IRepository<T>
         
         if (pageSize > 0)
             query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
-        
-        Console.WriteLine(query.ToQueryString());
 
         IEnumerable<T> entitiesList = await query.ToListAsync();
 

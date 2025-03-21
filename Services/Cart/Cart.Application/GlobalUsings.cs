@@ -5,8 +5,8 @@ global using Microsoft.Extensions.DependencyInjection;
 
 global using AutoMapper;
 
-global using ShopeeFoodClone.WebApi.Cart.Application.Dtos;
-global using ShopeeFoodClone.WebApi.Cart.Application.Responses;
+global using ShopeeFoodClone.WebApi.Cart.Application.Models.Dtos;
+global using ShopeeFoodClone.WebApi.Cart.Application.Models.Responses;
 global using ShopeeFoodClone.WebApi.Cart.Application.Interfaces;
 global using ShopeeFoodClone.WebApi.Cart.Application.Services;
 global using ShopeeFoodClone.WebApi.Cart.Application.Mappings;

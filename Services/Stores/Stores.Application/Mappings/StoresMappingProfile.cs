@@ -5,6 +5,7 @@ public class StoresMappingProfile : Profile
     public StoresMappingProfile()
     {
         CreateMap<Store, StoreDto>().ReverseMap();
+        CreateMap<VendorUpdateStoreRequest, Store>();
         CreateMap<SubCategory, SubCategoryDto>()
             .ReverseMap()
             .ForMember(dest => 

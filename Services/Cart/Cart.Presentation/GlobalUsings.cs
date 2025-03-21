@@ -19,8 +19,8 @@ global using ShopeeFoodClone.WebApi.Cart.Presentation.Configurations;
 global using ShopeeFoodClone.WebApi.Cart.Infrastructure.Persistence;
 global using ShopeeFoodClone.WebApi.Cart.Infrastructure;
 
-global using ShopeeFoodClone.WebApi.Cart.Application.Dtos;
-global using ShopeeFoodClone.WebApi.Cart.Application.Responses;
+global using ShopeeFoodClone.WebApi.Cart.Application.Models.Dtos;
+global using ShopeeFoodClone.WebApi.Cart.Application.Models.Responses;
 global using ShopeeFoodClone.WebApi.Cart.Application.Interfaces;
 
 global using ShopeeFoodClone.WebApi.EventBus.RabbitMQ;
