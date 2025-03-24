@@ -8,4 +8,5 @@ public class CategoryDto
     [Required, MinLength(2), MaxLength(50)]
     public required string CodeName { get; set; }
     public Guid ConcurrencyStamp  { get; set; }
+    public CategoryState State { get; set; } = CategoryState.InUse;
 }

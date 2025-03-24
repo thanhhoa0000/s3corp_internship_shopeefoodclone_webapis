@@ -11,6 +11,7 @@ public class SubCategory : IEntity
     [Required, MinLength(2), MaxLength(50)]
     public required string CodeName { get; set; }
     public Guid ConcurrencyStamp { get; set; }
+    public CategoryState State { get; set; } = CategoryState.InUse;
     
     public Category? Category { get; set; }
     public ICollection<Store> Stores { get; set; } = new List<Store>();

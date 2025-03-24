@@ -7,5 +7,6 @@ public interface ICategoryService
     Task<Response> GetByCodeNameAsync(string name);
     Task<Response> CreateAsync(CategoryDto categoryDto);
     Task<Response> RemoveAsync(Guid cateId);
+    Task<Response> DeleteAsync(Guid cateId);
     Task<Response> UpdateAsync(CategoryDto categoryDto);
 }

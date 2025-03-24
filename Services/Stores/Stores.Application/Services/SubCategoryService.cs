@@ -106,6 +106,14 @@ public class SubCategoryService : ISubCategoryService
         try
         {
             var subCategory = await _subCategoryRepository.GetAsync(s => s.Id == subCateId, tracked: false);
+            
+            if (subCategory is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "SubCategory not found!";
+                
+                return response;
+            }
 
             response.Body = _mapper.Map<CategoryDto>(subCategory);
 
@@ -131,7 +139,13 @@ public class SubCategoryService : ISubCategoryService
 
         try
         {
-            var subCategory = _mapper.Map<SubCategory>(request.SubCategoryDto);
+
+            var subCategory = new SubCategory
+            {
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                CodeName = request.CodeName
+            };
 
             subCategory.CategoryId = request.CategoryId;
             
@@ -155,16 +169,16 @@ public class SubCategoryService : ISubCategoryService
     /// <summary>
     /// Update the subCategory's metadata
     /// </summary>
-    /// <param name="subCategoryDto">The subCategory to update</param>
+    /// <param name="request">The subCategory to update</param>
     /// <returns>The updated subCategory</returns>
-    public async Task<Response> UpdateAsync(SubCategoryDto subCategoryDto)
+    public async Task<Response> UpdateAsync(UpdateSubCategoryRequest request)
     {
         var response = new Response();
 
         try
         {
             var subCategory = 
-                await _subCategoryRepository.GetAsync(s => s.Id == subCategoryDto.Id, tracked: false);
+                await _subCategoryRepository.GetAsync(s => s.Id == request.Id, tracked: false);
 
             if (subCategory is null)
             {
@@ -174,15 +188,20 @@ public class SubCategoryService : ISubCategoryService
                 return response;
             }
 
-            if (subCategory.ConcurrencyStamp != subCategoryDto.ConcurrencyStamp)
+            if (subCategory.ConcurrencyStamp != request.ConcurrencyStamp)
             {
                 response.IsSuccessful = false;
                 response.Message = "Concurrency conflict! Data was modified by another user!";
 
                 return response;
             }
-
-            var subCategoryToUpdate = _mapper.Map<SubCategory>(subCategoryDto);
+            
+            var subCategoryToUpdate = new SubCategory
+            {
+                CategoryId = request.CategoryId,
+                Name = request.Name,
+                CodeName = request.CodeName
+            };
             
             subCategoryToUpdate.ConcurrencyStamp = Guid.NewGuid();
 
@@ -223,6 +242,43 @@ public class SubCategoryService : ISubCategoryService
             }
             
             await _subCategoryRepository.RemoveAsync(subCategory);
+
+            response.Body = _mapper.Map<SubCategoryDto>(subCategory);
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.ToString();
+
+            return response;
+        }
+    }
+    
+    /// <summary>
+    /// Deleted (change state) the subCategory
+    /// </summary>
+    /// <param name="subCateId">The subCategory's ID to delete</param>
+    /// <returns>The deleted subCategory</returns>
+    public async Task<Response> DeleteAsync(Guid subCateId)
+    {
+        var response = new Response();
+
+        try
+        {
+            var subCategory = await _subCategoryRepository.GetAsync(s => s.Id == subCateId, tracked: false);
+            
+            if (subCategory is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "SubCategory not found!";
+                
+                return response;
+            }
+
+            subCategory.State = CategoryState.Deleted;
+            await _subCategoryRepository.UpdateAsync(subCategory);
 
             response.Body = _mapper.Map<SubCategoryDto>(subCategory);
 

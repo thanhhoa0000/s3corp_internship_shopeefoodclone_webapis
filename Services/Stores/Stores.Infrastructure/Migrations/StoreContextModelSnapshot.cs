@@ -108,6 +108,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<byte>("State")
+                        .HasColumnType("tinyint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CodeName")
@@ -309,6 +312,9 @@ namespace ShopeeFoodClone.WebApi.Stores.Infrastructure.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<byte>("State")
+                        .HasColumnType("tinyint");
 
                     b.HasKey("Id");
 

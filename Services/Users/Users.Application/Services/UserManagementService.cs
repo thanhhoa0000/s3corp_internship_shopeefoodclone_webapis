@@ -58,6 +58,14 @@ public class UserManagementService : IUserManagementService
         try
         {
             var user = await _repository.GetAsync(u => u.Id == userId, tracked: false);
+            
+            if (user is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "User not found!";
+
+                return response;
+            }
 
             response.Body = _mapper.Map<AppUserDto>(user);
             
@@ -119,7 +127,7 @@ public class UserManagementService : IUserManagementService
             if (user is null)
             {
                 response.IsSuccessful = false;
-                response.Message = "User not found";
+                response.Message = "User not found!";
 
                 return response;
             }
@@ -163,7 +171,7 @@ public class UserManagementService : IUserManagementService
             if (user is null)
             {
                 response.IsSuccessful = false;
-                response.Message = "User not found";
+                response.Message = "User not found!";
 
                 return response;
             }

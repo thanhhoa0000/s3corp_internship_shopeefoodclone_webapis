@@ -203,4 +203,41 @@ public class CategoryService : ICategoryService
             return response;
         }
     }
+    
+    /// <summary>
+    /// Deleted (change state) the category
+    /// </summary>
+    /// <param name="cateId">The category's ID to delete</param>
+    /// <returns>The deleted category</returns>
+    public async Task<Response> DeleteAsync(Guid cateId)
+    {
+        var response = new Response();
+
+        try
+        {
+            var category = await _repository.GetAsync(s => s.Id == cateId, tracked: false);
+            
+            if (category is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Category not found!";
+                
+                return response;
+            }
+
+            category.State = CategoryState.Deleted;
+            await _repository.UpdateAsync(category);
+            
+            response.Body = _mapper.Map<CategoryDto>(category);
+            
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+            
+            return response;
+        }
+    }
 }

@@ -6,6 +6,7 @@ public interface ISubCategoryService
     Task<Response> GetAllByCategoryCodeNameAsync(GetSubCategoriesRequest request);
     Task<Response> GetAsync(Guid subCateId);
     Task<Response> CreateAsync(CreateSubCategoryRequest request);
-    Task<Response> UpdateAsync(SubCategoryDto subCategoryDto);
+    Task<Response> UpdateAsync(UpdateSubCategoryRequest request);
     Task<Response> RemoveAsync(Guid subCateId);
+    Task<Response> DeleteAsync(Guid subCateId);
 }
