@@ -53,6 +53,14 @@ public class RoleManagementService : IRoleManagementService
         try
         {
             var role = await _repository.GetAsync(u => u.Id == roleId, tracked: false);
+            
+            if (role is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Role not found!";
+                
+                return response;
+            }
 
             response.Body = _mapper.Map<AppRoleDto>(role);
             
@@ -114,6 +122,14 @@ public class RoleManagementService : IRoleManagementService
         {
             var role = await _repository.GetAsync(u => u.Id == roleDto.Id, tracked: false);
 
+            if (role is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Role not found!";
+                
+                return response;
+            }
+
             if (role.ConcurrencyStamp != roleDto.ConcurrencyStamp)
             {
                 response.IsSuccessful = false;
@@ -150,6 +166,15 @@ public class RoleManagementService : IRoleManagementService
         try
         {
             var role = await _repository.GetAsync(u => u.Id == roleId, tracked: false);
+            
+            if (role is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Role not found!";
+                
+                return response;
+            }
+            
             await _repository.RemoveAsync(role);
 
             response.Body = _mapper.Map<AppRoleDto>(role);

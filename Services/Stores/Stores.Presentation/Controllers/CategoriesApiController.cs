@@ -48,6 +48,11 @@ public class CategoriesApiController : ControllerBase
             _logger.LogInformation("Getting the category...");
             
             _response = await _categoryService.GetAsync(cateId);
+
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Category not found!");
+            }
             
             return Ok(_response);
         }
@@ -69,6 +74,11 @@ public class CategoriesApiController : ControllerBase
             
             _response = await _categoryService.GetByCodeNameAsync(name);
             
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Category not found!");
+            }
+            
             return Ok(_response);
         }
         catch (Exception ex)
@@ -87,8 +97,8 @@ public class CategoriesApiController : ControllerBase
             _logger.LogInformation($"Creating category {categoryDto.Id}...");
             
             _response = await _categoryService.CreateAsync(categoryDto);
-            
-            return Ok(_response);
+
+            return Created();
         }
         catch (Exception ex)
         {
@@ -107,7 +117,12 @@ public class CategoriesApiController : ControllerBase
             
             _response = await _categoryService.UpdateAsync(category);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Category not found!");
+            }
+            
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -117,8 +132,8 @@ public class CategoriesApiController : ControllerBase
         }
     }
     
-    [HttpDelete("{cateId:guid}")]
-    public async Task<IActionResult> Delete([FromRoute] Guid cateId)
+    [HttpDelete("delete/{cateId:guid}")]
+    public async Task<IActionResult> Remove([FromRoute] Guid cateId)
     {
         try
         {
@@ -126,7 +141,36 @@ public class CategoriesApiController : ControllerBase
             
             _response = await _categoryService.RemoveAsync(cateId);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Category not found!");
+            }
+            
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when deleting the category!");
+        }
+    }
+    
+    [HttpDelete("inactive/{cateId:guid}")]
+    public async Task<IActionResult> Delete([FromRoute] Guid cateId)
+    {
+        try
+        {
+            _logger.LogInformation($"Changing state of category {cateId} to 'deleted'...");
+            
+            _response = await _categoryService.DeleteAsync(cateId);
+            
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Category not found!");
+            }
+            
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -137,14 +181,18 @@ public class CategoriesApiController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet("{cateId:guid}/sub-categories")]
-    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromRoute] Guid cateId, [FromQuery] int pageSize = 12, [FromQuery] int pageNumber = 1)
+    [HttpPost("sub-categories/get-by-cateId")]
+    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromBody] GetSubCategoriesRequest request)
     {
         try
         {
+            var cateId = request.CategoryId;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
             _logger.LogInformation($"Getting sub-categories of category {cateId}...");
 
-            _response = await _subCategoryService.GetAllAsync(cateId: cateId, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _subCategoryService.GetAllByCategoryIdAsync(request);
             
             return Ok(_response);
         }
@@ -157,14 +205,18 @@ public class CategoriesApiController : ControllerBase
     }
     
     [AllowAnonymous]
-    [HttpGet("{cateName}/sub-categories")]
-    public async Task<IActionResult> GetSubCategoriesByCategoryId([FromRoute] string cateName, [FromQuery] int pageSize = 12, [FromQuery] int pageNumber = 1)
+    [HttpPost("sub-categories/get-by-cateName")]
+    public async Task<IActionResult> GetSubCategoriesByCategoryName([FromBody] GetSubCategoriesRequest request)
     {
         try
         {
+            var cateName = request.CategoryName;
+            var pageSize = request.PageSize;
+            var pageNumber = request.PageNumber;
+            
             _logger.LogInformation($"Getting sub-categories of category {cateName}...");
 
-            _response = await _subCategoryService.GetAllByCodeNameAsync(cateName: cateName, pageSize: pageSize, pageNumber: pageNumber);
+            _response = await _subCategoryService.GetAllByCategoryCodeNameAsync(request);
             
             return Ok(_response);
         }
@@ -176,6 +228,7 @@ public class CategoriesApiController : ControllerBase
         }
     }
     
+    [AllowAnonymous]
     [HttpGet("{cateId:guid}/sub-categories/{subCategoryId:guid}")]
     public async Task<IActionResult> GetSubCategory([FromRoute] Guid subCategoryId)
     {
@@ -184,6 +237,11 @@ public class CategoriesApiController : ControllerBase
             _logger.LogInformation($"Getting sub-category {subCategoryId}...");
 
             _response = await _subCategoryService.GetAsync(subCateId: subCategoryId);
+            
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Sub-category not found!");
+            }
             
             return Ok(_response);
         }
@@ -200,11 +258,11 @@ public class CategoriesApiController : ControllerBase
     {
         try
         {
-            _logger.LogInformation($"Creating sub-category {request.SubCategoryDto.Id}...");
+            _logger.LogInformation($"Creating sub-category...");
 
             _response = await _subCategoryService.CreateAsync(request);
-            
-            return Ok(_response);
+
+            return Created();
         }
         catch (Exception ex)
         {
@@ -215,15 +273,20 @@ public class CategoriesApiController : ControllerBase
     }
     
     [HttpPut("{cateId:guid}/sub-categories")]
-    public async Task<IActionResult> CreateSubCategory([FromBody] SubCategoryDto subCategoryDto)
+    public async Task<IActionResult> UpdateSubCategory([FromBody] UpdateSubCategoryRequest request)
     {
         try
         {
-            _logger.LogInformation($"Updating sub-category {subCategoryDto.Id}...");
+            _logger.LogInformation($"Updating sub-category {request.Id}...");
 
-            _response = await _subCategoryService.UpdateAsync(subCategoryDto);
+            _response = await _subCategoryService.UpdateAsync(request);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Sub-category not found!");
+            }
+
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -233,8 +296,8 @@ public class CategoriesApiController : ControllerBase
         }
     }
     
-    [HttpDelete("{cateId:guid}/sub-categories/{subCategoryId:guid}")]
-    public async Task<IActionResult> DeleteSubCategory([FromRoute] Guid subCategoryId)
+    [HttpDelete("{cateId:guid}/sub-categories/delete/{subCategoryId:guid}")]
+    public async Task<IActionResult> RemoveSubCategory([FromRoute] Guid subCategoryId)
     {
         try
         {
@@ -242,7 +305,36 @@ public class CategoriesApiController : ControllerBase
 
             _response = await _subCategoryService.RemoveAsync(subCateId: subCategoryId);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Sub-category not found!");
+            }
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when deleting the sub-category!");
+        }
+    }
+    
+    [HttpDelete("{cateId:guid}/sub-categories/inactive/{subCategoryId:guid}")]
+    public async Task<IActionResult> DeleteSubCategory([FromRoute] Guid subCategoryId)
+    {
+        try
+        {
+            _logger.LogInformation($"Changing state of sub-category {subCategoryId} to 'deleted'...");
+
+            _response = await _subCategoryService.DeleteAsync(subCateId: subCategoryId);
+            
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Sub-category not found!");
+            }
+
+            return NoContent();
         }
         catch (Exception ex)
         {

@@ -1,4 +1,4 @@
-﻿using LoginRequest = ShopeeFoodClone.WebApi.Identity.Application.Dtos.LoginRequest;
+﻿using LoginRequest = ShopeeFoodClone.WebApi.Identity.Application.Models.Dtos.LoginRequest;
 
 namespace ShopeeFoodClone.WebApi.Identity.Application.Services;
 

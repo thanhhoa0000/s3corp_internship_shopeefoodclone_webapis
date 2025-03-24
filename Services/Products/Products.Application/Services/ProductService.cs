@@ -18,7 +18,7 @@ public class ProductService : IProductService
     /// </summary>
     /// <param name="request">The store ID to get products</param>
     /// <returns>The products list</returns>
-    public async Task<Response> GetAllByStoreIdAsync(GetStoresRequest request)
+    public async Task<Response> GetAllByStoreIdAsync(GetProductsRequest request)
     {
         var response = new Response();
 
@@ -28,9 +28,11 @@ public class ProductService : IProductService
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
             
+            Expression<Func<Product, bool>> filter = p => p.StoreId == storeId;
+            
             var products = 
                 await _repository
-                    .GetAllAsync(p => p.StoreId == storeId, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+                    .GetAllAsync(filter: filter, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<ProductDto>>(products);
             
@@ -74,15 +76,23 @@ public class ProductService : IProductService
     /// <summary>
     /// Create a product
     /// </summary>
-    /// <param name="productDto">The product to create</param>
+    /// <param name="request">The product to create</param>
     /// <returns>The created product</returns>
-    public async Task<Response> CreateAsync(ProductDto productDto)
+    public async Task<Response> CreateAsync(CreateProductRequest request)
     {
         var response = new Response();
 
         try
         {
-            var product = _mapper.Map<Product>(productDto);
+            if (await _repository.GetAsync(p => p.Id == request.Id) is not null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Product already exists!";
+                
+                return response;
+            }
+            
+            var product = _mapper.Map<Product>(request);
             
             await _repository.CreateAsync(product);
             
@@ -102,17 +112,25 @@ public class ProductService : IProductService
     /// <summary>
     /// Update the product's metadata
     /// </summary>
-    /// <param name="productDto">The product to update</param>
+    /// <param name="request">The product to update</param>
     /// <returns>The updated product</returns>
-    public async Task<Response> UpdateAsync(ProductDto productDto)
+    public async Task<Response> VendorUpdateAsync(VendorUpdateProductRequest request)
     {
         var response = new Response();
 
         try
         {
-            var product = await _repository.GetAsync(s => s.Id == productDto.Id, tracked: false);
+            var product = await _repository.GetAsync(s => s.Id == request.Id, tracked: false);
+
+            if (product is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Product not found!";
+                
+                return response;
+            }
             
-            if (product.ConcurrencyStamp != productDto.ConcurrencyStamp)
+            if (product.ConcurrencyStamp != request.ConcurrencyStamp)
             {
                 response.IsSuccessful = false;
                 response.Message = "Concurrency conflict! Data was modified by another user!";
@@ -120,11 +138,101 @@ public class ProductService : IProductService
                 return response;
             }
             
-            var categoryToUpdate = _mapper.Map<Product>(productDto);
+            var categoryToUpdate = _mapper.Map<Product>(request);
+            
+            categoryToUpdate.LastUpdatedAt = DateTime.UtcNow;
             
             await _repository.UpdateAsync(categoryToUpdate);
             
             response.Body = _mapper.Map<ProductDto>(categoryToUpdate);
+            
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+            
+            return response;
+        }
+    }
+
+    /// <summary>
+    /// Update the product's state
+    /// </summary>
+    /// <param name="request">The product state to update</param>
+    /// <returns>The updated product</returns>
+    public async Task<Response> VendorChangeProductStateAsync(VendorUpdateProductStateRequest request)
+    {
+        var response = new Response();
+
+        try
+        {
+            var product = await _repository.GetAsync(s => s.Id == request.ProductId, tracked: false);
+
+            if (product is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Product not found!";
+                
+                return response;
+            }
+            
+            if (product.ConcurrencyStamp != request.ConcurrencyStamp)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Concurrency conflict! Data was modified by another user!";
+                
+                return response;
+            }
+            
+            var productToUpdate = _mapper.Map<ProductDto>(product);
+            
+            productToUpdate.LastUpdatedAt = DateTime.UtcNow;
+            productToUpdate.State = request.State;
+            
+            await _repository.UpdateAsync(_mapper.Map<Product>(productToUpdate));
+
+            response.Body = productToUpdate;
+            
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+            
+            return response;
+        }
+    }
+
+    /// <summary>
+    /// Deleted the product (soft delete)
+    /// </summary>
+    /// <param name="productId">The product's ID to delete</param>
+    /// <returns>The deleted product</returns>
+    public async Task<Response> VendorDeleteAsync(Guid productId)
+    {
+        var response = new Response();
+
+        try
+        {
+            var product = await _repository.GetAsync(s => s.Id == productId, tracked: false);
+            
+            if (product is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Product not found!";
+                
+                return response;
+            }
+            
+            product.LastUpdatedAt = DateTime.UtcNow;
+            product.State = ProductState.Deleted;
+            
+            await _repository.UpdateAsync(product);
+            
+            response.Body = _mapper.Map<ProductDto>(product);
             
             return response;
         }
@@ -149,6 +257,14 @@ public class ProductService : IProductService
         try
         {
             var product = await _repository.GetAsync(s => s.Id == productId, tracked: false);
+            
+            if (product is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Product not found!";
+                
+                return response;
+            }
             
             await _repository.RemoveAsync(product);
             

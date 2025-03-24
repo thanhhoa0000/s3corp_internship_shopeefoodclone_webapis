@@ -135,7 +135,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/stores",
+      "DownstreamPathTemplate":"/api/v1/stores/get",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -143,8 +143,8 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/stores",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "/stores/get",
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -157,7 +157,7 @@
         }
       ],
       "UpstreamPathTemplate": "/stores",
-      "UpstreamHttpMethod": [ "POST", "PUT" ],
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
@@ -167,7 +167,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/stores/{storeId}",
+      "DownstreamPathTemplate":"/api/v1/stores/update-by-vendor",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -175,13 +175,70 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/stores/{storeId}",
+      "UpstreamPathTemplate": "/stores/update-by-vendor",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Vendor"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/stores/update-by-admin",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/stores/update-by-admin",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/stores/delete-by-vendor/{storeId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/stores/delete-by-vendor/{storeId}",
       "UpstreamHttpMethod": [ "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
         "Role": "Vendor"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/stores/delete-by-admin/{storeId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/stores/delete-by-admin/{storeId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
       },
       "DangerousAcceptAnyServerCertificateValidator": true
     },
@@ -218,7 +275,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/collections",
+      "DownstreamPathTemplate":"/api/v1/collections/get",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -226,8 +283,8 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/collections",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "/collections/get",
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -263,7 +320,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/categories/{categoryId}/sub-categories",
+      "DownstreamPathTemplate":"/api/v1/categories/sub-categories/get-by-cateId",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -271,8 +328,21 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/categories/{categoryId}/sub-categories",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "/categories/sub-categories/get-by-cateId",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/categories/sub-categories/get-by-cateName",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/categories/sub-categories/get-by-cateName",
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -308,7 +378,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/categories/{categoryId}/sub-categories/{subCateId}",
+      "DownstreamPathTemplate":"/api/v1/categories/{categoryId}/sub-categories/delete/{subCateId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -316,7 +386,26 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/categories/{categoryId}/sub-categories/{subCateId}",
+      "UpstreamPathTemplate": "/categories/{categoryId}/sub-categories/delete/{subCateId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/categories/{categoryId}/sub-categories/inactive/{subCateId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/categories/{categoryId}/sub-categories/inactive/{subCateId}",
       "UpstreamHttpMethod": [ "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
@@ -356,6 +445,44 @@
       ],
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [ "GET" ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/categories/delete/{categoryId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/categories/delete/{categoryId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/categories/inactive/{categoryId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/categories/inactive/{categoryId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
+      },
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -404,7 +531,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/products/store/{storeId}",
+      "DownstreamPathTemplate":"/api/v1/products/get-from-store",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -412,8 +539,8 @@
           "Port": 5041
         }
       ],
-      "UpstreamPathTemplate": "/products/store/{storeId}",
-      "UpstreamHttpMethod": [ "GET" ],
+      "UpstreamPathTemplate": "/products/get-from-store",
+      "UpstreamHttpMethod": [ "POST" ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
@@ -426,7 +553,45 @@
         }
       ],
       "UpstreamPathTemplate": "/products",
-      "UpstreamHttpMethod": [ "POST", "PUT" ],
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Vendor"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/products/update-metadata",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 5041
+        }
+      ],
+      "UpstreamPathTemplate": "/products/update-metadata",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Vendor"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/products/update-state",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 5041
+        }
+      ],
+      "UpstreamPathTemplate": "/products/update-state",
+      "UpstreamHttpMethod": [ "PUT" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
@@ -449,7 +614,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate":"/api/v1/products/{productId}",
+      "DownstreamPathTemplate":"/api/v1/products/delete/{productId}",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -457,13 +622,32 @@
           "Port": 5041
         }
       ],
-      "UpstreamPathTemplate": "/products/{productId}",
+      "UpstreamPathTemplate": "/products/delete/{productId}",
       "UpstreamHttpMethod": [ "DELETE" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
         "Role": "Vendor"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/products/remove/{productId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "products-api",
+          "Port": 5041
+        }
+      ],
+      "UpstreamPathTemplate": "/products/remove/{productId}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
       },
       "DangerousAcceptAnyServerCertificateValidator": true
     },
@@ -516,6 +700,63 @@
       ],
       "UpstreamPathTemplate": "/cart/item/{itemId}",
       "UpstreamHttpMethod": [ "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Customer"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/orders/get",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orders-api",
+          "Port": 5061
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/get",
+      "UpstreamHttpMethod": [ "POST" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Customer"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/orders/{orderId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orders-api",
+          "Port": 5061
+        }
+      ],
+      "UpstreamPathTemplate": "/orders/{orderId}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Customer"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate":"/api/v1/orders",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "orders-api",
+          "Port": 5061
+        }
+      ],
+      "UpstreamPathTemplate": "/orders",
+      "UpstreamHttpMethod": [ "POST" ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
       },

@@ -42,12 +42,14 @@ public class CollectionService : ICollectionService
                     .Include(c => c.Stores!)
                     .ThenInclude(s => s.Ward)
                     .ThenInclude(w => w!.District)
-                    .ThenInclude(d => d!.Province);
+                    .ThenInclude(d => d!.Province)
+                    .Include(c => c.Stores!)
+                    .ThenInclude(s => s.SubCategories);
             
             Expression<Func<Collection, bool>> filter = x => 
-                (province.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.Code == province)) &&
+                (ward.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.Code == ward)) &&
                 (district.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.District!.Code == district)) &&
-                (ward.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.District!.Province!.Code == ward)) &&
+                (province.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.District!.Province!.Code == province)) &&
                 (categoryName.IsNullOrEmpty() || x.Stores!.Any(s => s.SubCategories.Any(c => c.Category!.CodeName == categoryName)));
             
             var collections = 
@@ -178,6 +180,14 @@ public class CollectionService : ICollectionService
         try
         {
             var collection = await _collectionRepository.GetAsync(c => c.Id == collectionId, tracked: false);
+
+            if (collection is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Collection not found!";
+                
+                return response;
+            }
             
             await _collectionRepository.RemoveAsync(collection);
             

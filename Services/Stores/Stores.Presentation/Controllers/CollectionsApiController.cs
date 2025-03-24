@@ -18,34 +18,18 @@ public class CollectionsApiController : ControllerBase
         _response = new Response();
     }
     
-    [HttpGet]
-    public async Task<IActionResult> GetByLocationAndCategory(
-        [FromQuery] string? province,
-        [FromQuery] string? district,
-        [FromQuery] string? ward,
-        [FromQuery] string? category,
-        [FromQuery] int pageSize = 12, 
-        [FromQuery] int pageNumber = 1)
+    [HttpPost("get")]
+    public async Task<IActionResult> GetByLocationAndCategory([FromBody] GetCollectionsRequest request)
     {
         try
         {
-            var request = new GetCollectionsRequest()
-            {
-                LocationRequest = new LocationRequest()
-                {
-                    Province = province,
-                    District = district,
-                    Ward = ward,
-                },
-                CategoryName = category,
-                PageSize = pageSize,
-                PageNumber = pageNumber
-            };
+            var province = request.LocationRequest!.Province;
+            var category = request.CategoryName;
             
             if (category is null)
                 _logger.LogInformation($"Getting the collections in province/city {province}...");
             else
-                _logger.LogInformation($"Getting the collections of category {request.CategoryName} in province/city {province}...");
+                _logger.LogInformation($"Getting the collections of category {category} in province/city {province}...");
             
             _response = await _service.GetByLocationAndCategoryAsync(request);
             

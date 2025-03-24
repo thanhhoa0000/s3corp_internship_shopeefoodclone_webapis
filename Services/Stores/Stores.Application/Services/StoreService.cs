@@ -174,20 +174,140 @@ public class StoreService : IStoreService
             return response;
         }
     }
-
+    
     /// <summary>
-    /// Update the store's metadata
+    /// Update the store's metadata by vendor (store's owner)
     /// </summary>
-    /// <param name="storeDto">The store to update</param>
+    /// <param name="request">The store to update</param>
     /// <returns>The updated store</returns>
-    public async Task<Response> UpdateAsync(StoreDto storeDto)
+    public async Task<Response> VendorUpdateAsync(VendorUpdateStoreRequest request)
     {
         var response = new Response();
 
         try
         {
-            // TODO: check existance, and state with corresponding behaviours (Validation model)
-            var store = _mapper.Map<Store>(storeDto);
+            var store = await _storeRepository.GetAsync(s => s.Id == request.Id);
+            
+            if (store is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Store not found!";
+                
+                return response;
+            }
+
+            if (store.State != StoreState.Active)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Store is not in active state!";
+                
+                return response;
+            }
+            
+            if (store.ConcurrencyStamp != request.ConcurrencyStamp)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Concurrency conflict! Data was modified by another user!";
+                
+                return response;
+            }
+            
+            var storeToUpdate = _mapper.Map<Store>(request);
+            
+            // TODO: track user who update
+            storeToUpdate.LastUpdatedAt = DateTime.UtcNow;
+            storeToUpdate.ConcurrencyStamp = Guid.NewGuid();
+
+            await _storeRepository.UpdateAsync(storeToUpdate);
+
+            response.Body = _mapper.Map<StoreDto>(store);
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+
+            return response;
+        }
+    }
+    
+    /// <summary>
+    /// Update the store's state by admin
+    /// </summary>
+    /// <param name="request">The store to update</param>
+    /// <returns>The updated store</returns>
+    public async Task<Response> AdminUpdateAsync(AdminUpdateStoreRequest request)
+    {
+        var response = new Response();
+
+        try
+        {
+            var store = await _storeRepository.GetAsync(s => s.Id == request.Id);
+            
+            if (store is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Store not found!";
+                
+                return response;
+            }
+            
+            if (store.ConcurrencyStamp != request.ConcurrencyStamp)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Concurrency conflict! Data was modified by another user!";
+                
+                return response;
+            }
+            
+            // TODO: Cannot map
+            // Cons: Mismatch Datatype, Prop Name,...
+            var storeToUpdate = _mapper.Map<Store>(request);
+            
+            storeToUpdate.LastUpdatedAt = DateTime.UtcNow;
+            storeToUpdate.ConcurrencyStamp = Guid.NewGuid();
+
+            await _storeRepository.UpdateAsync(storeToUpdate);
+
+            response.Body = _mapper.Map<StoreDto>(store);
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+
+            return response;
+        }
+    }
+    
+    /// <summary>
+    /// Deleted the store (Vendor)
+    /// </summary>
+    /// <param name="storeId">The store's ID to delete</param>
+    /// <returns>The deleted store (change store's state to "deleted")</returns>
+    public async Task<Response> VendorDeleteAsync(Guid storeId)
+    {
+        var response = new Response();
+
+        try
+        {
+            var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
+            
+            if (store is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Store not found!";
+                
+                return response;
+            }
+
+            
+            store.State = StoreState.Deleted;
+            store.LastUpdatedAt = DateTime.UtcNow;
 
             await _storeRepository.UpdateAsync(store);
 
@@ -205,7 +325,7 @@ public class StoreService : IStoreService
     }
 
     /// <summary>
-    /// Deleted the store
+    /// Deleted the store (Admin)
     /// </summary>
     /// <param name="storeId">The store's ID to delete</param>
     /// <returns>The deleted store</returns>
@@ -216,6 +336,14 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
+            
+            if (store is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Store not found!";
+                
+                return response;
+            }
 
             await _storeRepository.RemoveAsync(store);
 

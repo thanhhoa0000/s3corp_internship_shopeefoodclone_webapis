@@ -19,4 +19,7 @@ public class Product : IEntity
     [Column(TypeName = "decimal(18,0)")]
     public decimal Price { get; set; }
     public Guid ConcurrencyStamp { get; set; }
+    public ProductState State { get; set; } = ProductState.Normal;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? LastUpdatedAt { get; set; }
 }

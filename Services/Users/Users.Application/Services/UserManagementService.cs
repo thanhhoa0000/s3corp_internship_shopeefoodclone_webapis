@@ -58,6 +58,14 @@ public class UserManagementService : IUserManagementService
         try
         {
             var user = await _repository.GetAsync(u => u.Id == userId, tracked: false);
+            
+            if (user is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "User not found!";
+
+                return response;
+            }
 
             response.Body = _mapper.Map<AppUserDto>(user);
             
@@ -116,6 +124,14 @@ public class UserManagementService : IUserManagementService
         {
             var user = await _repository.GetAsync(u => u.Id == userDto.Id);
 
+            if (user is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "User not found!";
+
+                return response;
+            }
+
             var result = await _service.UpdateUserAsync(user);
 
             if (result.Errors.Any(e => e.Code == "ConcurrencyFailure"))
@@ -151,6 +167,15 @@ public class UserManagementService : IUserManagementService
         try
         {
             var user = await _repository.GetAsync(u => u.Id == userId, tracked: false);
+            
+            if (user is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "User not found!";
+
+                return response;
+            }
+            
             await _repository.RemoveAsync(user);
 
             response.Body = _mapper.Map<AppUserDto>(user);

@@ -51,6 +51,11 @@ public class RolesApiController : ControllerBase
             
             _response = await _service.GetAsync(roleId);
             
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Role not found!");
+            }
+            
             return Ok(_response);
         }
         catch (Exception ex)
@@ -69,8 +74,8 @@ public class RolesApiController : ControllerBase
             _logger.LogInformation($"Creating role {roleName}");
             
             _response = await _service.CreateAsync(roleName);
-            
-            return Ok(_response);
+
+            return Created();
         }
         catch (Exception ex)
         {
@@ -89,7 +94,12 @@ public class RolesApiController : ControllerBase
             
             _response = await _service.UpdateAsync(roleDto);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Role not found!");
+            }
+
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -108,7 +118,12 @@ public class RolesApiController : ControllerBase
             
             _response = await _service.RemoveAsync(roleId);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Role not found!");
+            }
+
+            return NoContent();
         }
         catch (Exception ex)
         {

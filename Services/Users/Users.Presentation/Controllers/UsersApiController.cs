@@ -53,6 +53,11 @@ public class UsersApiController : ControllerBase
             
             _response = await _service.GetAsync(userId);
             
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("User not found!");
+            }
+            
             return Ok(_response);
         }
         catch (Exception ex)
@@ -72,8 +77,8 @@ public class UsersApiController : ControllerBase
             _logger.LogInformation($"Creating user {request.User.Id}");
             
             _response = await _service.CreateAsync(request);
-            
-            return Ok(_response);
+
+            return Created();
         }
         catch (Exception ex)
         {
@@ -92,7 +97,12 @@ public class UsersApiController : ControllerBase
             
             _response = await _service.UpdateAsync(userDto);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("User not found!");
+            }
+
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -111,7 +121,12 @@ public class UsersApiController : ControllerBase
             
             _response = await _service.RemoveAsync(userId);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("User not found!");
+            }
+
+            return NoContent();
         }
         catch (Exception ex)
         {

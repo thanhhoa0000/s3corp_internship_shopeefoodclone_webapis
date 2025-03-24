@@ -1,0 +1,51 @@
+{
+	"id": "75e2e6f4-f730-4da2-aeac-515f306f7c0e",
+	"name": "ShopeeFoodClone Environment",
+	"values": [
+		{
+			"key": "identity_url",
+			"value": "https://localhost:5011/api/v1/auth",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "admin_access_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "admin_refresh_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "gateway_url",
+			"value": "https://localhost:5001",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "current_user_id",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2025-03-24T10:24:59.246Z",
+	"_postman_exported_using": "Postman/11.37.5"
+}

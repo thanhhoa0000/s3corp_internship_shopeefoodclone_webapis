@@ -6,9 +6,9 @@ global using Microsoft.Extensions.DependencyInjection;
 
 global using AutoMapper;
 
-global using ShopeeFoodClone.WebApi.Users.Application.Dtos;
-global using ShopeeFoodClone.WebApi.Users.Application.Requests;
-global using ShopeeFoodClone.WebApi.Users.Application.Responses;
+global using ShopeeFoodClone.WebApi.Users.Application.Models.Dtos;
+global using ShopeeFoodClone.WebApi.Users.Application.Models.Requests;
+global using ShopeeFoodClone.WebApi.Users.Application.Models.Responses;
 global using ShopeeFoodClone.WebApi.Users.Application.Interfaces;
 global using ShopeeFoodClone.WebApi.Users.Application.Services;
 global using ShopeeFoodClone.WebApi.Users.Application.Mappings;

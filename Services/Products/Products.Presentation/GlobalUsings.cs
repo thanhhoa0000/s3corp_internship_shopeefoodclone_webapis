@@ -20,9 +20,9 @@ global using ShopeeFoodClone.WebApi.Products.Presentation.Configurations;
 global using ShopeeFoodClone.WebApi.Products.Infrastructure.Persistence;
 global using ShopeeFoodClone.WebApi.Products.Infrastructure;
 
-global using ShopeeFoodClone.WebApi.Products.Application.Dtos;
-global using ShopeeFoodClone.WebApi.Products.Application.Requests;
-global using ShopeeFoodClone.WebApi.Products.Application.Responses;
+global using ShopeeFoodClone.WebApi.Products.Application.Models.Dtos;
+global using ShopeeFoodClone.WebApi.Products.Application.Models.Requests;
+global using ShopeeFoodClone.WebApi.Products.Application.Models.Responses;
 global using ShopeeFoodClone.WebApi.Products.Application.Interfaces;
 
 global using ShopeeFoodClone.WebApi.EventBus.RabbitMQ;

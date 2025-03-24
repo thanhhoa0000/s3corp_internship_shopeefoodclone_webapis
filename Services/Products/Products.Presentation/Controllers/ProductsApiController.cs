@@ -19,21 +19,12 @@ public class ProductsApiController : ControllerBase
     }
     
     [AllowAnonymous]
-    [HttpGet("store/{storeId}")]
-    public async Task<IActionResult> GetAllByStoreId(
-        [FromRoute] Guid storeId, [FromQuery] int pageSize = 12,
-        [FromQuery] int pageNumber = 1)
+    [HttpPost("get-from-store")]
+    public async Task<IActionResult> GetAllByStoreId([FromBody] GetProductsRequest request)
     {
         try
         {
-            var request = new GetStoresRequest()
-            {
-                StoreId = storeId,
-                PageSize = pageSize,
-                PageNumber = pageNumber
-            };
-            
-            _logger.LogInformation($"Getting the products of store {storeId}...");
+            _logger.LogInformation($"Getting the products of store {request.StoreId}...");
             
             _response = await _service.GetAllByStoreIdAsync(request);
             
@@ -68,13 +59,13 @@ public class ProductsApiController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ProductDto productDto)
+    public async Task<IActionResult> Create([FromBody] CreateProductRequest request)
     {
         try
         {
-            _logger.LogInformation($"Creating product {productDto.Id}");
+            _logger.LogInformation($"Creating product {request.Id}...");
             
-            _response = await _service.CreateAsync(productDto);
+            _response = await _service.CreateAsync(request);
             
             return Ok(_response);
         }
@@ -86,14 +77,14 @@ public class ProductsApiController : ControllerBase
         }
     }
     
-    [HttpPut]
-    public async Task<IActionResult> Update([FromBody] ProductDto productDto)
+    [HttpPut("update-metadata")]
+    public async Task<IActionResult> VendorUpdate([FromBody] VendorUpdateProductRequest request)
     {
         try
         {
-            _logger.LogInformation($"Updating product {productDto.Id}");
+            _logger.LogInformation($"Updating product {request.Id}...");
             
-            _response = await _service.UpdateAsync(productDto);
+            _response = await _service.VendorUpdateAsync(request);
             
             return Ok(_response);
         }
@@ -105,12 +96,51 @@ public class ProductsApiController : ControllerBase
         }
     }
     
-    [HttpDelete("{productId:guid}")]
+    [HttpPut("update-state")]
+    public async Task<IActionResult> VendorStateUpdate([FromBody] VendorUpdateProductStateRequest request)
+    {
+        try
+        {
+            _logger.LogInformation($"Updating product {request.ProductId}...");
+            
+            _response = await _service.VendorChangeProductStateAsync(request);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when updating the product!");
+        }
+    }
+    
+    [HttpDelete("delete/{productId:guid}")]
+    public async Task<IActionResult> VendorDelete([FromRoute] Guid productId)
+    {
+        try
+        {
+            _logger.LogInformation($"Deleting product {productId}...");
+            
+            _response = await _service.VendorDeleteAsync(productId);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when deleting the product!");
+        }
+    }
+    
+    [Authorize(AuthenticationSchemes = "Bearer", Policy = "AdminOnly")]
+    [HttpDelete("remove/{productId:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid productId)
     {
         try
         {
-            _logger.LogInformation($"Deleting product {productId}");
+            _logger.LogInformation($"Deleting product {productId}...");
             
             _response = await _service.RemoveAsync(productId);
             

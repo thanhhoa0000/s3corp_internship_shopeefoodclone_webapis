@@ -40,10 +40,16 @@ namespace ShopeeFoodClone.WebApi.Products.Infrastructure.Migrations
                     b.Property<string>("CoverImagePath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -51,7 +57,10 @@ namespace ShopeeFoodClone.WebApi.Products.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(18,0)");
+
+                    b.Property<byte>("State")
+                        .HasColumnType("tinyint");
 
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uniqueidentifier");

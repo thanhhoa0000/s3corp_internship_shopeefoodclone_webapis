@@ -16,36 +16,19 @@ public class StoresApiController : ControllerBase
         
         _response = new Response();
     }
-
-    // TODO: post
-    [HttpGet]
-    public async Task<IActionResult> GetByLocationAndCategory(
-        [FromQuery] string? province,
-        [FromQuery] string? district,
-        [FromQuery] string? ward,
-        [FromQuery] string? category,
-        [FromQuery] int pageSize = 12, 
-        [FromQuery] int pageNumber = 1)
+    
+    [HttpPost("get")]
+    public async Task<IActionResult> GetByLocationAndCategory([FromBody] GetStoresRequest request)
     {
         try
         {
-            var request = new GetStoresRequest()
-            {
-                LocationRequest = new LocationRequest()
-                {
-                    Province = province,
-                    District = district,
-                    Ward = ward,
-                },
-                CategoryName = category,
-                PageSize = pageSize,
-                PageNumber = pageNumber
-            };
+            var province = request.LocationRequest!.Province;
+            var category = request.CategoryName;
             
             if (category is null)
                 _logger.LogInformation($"Getting the stores in province/city {province}...");
             else
-                _logger.LogInformation($"Getting the stores of category {request.CategoryName} in province/city {province}...");
+                _logger.LogInformation($"Getting the stores of category {category} in province/city {province}...");
             
             _response = await _service.GetByLocationAndCategoryAsync(request);
             
@@ -129,14 +112,34 @@ public class StoresApiController : ControllerBase
     }
     
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "VendorOnly")]
-    [HttpPut]
-    public async Task<IActionResult> Update([FromBody] StoreDto storeDto)
+    [HttpPut("update-by-vendor")]
+    public async Task<IActionResult> VendorUpdate([FromBody] VendorUpdateStoreRequest request)
     {
         try
         {
-            _logger.LogInformation($"Updating store {storeDto.Id}");
+            _logger.LogInformation($"Updating store {request.Id}...");
             
-            _response = await _service.UpdateAsync(storeDto);
+            _response = await _service.VendorUpdateAsync(request);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when updating the store!");
+        }
+    }
+    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
+    [HttpPut("update-by-admin")]
+    public async Task<IActionResult> AdminUpdate([FromBody] AdminUpdateStoreRequest request)
+    {
+        try
+        {
+            _logger.LogInformation($"Updating store {request.Id}...");
+            
+            _response = await _service.AdminUpdateAsync(request);
             
             return Ok(_response);
         }
@@ -149,12 +152,32 @@ public class StoresApiController : ControllerBase
     }
     
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "VendorOnly")]
-    [HttpDelete("{storeId:guid}")]
-    public async Task<IActionResult> Delete([FromRoute] Guid storeId)
+    [HttpDelete("delete-by-vendor/{storeId:guid}")]
+    public async Task<IActionResult> VendorDelete([FromRoute] Guid storeId)
     {
         try
         {
-            _logger.LogInformation($"Deleting store {storeId}");
+            _logger.LogInformation($"Deleting store {storeId}...");
+            
+            _response = await _service.VendorDeleteAsync(storeId);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when deleting the store!");
+        }
+    }
+    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
+    [HttpDelete("delete-by-admin/{storeId:guid}")]
+    public async Task<IActionResult> AdminDelete([FromRoute] Guid storeId)
+    {
+        try
+        {
+            _logger.LogInformation($"Deleting store {storeId}...");
             
             _response = await _service.RemoveAsync(storeId);
             

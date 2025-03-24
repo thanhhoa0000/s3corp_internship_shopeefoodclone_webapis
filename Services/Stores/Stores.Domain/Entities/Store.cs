@@ -20,6 +20,10 @@ public class Store : IEntity
     public double Rating { get; set; } = 0.0;
     public int Sold { get; set; } = 0;
     public bool IsPromoted { get; set; } = false;
+    public StoreState State { get; set; } = StoreState.Active;
+    public Guid ConcurrencyStamp  { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? LastUpdatedAt { get; set; }
     
     public Ward? Ward { get; set; }
     public ICollection<SubCategory> SubCategories { get; set; } = new List<SubCategory>();

@@ -2,6 +2,7 @@
 
 namespace ShopeeFoodClone.WebApi.Orders.Application.Services;
 
+// TODO: GetOrdersByStore
 public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderHeaderRepository;
