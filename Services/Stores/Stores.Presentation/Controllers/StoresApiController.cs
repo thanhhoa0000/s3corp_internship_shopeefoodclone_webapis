@@ -23,12 +23,15 @@ public class StoresApiController : ControllerBase
         try
         {
             var province = request.LocationRequest!.Province;
-            var category = request.CategoryName;
+            var category =  request.CategoryName;
+            var subCategories = request.SubCategoryNames;
             
-            if (category is null)
+            if ((subCategories.IsNullOrEmpty() || !subCategories!.Any()) && category.IsNullOrEmpty())
                 _logger.LogInformation($"Getting the stores in province/city {province}...");
+            else if (!category.IsNullOrEmpty())
+                _logger.LogInformation($"Getting the stores in of category {category} in province/city {province}...");
             else
-                _logger.LogInformation($"Getting the stores of category {category} in province/city {province}...");
+                _logger.LogInformation($"Getting the stores of sub-categories {string.Join(", ", subCategories!)} in province/city {province}...");
             
             _response = await _service.GetByLocationAndCategoryAsync(request);
             

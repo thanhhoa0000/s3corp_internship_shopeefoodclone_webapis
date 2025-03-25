@@ -31,8 +31,8 @@ public class CollectionService : ICollectionService
         try
         {
             var province = request.LocationRequest!.Province;
-            var district = request.LocationRequest.District;
-            var ward = request.LocationRequest.Ward;
+            var districts = request.LocationRequest.Districts;
+            var wards = request.LocationRequest.Wards;
             var categoryName = request.CategoryName;
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
@@ -47,8 +47,8 @@ public class CollectionService : ICollectionService
                     .ThenInclude(s => s.SubCategories);
             
             Expression<Func<Collection, bool>> filter = x => 
-                (ward.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.Code == ward)) &&
-                (district.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.District!.Code == district)) &&
+                (wards == null || !wards.Any() || x.Stores!.Any(s => wards.Contains(s.Ward!.Code))) &&
+                (districts == null || !districts.Any() || x.Stores!.Any(s => districts.Contains(s.Ward!.District!.Code))) &&
                 (province.IsNullOrEmpty() || x.Stores!.Any(s => s.Ward!.District!.Province!.Code == province)) &&
                 (categoryName.IsNullOrEmpty() || x.Stores!.Any(s => s.SubCategories.Any(c => c.Category!.CodeName == categoryName)));
             

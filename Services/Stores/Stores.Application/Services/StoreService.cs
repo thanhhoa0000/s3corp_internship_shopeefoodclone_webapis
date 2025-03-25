@@ -1,6 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
-namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
+﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Services;
 
 public class StoreService : IStoreService
 {
@@ -33,25 +31,26 @@ public class StoreService : IStoreService
         try
         {
             var province = request.LocationRequest!.Province;
-            var district = request.LocationRequest.District;
-            var ward = request.LocationRequest.Ward;
+            var districts = request.LocationRequest.Districts;
+            var wards = request.LocationRequest.Wards;
             var categoryName = request.CategoryName;
+            var subCategoryNames = request.SubCategoryNames;
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
 
-            Func<IQueryable<Store>, IQueryable<Store>>? include = query =>
+            Func<IQueryable<Store>, IQueryable<Store>> include = query =>
                 query
                     .Include(s => s.Ward)
                     .ThenInclude(w => w!.District)
                     .ThenInclude(d => d!.Province)
-                    .Include(s => s.SubCategories)
-                    .ThenInclude(sc => sc.Category);
+                    .Include(s => s.SubCategories);
 
             Expression<Func<Store, bool>> filter = x =>
-                (ward.IsNullOrEmpty() || x.Ward!.Code == ward) &&
-                (district.IsNullOrEmpty() || x.Ward!.District!.Code == district) &&
+                (wards == null || !wards.Any() || wards.Contains(x.Ward!.Code)) &&
+                (districts == null || !districts.Any() || districts.Contains(x.Ward!.District!.Code)) &&
                 (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
-                (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName));
+                (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName)) &&
+                (subCategoryNames == null || !subCategoryNames.Any() || x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName)));
 
             var stores = await _storeRepository.GetAllAsync(
                 filter: filter,
