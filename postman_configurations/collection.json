@@ -531,7 +531,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"locationRequest\": { \"province\": \"79\" },\r\n    \"categoryName\": \"flowers\"\r\n}",
+									"raw": "{\r\n    \"locationRequest\": { \r\n        \"province\": \"79\"\r\n    },\r\n    \"categoryName\": \"flowers\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
