@@ -6,7 +6,7 @@ public class ProductDto
     public Guid StoreId { get; set; }
     [Required, MinLength(10), MaxLength(50)]
     public required string Name { get; set; }
-    [Required, MinLength(20), MaxLength(100)]
+    [Required, MinLength(20), MaxLength(200)]
     public required string Description { get; set; }
 
     [Required] public int AvailableStock { get; set; } = 0;
@@ -16,8 +16,10 @@ public class ProductDto
     [Required]
     [Range(1, double.MaxValue)]
     public decimal Price { get; set; }
+    public decimal Discount { get; set; }
     public Guid ConcurrencyStamp { get; set; }
     public ProductState State { get; set; } = ProductState.Normal;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? LastUpdatedAt { get; set; }
+    public ICollection<MenuDto> Menus { get; set; } = new List<MenuDto>();
 }

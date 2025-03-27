@@ -91,8 +91,19 @@ public class ProductService : IProductService
                 
                 return response;
             }
+
+            var product = new Product
+            {
+                Id = Guid.NewGuid(),
+                StoreId = request.StoreId,
+                Name = request.Name,
+                Description = request.Description,
+                AvailableStock = request.AvailableStock,
+                Price = request.Price,
+            };
             
-            var product = _mapper.Map<Product>(request);
+            product.CoverImagePath = $"/stores/{product.StoreId}/products/{product.Id}/cover-img.jpg";
+            product.ConcurrencyStamp = Guid.NewGuid();
             
             await _repository.CreateAsync(product);
             
