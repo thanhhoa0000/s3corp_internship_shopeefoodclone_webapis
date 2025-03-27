@@ -51,10 +51,14 @@ public class StoreService : IStoreService
                 (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
                 (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName)) &&
                 (subCategoryNames == null || !subCategoryNames.Any() || x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName)));
+            
+            Func<IQueryable<Store>, IOrderedQueryable<Store>> orderBy = query =>
+                query.OrderByDescending(s => s.IsPromoted);
 
             var stores = await _storeRepository.GetAllAsync(
                 filter: filter,
                 include: include,
+                orderBy: orderBy,
                 pageSize: pageSize,
                 pageNumber: pageNumber);
 
@@ -115,7 +119,13 @@ public class StoreService : IStoreService
 
         try
         {
-            var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
+            Func<IQueryable<Store>, IQueryable<Store>> include = query =>
+                query
+                    .Include(s => s.Ward)
+                    .ThenInclude(w => w!.District)
+                    .ThenInclude(d => d!.Province);
+            
+            var store = await _storeRepository.GetAsync(s => s.Id == storeId, include: include, tracked: false);
 
             response.Body = _mapper.Map<StoreDto>(store);
 
@@ -263,14 +273,16 @@ public class StoreService : IStoreService
             
             // TODO: Cannot map
             // Cons: Mismatch Datatype, Prop Name,...
-            var storeToUpdate = _mapper.Map<Store>(request);
+            var storeToUpdate = _mapper.Map<StoreDto>(store);
             
+            storeToUpdate.IsPromoted = request.IsPromoted;
+            storeToUpdate.State = request.State;
             storeToUpdate.LastUpdatedAt = DateTime.UtcNow;
             storeToUpdate.ConcurrencyStamp = Guid.NewGuid();
 
-            await _storeRepository.UpdateAsync(storeToUpdate);
+            await _storeRepository.UpdateAsync(_mapper.Map<Store>(storeToUpdate));
 
-            response.Body = _mapper.Map<StoreDto>(store);
+            response.Body = storeToUpdate;
 
             return response;
         }
