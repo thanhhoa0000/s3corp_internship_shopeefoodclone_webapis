@@ -531,7 +531,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"locationRequest\": { \r\n        \"province\": \"79\"\r\n    },\r\n    \"categoryName\": \"flowers\"\r\n}",
+									"raw": "{\r\n    \"locationRequest\": { \r\n        \"province\": \"79\"\r\n    },\r\n    \"categoryName\": \"food\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -568,7 +568,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"store\": {\r\n        \"userId\": \"46e132c8-5514-4e6b-6def-08dd62cbcedf\",\r\n        \"name\": \"Bánh Mì Chay Vạn Phước - Nguyễn Văn Lượng\",\r\n        \"streetName\": \"255A23 KDC City Land, Nguyễn Văn Lượng\",\r\n        \"openingHour\": \"11:00:00\",\r\n        \"closingHour\": \"22:00:00\"\r\n    },\r\n    \"subCateIds\": [\r\n        \"3fe57dd2-71b3-40d0-96b7-736421da3f2b\",\r\n        \"f699191d-5dd1-40b2-80c6-80e79e903fb9\"\r\n\r\n    ],\r\n    \"WardCode\": \"26884\"\r\n}",
+									"raw": "{\r\n    \"store\": {\r\n        \"userId\": \"46e132c8-5514-4e6b-6def-08dd62cbcedf\",\r\n        \"name\": \"Trà trái cây 130 Nguyễn Thị Minh Khai\",\r\n        \"streetName\": \"130 Nguyễn Thị Minh Khai\",\r\n        \"openingHour\": \"14:00:00\",\r\n        \"closingHour\": \"18:00:00\",\r\n        \"isPromoted\": true\r\n    },\r\n    \"subCateIds\": [\r\n        \"237daf77-f667-43ad-81c0-9fbcc9bf3582\"\r\n    ],\r\n    \"WardCode\": \"27139\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -636,13 +636,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_url}}/stores/delete-by-vendor/0b0978bc-326a-4179-9604-514671492596",
+									"raw": "{{gateway_url}}/stores/delete-by-admin/0b0978bc-326a-4179-9604-514671492596",
 									"host": [
 										"{{gateway_url}}"
 									],
 									"path": [
 										"stores",
-										"delete-by-vendor",
+										"delete-by-admin",
 										"0b0978bc-326a-4179-9604-514671492596"
 									]
 								}
@@ -666,7 +666,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"id\": \"0b0978bc-326a-4179-9604-514671492596\",\r\n        \"userId\": \"46e132c8-5514-4e6b-6def-08dd62cbcedf\",\r\n        \"wardCode\": \"26884\",\r\n        \"streetName\": \"255A23 KDC City Land, Nguyễn Văn Lượng\",\r\n        \"name\": \"Bánh Mì Chay Vạn Phước - Nguyễn Văn Lượng\",\r\n        \"openingHour\": \"11:00:00\",\r\n        \"closingHour\": \"22:00:00\",\r\n        \"coverImagePath\": \"/stores/0b0978bc-326a-4179-9604-514671492596/cover-img.jpg\",\r\n        \"rating\": 0,\r\n        \"sold\": 0,\r\n        \"isPromoted\": true,\r\n        \"ward\": {\r\n            \"code\": \"26884\",\r\n            \"districtCode\": \"764\",\r\n            \"name\": \"10\",\r\n            \"nameEng\": \"10\",\r\n            \"fullName\": \"Phường 10\",\r\n            \"fullNameEng\": \"Ward 10\",\r\n            \"codeName\": \"10\",\r\n            \"administrativeUnitId\": 8,\r\n            \"district\": null,\r\n            \"administrativeUnit\": null\r\n        },\r\n        \"subCategories\": [\r\n            {\r\n                \"id\": \"3fe57dd2-71b3-40d0-96b7-736421da3f2b\",\r\n                \"categoryId\": \"eeab6f01-dee7-48d8-b050-d48e90fe74a3\",\r\n                \"name\": \"Đồ chay\",\r\n                \"codeName\": \"vegetarians\",\r\n                \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\",\r\n                \"category\": null,\r\n                \"stores\": [\r\n                    null\r\n                ]\r\n            },\r\n            {\r\n                \"id\": \"f699191d-5dd1-40b2-80c6-80e79e903fb9\",\r\n                \"categoryId\": \"eeab6f01-dee7-48d8-b050-d48e90fe74a3\",\r\n                \"name\": \"Bánh mì\",\r\n                \"codeName\": \"banhmi\",\r\n                \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\",\r\n                \"category\": null,\r\n                \"stores\": [\r\n                    null\r\n                ]\r\n            }\r\n        ],\r\n        \"collections\": []\r\n    }",
+									"raw": "{\r\n        \"id\": \"7d659c05-1b4c-483f-a681-072045b3b213\",\r\n        \"wardCode\": \"27139\",\r\n        \"streetName\": \"130 Nguyễn Thị Minh Khai\",\r\n        \"name\": \"Trà trái cây 130 Nguyễn Thị Minh Khai\",\r\n        \"openingHour\": \"14:00:00\",\r\n        \"closingHour\": \"17:00:00\",\r\n        \"coverImagePath\": \"/stores/7d659c05-1b4c-483f-a681-072045b3b213/cover-img.jpg\",    \r\n        \"concurrencyStamp\": \"bfe66b6a-12bb-4954-a5cb-20759e1626e4\"\r\n    }",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -674,12 +674,50 @@
 									}
 								},
 								"url": {
-									"raw": "{{gateway_url}}/stores",
+									"raw": "{{gateway_url}}/stores/update-by-vendor",
 									"host": [
 										"{{gateway_url}}"
 									],
 									"path": [
-										"stores"
+										"stores",
+										"update-by-vendor"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Admin] Update a Store Copy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"7d659c05-1b4c-483f-a681-072045b3b213\",\r\n    \"isPromoted\": true,\r\n    \"state\": 0,\r\n    \"concurrencyStamp\": \"10df7ac5-b27b-4d09-8ad5-21d8b670b271\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/stores/update-by-admin",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"stores",
+										"update-by-admin"
 									]
 								}
 							},
@@ -691,13 +729,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_url}}/stores/d01681de-98b6-4955-9d0a-7580af91ce70",
+									"raw": "{{gateway_url}}/stores/7d659c05-1b4c-483f-a681-072045b3b213",
 									"host": [
 										"{{gateway_url}}"
 									],
 									"path": [
 										"stores",
-										"d01681de-98b6-4955-9d0a-7580af91ce70"
+										"7d659c05-1b4c-483f-a681-072045b3b213"
 									]
 								}
 							},
@@ -1036,17 +1074,25 @@
 								}
 							]
 						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"storeId\": \"df958450-5c70-44ed-989d-448cb6cec6aa\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{gateway_url}}/products/store/df958450-5c70-44ed-989d-448cb6cec6aa",
+							"raw": "{{gateway_url}}/products/get-from-store",
 							"host": [
 								"{{gateway_url}}"
 							],
 							"path": [
 								"products",
-								"store",
-								"df958450-5c70-44ed-989d-448cb6cec6aa"
+								"get-from-store"
 							]
 						}
 					},
@@ -1069,7 +1115,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"6c48ba52-7c01-4cd5-9cad-cee4f5de4a29\",\r\n    \"storeId\": \"df958450-5c70-44ed-989d-448cb6cec6aa\",\r\n    \"name\": \"producttest\",\r\n    \"description\":\"test\",\r\n    \"price\": 20000\r\n}",
+							"raw": "{\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n    \"name\": \"Combo Cơm Trưa Phi-lê Gà Quay\",\r\n    \"description\":\"1 Cơm Phi-lê Gà Quay/Cơm Phi-lê Gà Quay Tiêu + 1 ly Pepsi (Vừa)\",\r\n    \"price\": 59000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1089,7 +1135,44 @@
 					"response": []
 				},
 				{
-					"name": "[Vendor] Delete a Product",
+					"name": "[Vendor] Update a Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"id\": \"2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c\",\r\n        \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n        \"name\": \"Combo Deal Hời 55k\",\r\n        \"description\": \"01 miếng Gà/01 Mì Ý Gà Viên + 01 Khoai Tây Chiên (Vừa)/01 Bắp Cải Trộn (Lớn) + 01 Bánh Trứng/02 Viên Khoai Môn Kim Sa\",\r\n        \"availableStock\": 0,\r\n        \"coverImagePath\": \"/stores/906bf960-417d-4697-9bbb-5d351e455bfe/products/2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c/cover-img.jpg\",\r\n        \"price\": 79000,\r\n        \"discount\": 24000,\r\n        \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/products/update-metadata",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"products",
+								"update-metadata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Admin] Delete a Product",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1104,13 +1187,14 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{gateway_url}}/products/6c48ba52-7c01-4cd5-9cad-cee4f5de4a29",
+							"raw": "{{gateway_url}}/products/remove/581a5e9a-754a-4a2b-be87-79fda45cd7c8",
 							"host": [
 								"{{gateway_url}}"
 							],
 							"path": [
 								"products",
-								"6c48ba52-7c01-4cd5-9cad-cee4f5de4a29"
+								"remove",
+								"581a5e9a-754a-4a2b-be87-79fda45cd7c8"
 							]
 						}
 					},
