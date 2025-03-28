@@ -1,4 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Products.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ShopeeFoodClone.WebApi.Products.Application.Services;
 
 public class ProductService : IProductService
 {
@@ -29,10 +31,13 @@ public class ProductService : IProductService
             var pageNumber = request.PageNumber;
             
             Expression<Func<Product, bool>> filter = p => p.StoreId == storeId;
+
+            Func<IQueryable<Product>, IQueryable<Product>> include = query =>
+                query.Include(p => p.Menus.Where(i => i.State != MenuState.Inactive));
             
             var products = 
                 await _repository
-                    .GetAllAsync(filter: filter, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+                    .GetAllAsync(filter: filter, include: include, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<ProductDto>>(products);
             

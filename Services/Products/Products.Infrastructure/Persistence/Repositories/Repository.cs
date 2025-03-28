@@ -47,6 +47,9 @@ public class Repository<T, TContext> : IRepository<T>
     public async Task<IEnumerable<T>>
         GetAllAsync(
             Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IQueryable<T>>? include = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            bool orderByDescending = false,
             bool tracked = true,
             int pageSize = 0,
             int pageNumber = 1)
@@ -55,10 +58,16 @@ public class Repository<T, TContext> : IRepository<T>
 
         if (!tracked)
             query = query.AsNoTracking();
-
+        
+        if (include is not null)
+            query = include(query);
+        
         if (filter is not null)
             query = query.Where(filter);
-
+        
+        if (orderBy is not null)
+            query = orderByDescending ? orderBy(query).Reverse() : orderBy(query);
+        
         if (pageSize > 0)
             query = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize);
 

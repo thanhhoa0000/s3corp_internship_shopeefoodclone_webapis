@@ -1,4 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Products.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ShopeeFoodClone.WebApi.Products.Application.Services;
 
 public class MenuService : IMenuService
 {
@@ -32,10 +34,16 @@ public class MenuService : IMenuService
             var pageNumber = request.PageNumber;
 
             Expression<Func<Menu, bool>> filter = p => p.StoreId == storeId;
+            
+            Func<IQueryable<Menu>, IOrderedQueryable<Menu>> orderBy = query =>
+                query.OrderBy(i => i.Title.Contains("Món đang giảm") ? 0 : 1);
+
+            Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
+                query.Include(i => i.Products.Where(p => p.State != ProductState.Deleted));
 
             var menus =
                 await _menuRepository
-                    .GetAllAsync(filter: filter, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+                    .GetAllAsync(filter: filter, orderBy: orderBy, include: include, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
 
             response.Body = _mapper.Map<IEnumerable<Menu>>(menus);
         }
@@ -102,7 +110,7 @@ public class MenuService : IMenuService
 
         try
         {
-            var menu = await _menuRepository.GetAsync(p => p.Id == request.MenuId, tracked: false);
+            var menu = await _menuRepository.GetAsync(p => p.Id == request.MenuId);
 
             if (menu is null)
             {
