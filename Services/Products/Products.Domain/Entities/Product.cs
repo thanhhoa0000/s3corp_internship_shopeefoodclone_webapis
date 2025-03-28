@@ -13,6 +13,8 @@ public class Product : IEntity
     [Required] public int AvailableStock { get; set; } = 0;
 
     public int BookingCount { get; set; } = 0;
+    public int RateCount { get; set; } = 0;
+    public double Rating { get; set; } = 0.0;
     public string? CoverImagePath { get; set; }
     [Required]
     [Range(1, double.MaxValue)]

@@ -1034,171 +1034,281 @@
 			"name": "Products API",
 			"item": [
 				{
-					"name": "[Anonymous] Get a Product",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
+					"name": "Products",
+					"item": [
+						{
+							"name": "[Anonymous] Get a Product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/products/6c48ba52-7c01-4cd5-9cad-cee4f5de4a29",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"products",
+										"6c48ba52-7c01-4cd5-9cad-cee4f5de4a29"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{gateway_url}}/products/6c48ba52-7c01-4cd5-9cad-cee4f5de4a29",
-							"host": [
-								"{{gateway_url}}"
-							],
-							"path": [
-								"products",
-								"6c48ba52-7c01-4cd5-9cad-cee4f5de4a29"
-							]
+						{
+							"name": "[Anonymous] Get Products List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"storeId\": \"df958450-5c70-44ed-989d-448cb6cec6aa\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/products/get-from-store",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"products",
+										"get-from-store"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Vendor] Add a Product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n    \"name\": \"Combo Cơm Trưa Phi-lê Gà Quay\",\r\n    \"description\":\"1 Cơm Phi-lê Gà Quay/Cơm Phi-lê Gà Quay Tiêu + 1 ly Pepsi (Vừa)\",\r\n    \"price\": 59000\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/products",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Vendor] Update a Product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"id\": \"2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c\",\r\n        \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n        \"name\": \"Combo Deal Hời 55k\",\r\n        \"description\": \"01 miếng Gà/01 Mì Ý Gà Viên + 01 Khoai Tây Chiên (Vừa)/01 Bắp Cải Trộn (Lớn) + 01 Bánh Trứng/02 Viên Khoai Môn Kim Sa\",\r\n        \"availableStock\": 0,\r\n        \"coverImagePath\": \"/stores/906bf960-417d-4697-9bbb-5d351e455bfe/products/2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c/cover-img.jpg\",\r\n        \"price\": 79000,\r\n        \"discount\": 24000,\r\n        \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/products/update-metadata",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"products",
+										"update-metadata"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Admin] Delete a Product",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/products/remove/581a5e9a-754a-4a2b-be87-79fda45cd7c8",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"products",
+										"remove",
+										"581a5e9a-754a-4a2b-be87-79fda45cd7c8"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "[Anonymous] Get Products List",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
+					"name": "Menu",
+					"item": [
+						{
+							"name": "[Vendor] Add a Menu Item",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\": \"Món đang giảm\",\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/menus",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"menus"
+									]
 								}
-							]
+							},
+							"response": []
 						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"storeId\": \"df958450-5c70-44ed-989d-448cb6cec6aa\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						{
+							"name": "[Vendor] Add products to Menu Item",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"menuId\": \"9b2ea81a-d1b8-4079-86c0-912dc49afea9\",\r\n    \"concurrencyStamp\": \"71b06fd7-d82b-4714-9e56-ea378bfb67c6\",\r\n    \"productIds\": [\r\n        \"332fc7da-b0be-4533-bf67-2909020ff689\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/menus/add-products",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"menus",
+										"add-products"
+									]
 								}
-							}
+							},
+							"response": []
 						},
-						"url": {
-							"raw": "{{gateway_url}}/products/get-from-store",
-							"host": [
-								"{{gateway_url}}"
-							],
-							"path": [
-								"products",
-								"get-from-store"
-							]
+						{
+							"name": "[Anonymous] Get Menu Items",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/menus/get-from-store",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"menus",
+										"get-from-store"
+									]
+								}
+							},
+							"response": []
 						}
-					},
-					"response": []
-				},
-				{
-					"name": "[Vendor] Add a Product",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n    \"name\": \"Combo Cơm Trưa Phi-lê Gà Quay\",\r\n    \"description\":\"1 Cơm Phi-lê Gà Quay/Cơm Phi-lê Gà Quay Tiêu + 1 ly Pepsi (Vừa)\",\r\n    \"price\": 59000\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{gateway_url}}/products",
-							"host": [
-								"{{gateway_url}}"
-							],
-							"path": [
-								"products"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[Vendor] Update a Product",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n        \"id\": \"2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c\",\r\n        \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n        \"name\": \"Combo Deal Hời 55k\",\r\n        \"description\": \"01 miếng Gà/01 Mì Ý Gà Viên + 01 Khoai Tây Chiên (Vừa)/01 Bắp Cải Trộn (Lớn) + 01 Bánh Trứng/02 Viên Khoai Môn Kim Sa\",\r\n        \"availableStock\": 0,\r\n        \"coverImagePath\": \"/stores/906bf960-417d-4697-9bbb-5d351e455bfe/products/2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c/cover-img.jpg\",\r\n        \"price\": 79000,\r\n        \"discount\": 24000,\r\n        \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\"\r\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{gateway_url}}/products/update-metadata",
-							"host": [
-								"{{gateway_url}}"
-							],
-							"path": [
-								"products",
-								"update-metadata"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[Admin] Delete a Product",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{access_token}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{gateway_url}}/products/remove/581a5e9a-754a-4a2b-be87-79fda45cd7c8",
-							"host": [
-								"{{gateway_url}}"
-							],
-							"path": [
-								"products",
-								"remove",
-								"581a5e9a-754a-4a2b-be87-79fda45cd7c8"
-							]
-						}
-					},
-					"response": []
+					]
 				}
 			]
 		},

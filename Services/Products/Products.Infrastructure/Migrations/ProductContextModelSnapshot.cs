@@ -22,6 +22,52 @@ namespace ShopeeFoodClone.WebApi.Products.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MenuProduct", b =>
+                {
+                    b.Property<Guid>("MenusId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProductsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MenusId", "ProductsId");
+
+                    b.HasIndex("ProductsId");
+
+                    b.ToTable("MenuProduct");
+                });
+
+            modelBuilder.Entity("ShopeeFoodClone.WebApi.Products.Domain.Entities.Menu", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("LastUpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte>("State")
+                        .HasColumnType("tinyint");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Menus");
+                });
+
             modelBuilder.Entity("ShopeeFoodClone.WebApi.Products.Domain.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -62,6 +108,12 @@ namespace ShopeeFoodClone.WebApi.Products.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,0)");
 
+                    b.Property<int>("RateCount")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
+
                     b.Property<byte>("State")
                         .HasColumnType("tinyint");
 
@@ -71,6 +123,21 @@ namespace ShopeeFoodClone.WebApi.Products.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("MenuProduct", b =>
+                {
+                    b.HasOne("ShopeeFoodClone.WebApi.Products.Domain.Entities.Menu", null)
+                        .WithMany()
+                        .HasForeignKey("MenusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ShopeeFoodClone.WebApi.Products.Domain.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
