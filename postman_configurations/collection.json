@@ -1316,20 +1316,26 @@
 			"name": "Cart API",
 			"item": [
 				{
-					"name": "[Anonymous] Get Cart",
+					"name": "[Customer] Get Cart",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5051/api/v1/cart/user/62b3d6ba-b064-446e-5063-08dd56ef0d0e",
-							"protocol": "https",
+							"raw": "{{gateway_url}}/cart/user/62b3d6ba-b064-446e-5063-08dd56ef0d0e",
 							"host": [
-								"localhost"
+								"{{gateway_url}}"
 							],
-							"port": "5051",
 							"path": [
-								"api",
-								"v1",
 								"cart",
 								"user",
 								"62b3d6ba-b064-446e-5063-08dd56ef0d0e"
