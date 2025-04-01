@@ -1,3 +1,5 @@
+using ShopeeFoodClone.WebApi.Cart.Application.Models.Requests;
+
 namespace ShopeeFoodClone.WebApi.Cart.Presentation.Controllers;
 
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "CustomerOnly")]
@@ -37,15 +39,15 @@ public class CartApiController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddToCart([FromBody] CartDto cartDto)
+    public async Task<IActionResult> AddToCart([FromBody] AddToCartRequest request)
     {
         try
         {
-            _logger.LogInformation("Adding item to the cart...");
+            _logger.LogInformation($"Adding item {request.ProductId} to the cart...");
             
-            _response = await _service.AddToCartAsync(cartDto);
-            
-            return Ok(_response);
+            _response = await _service.AddToCartAsync(request);
+
+            return Created();
         }
         catch (Exception ex)
         {
@@ -64,7 +66,12 @@ public class CartApiController : ControllerBase
             
             _response = await _service.RemoveFromCartAsync(itemId);
             
-            return Ok(_response);
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound(_response.Message);
+            }
+            
+            return NoContent();
         }
         catch (Exception ex)
         {

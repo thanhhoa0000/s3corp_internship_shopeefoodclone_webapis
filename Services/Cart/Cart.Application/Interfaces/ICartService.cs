@@ -3,6 +3,6 @@
 public interface ICartService
 {
     Task<Response> GetCartAsync(Guid customerId);
-    Task<Response> AddToCartAsync(CartDto cartDto);
+    Task<Response> AddToCartAsync(AddToCartRequest request);
     Task<Response> RemoveFromCartAsync(Guid cartItemId);
 }
