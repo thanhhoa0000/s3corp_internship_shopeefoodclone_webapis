@@ -115,6 +115,11 @@ public class Repository<T, TContext> : IRepository<T>
 
     }
 
+    public int GetCount()
+    {
+        return _dbSet.AsNoTracking().ToList().Count;
+    }
+
     public async Task SaveAsync()
     {
         await _context.SaveChangesAsync();

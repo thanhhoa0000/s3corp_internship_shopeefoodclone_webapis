@@ -193,4 +193,21 @@ public class StoresApiController : ControllerBase
             return BadRequest("Error(s) occurred when deleting the store!");
         }
     }
+
+    [HttpGet("get-count")]
+    public IActionResult GetStoresCount()
+    {
+        try
+        {
+            _logger.LogInformation($"Getting stores count...");
+            
+            return Ok(_service.GetStoresCount());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the stores count!");
+        }
+    }
 }

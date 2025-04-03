@@ -34,4 +34,23 @@ public class ProvincesApiController : ControllerBase
             return BadRequest("Error(s) occurred when getting the provinces!");
         }
     }
+
+    [HttpGet("with-stores-count")]
+    public async Task<IActionResult> GetNamesWithStoresCount([FromQuery] int pageSize = 0, [FromQuery] int pageNumber = 1)
+    {
+        try
+        {
+            _logger.LogInformation("Getting the provinces with stores count...");
+
+            _response = await _service.GetNamesWithStoresCountAsync(pageSize: pageSize, pageNumber: pageNumber);
+
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+
+            return BadRequest("Error(s) occurred when getting the provinces!");
+        }
+    }
 }
