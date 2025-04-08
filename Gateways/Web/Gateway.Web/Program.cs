@@ -19,6 +19,10 @@ try
                 policy.WithOrigins("https://thanhhoa.shopeefood.s3corp.vn:7001")
                     .WithMethods("POST", "GET")
                     .AllowAnyHeader();
+                
+                policy.WithOrigins("https://localhost:44351")
+                    .WithMethods("POST", "GET")
+                    .AllowAnyHeader();
             });
     });
     

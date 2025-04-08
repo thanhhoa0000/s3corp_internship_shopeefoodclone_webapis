@@ -1,4 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Cart.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ShopeeFoodClone.WebApi.Cart.Application.Services;
 
 public class CartService : ICartService
 {
@@ -48,7 +50,10 @@ public class CartService : ICartService
             
             cart.CartItems = _mapper
                 .Map<ICollection<CartItemDto>>(
-                    await _cartItemRepository.GetAllAsync(i => i.CartHeaderId == cart.CartHeader.Id, tracked: false));
+                    await _cartItemRepository.GetAllAsync(
+                        filter: i => i.CartHeaderId == cart.CartHeader.Id,
+                        include: query => query.Include(i => i.CartHeader),
+                        tracked: false));
             
             foreach (var item in cart.CartItems)
             {
@@ -59,7 +64,8 @@ public class CartService : ICartService
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 
                 item.Product = productDto;
-                cart.CartHeader.TotalPrice += (item.Quantity * item.Product!.Price);
+                cart.CartHeader.TotalPrice += (item.Quantity * (item.Product!.Price - item.Product!.Discount));
+                item.CartHeader!.TotalPrice += (item.Quantity * (item.Product!.Price - item.Product!.Discount));
             }
             
             response.Body = cart;

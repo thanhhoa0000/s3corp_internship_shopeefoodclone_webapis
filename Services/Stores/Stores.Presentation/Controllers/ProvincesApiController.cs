@@ -23,7 +23,7 @@ public class ProvincesApiController : ControllerBase
         {
             _logger.LogInformation("Getting the provinces...");
             
-            _response = await _service.GetAllAsync(pageSize:  pageSize, pageNumber: pageNumber);
+            _response = await _service.GetAllAsync(pageSize: pageSize, pageNumber: pageNumber);
             
             return Ok(_response);
         }

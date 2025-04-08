@@ -537,6 +537,19 @@
             "UpstreamHttpMethod": [ "GET" ],
             "DangerousAcceptAnyServerCertificateValidator": true
         },
+      {
+        "DownstreamPathTemplate": "/api/v1/wards",
+        "DownstreamScheme": "https",
+        "DownstreamHostAndPorts": [
+          {
+            "Host": "stores-api",
+            "Port": 5031
+          }
+        ],
+        "UpstreamPathTemplate": "/wards",
+        "UpstreamHttpMethod": [ "GET" ],
+        "DangerousAcceptAnyServerCertificateValidator": true
+      },
         {
             "DownstreamPathTemplate": "/api/v1/categories/{cateId}",
             "DownstreamScheme": "https",
