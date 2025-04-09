@@ -29,7 +29,7 @@ public class IdentityRepository : IIdentityRepository
         return user!;
     }
     
-    public async Task<RefreshToken> GetRefreshTokenAsync(
+    public async Task<RefreshToken?> GetRefreshTokenAsync(
         Expression<Func<RefreshToken, bool>>? filter = null, 
         Func<IQueryable<RefreshToken>, IQueryable<RefreshToken>>? include = null,
         bool tracked = true)
@@ -47,7 +47,7 @@ public class IdentityRepository : IIdentityRepository
 
         RefreshToken? refreshToken = await query.FirstOrDefaultAsync();
 
-        return refreshToken!;
+        return refreshToken;
     }
 
     public async Task CreateRefreshTokenAsync(RefreshToken refreshToken)

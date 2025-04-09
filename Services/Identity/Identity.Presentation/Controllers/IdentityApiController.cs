@@ -59,6 +59,13 @@ public class IdentityApiController : ControllerBase
                 return BadRequest("Refresh token is expired!");
             }
             
+            if (_response.Message.Contains("Refresh token not found!"))
+            {
+                _logger.LogError("Error(s) occurred: \n---\n{error}", _response.Message);
+                
+                return NotFound(_response.Message);
+            }
+            
             return Ok(_response);
                 
         }

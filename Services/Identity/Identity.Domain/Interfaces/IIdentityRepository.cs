@@ -3,7 +3,7 @@
 public interface IIdentityRepository : IDisposable
 {
     Task<AppUser> GetUserAsync(Expression<Func<AppUser, bool>>? filter = null, bool tracked = true);
-    Task<RefreshToken> GetRefreshTokenAsync(
+    Task<RefreshToken?> GetRefreshTokenAsync(
         Expression<Func<RefreshToken, bool>>? filter = null, 
         Func<IQueryable<RefreshToken>, IQueryable<RefreshToken>>? include = null, 
         bool tracked = true);

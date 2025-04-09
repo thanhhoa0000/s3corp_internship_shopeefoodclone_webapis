@@ -10,6 +10,8 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
         
         builder.HasIndex(r => r.Token).IsUnique();
 
+        builder.HasIndex(r => r.AppUserId).IsUnique();
+
         builder.HasOne(r => r.AppUser).WithMany().HasForeignKey(r => r.AppUserId).IsRequired();
     }
 }
