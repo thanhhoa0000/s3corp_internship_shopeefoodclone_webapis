@@ -50,6 +50,24 @@ public class IdentityService : IIdentityService
 
             var token = _tokenProvider.CreateAccessToken(user, roles);
 
+            var refreshTokenInDb = await _repository.GetRefreshTokenAsync(r => r.AppUserId == user.Id);
+
+            if (refreshTokenInDb is not null)
+            {
+                refreshTokenInDb.Token = _tokenProvider.GenerateRefreshToken();
+                refreshTokenInDb.ExpireTime = DateTime.UtcNow.AddDays(refreshTokenExpirationTimeInDays);
+                
+                await _repository.UpdateRefreshTokenAsync(refreshTokenInDb);
+                
+                response.Body = new LoginResponse()
+                {
+                    AccessToken = token,
+                    RefreshToken = refreshTokenInDb.Token,
+                };
+
+                return response;
+            }
+
             var refreshToken = new RefreshToken()
             {
                 Id = Guid.NewGuid(),
@@ -89,10 +107,19 @@ public class IdentityService : IIdentityService
 
         try
         {
+            Console.WriteLine(request.RefreshToken);
             var refreshToken = await _repository.GetRefreshTokenAsync(
                 include: q => q.Include(r => r.AppUser),
                 filter: r => r.Token == request.RefreshToken,
                 tracked: false);
+
+            if (refreshToken is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Refresh token not found!";
+
+                return response;
+            }
             
             if (refreshToken.ExpireTime < DateTime.UtcNow)
             {
@@ -124,7 +151,7 @@ public class IdentityService : IIdentityService
         catch (Exception ex)
         {
             response.IsSuccessful = false;
-            response.Message = ex.Message;
+            response.Message = ex.ToString();
             
             return response;
         }

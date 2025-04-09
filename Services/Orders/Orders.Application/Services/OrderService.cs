@@ -97,18 +97,24 @@ public class OrderService : IOrderService
     /// <summary>
     /// Create order when processing from cart
     /// </summary>
-    /// <param name="cartDto">The cart to process</param>
+    /// <param name="request">The cart to process</param>
     /// <returns>The created order</returns>
-    public async Task<Response> CreateOrderAsync(CartDto cartDto)
+    public async Task<Response> CreateOrderAsync(CreateOrderRequest request)
     {
         var response = new Response();
 
         try
         {
-            var orderHeaderDto = _mapper.Map<OrderDto>(cartDto.CartHeader);
+            var cartHeader = request.Cart!.CartHeader;
+            var cartItems = request.Cart!.CartItems;
+            var address = request.Address!;
+            
+            var orderHeaderDto = _mapper.Map<OrderDto>(cartHeader);
             orderHeaderDto.OrderDate = DateTime.UtcNow;
             orderHeaderDto.OrderStatus = OrderStatus.Pending;
-            orderHeaderDto.OrderDetails = _mapper.Map<ICollection<OrderDetailDto>>(cartDto.CartItems);
+            orderHeaderDto.OrderDetails = _mapper.Map<ICollection<OrderDetailDto>>(cartItems);
+            orderHeaderDto.Address = address;
+            
             await _orderHeaderRepository.CreateAsync(_mapper.Map<Order>(orderHeaderDto));
             
             response.Body = orderHeaderDto;

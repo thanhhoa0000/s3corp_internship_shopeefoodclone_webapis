@@ -56,13 +56,13 @@ public class OrdersApiController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CartDto cartDto)
+    public async Task<IActionResult> Create(CreateOrderRequest request)
     {
         try
         {
             _logger.LogInformation($"Creating the order...");
 
-            _response = await _service.CreateOrderAsync(cartDto);
+            _response = await _service.CreateOrderAsync(request);
             
             return Ok(_response);
         }

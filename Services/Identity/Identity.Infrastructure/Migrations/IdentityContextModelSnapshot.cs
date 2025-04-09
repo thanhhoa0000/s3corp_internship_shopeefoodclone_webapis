@@ -163,7 +163,7 @@ namespace ShopeeFoodClone.WebApi.Identity.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("f6fe96d6-874b-4c9e-a80e-b35d430029da"),
+                            Id = new Guid("ceaf2fd0-ab94-43e4-9a50-d8f37b7377c9"),
                             ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
                             Description = "Administrator role",
                             Name = "Admin",
@@ -171,7 +171,7 @@ namespace ShopeeFoodClone.WebApi.Identity.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("1514474e-63e4-47bc-b3b8-fd1c174b9e5f"),
+                            Id = new Guid("913ae6d5-7bef-43e8-8db3-8a162a71518f"),
                             ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
                             Description = "Customer role",
                             Name = "Customer",
@@ -179,7 +179,7 @@ namespace ShopeeFoodClone.WebApi.Identity.Infrastructure.Migrations
                         },
                         new
                         {
-                            Id = new Guid("a7b5d50e-f703-4790-ae4c-234fc6fe6df1"),
+                            Id = new Guid("9e75b1d1-58a1-4a9a-ada9-39a545d6e5e5"),
                             ConcurrencyStamp = "00000000-0000-0000-0000-000000000000",
                             Description = "Vendor role",
                             Name = "Vendor",
@@ -195,6 +195,9 @@ namespace ShopeeFoodClone.WebApi.Identity.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -280,7 +283,8 @@ namespace ShopeeFoodClone.WebApi.Identity.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
 
                     b.HasIndex("Token")
                         .IsUnique();

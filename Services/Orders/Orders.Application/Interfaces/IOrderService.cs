@@ -4,6 +4,6 @@ public interface IOrderService
 {
     Task<Response> GetOrdersByCustomerIdAsync(GetOrdersRequest request);
     Task<Response> GetOrderByIdAsync(Guid orderId);
-    Task<Response> CreateOrderAsync(CartDto cartDto);
+    Task<Response> CreateOrderAsync(CreateOrderRequest request);
     Task<Response> SoftDeleteOrderAsync(Guid orderId);
 }

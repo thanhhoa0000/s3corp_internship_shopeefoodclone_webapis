@@ -12,16 +12,19 @@ try
         options.AddPolicy("AllowFrontend",
             policy =>
             {
-                policy.WithOrigins("https://localhost:7001")
-                    .WithMethods("GET", "POST")
+                policy.WithOrigins("http://thanhhoa.shopeefood.s3corp.vn")
+                    .WithMethods("POST", "GET")
+                    .AllowAnyHeader();
+
+                policy.WithOrigins("https://thanhhoa.shopeefood.s3corp.vn:7001")
+                    .WithMethods("POST", "GET")
                     .AllowAnyHeader();
                 
                 policy.WithOrigins("https://localhost:44351")
-                    .WithMethods("GET", "POST")
+                    .WithMethods("POST", "GET")
                     .AllowAnyHeader();
             });
     });
-
     
     // Use NLog
     builder.Logging.ClearProviders();

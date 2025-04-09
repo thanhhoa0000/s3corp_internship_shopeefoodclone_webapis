@@ -10,4 +10,5 @@ public interface IStoreService
     Task<Response> RemoveAsync(Guid storeId);
     Task<Response> VendorUpdateAsync(VendorUpdateStoreRequest request);
     Task<Response> AdminUpdateAsync(AdminUpdateStoreRequest request);
+    Response GetStoresCount();
 }

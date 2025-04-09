@@ -238,7 +238,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"normal1\",\r\n    \"password\": \"Aa@123456\"\r\n}",
+									"raw": "{\r\n    \"username\": \"customerNo1\",\r\n    \"password\": \"Aa@123456\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -358,6 +358,34 @@
 									],
 									"path": [
 										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Admin] Delete a User",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/users/1872863a-ba3c-4f1e-711e-08dd7360d6a8",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"users",
+										"1872863a-ba3c-4f1e-711e-08dd7360d6a8"
 									]
 								}
 							},
@@ -740,6 +768,24 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[Anonymous] Get Count",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/stores/get-count",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"stores",
+										"get-count"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -957,6 +1003,41 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[Anonymous] Get Wards List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/wards",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"wards"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Anonymous] Get Province Names with Stores Count",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/provinces/with-stores-count",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"provinces",
+										"with-stores-count"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1081,7 +1162,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"storeId\": \"df958450-5c70-44ed-989d-448cb6cec6aa\"\r\n}",
+									"raw": "{\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1316,36 +1397,52 @@
 			"name": "Cart API",
 			"item": [
 				{
-					"name": "[Anonymous] Get Cart",
+					"name": "[Customer] Get Cart",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5051/api/v1/cart/user/62b3d6ba-b064-446e-5063-08dd56ef0d0e",
-							"protocol": "https",
+							"raw": "{{gateway_url}}/cart/user/3192d0e3-5b84-4941-7120-08dd7360d6a8",
 							"host": [
-								"localhost"
+								"{{gateway_url}}"
 							],
-							"port": "5051",
 							"path": [
-								"api",
-								"v1",
 								"cart",
 								"user",
-								"62b3d6ba-b064-446e-5063-08dd56ef0d0e"
+								"3192d0e3-5b84-4941-7120-08dd7360d6a8"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "[Anonymous] Add to Cart",
+					"name": "[Customer] Add to Cart",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"cartHeader\": {\r\n        \"id\": \"7fcd9c4e-4f65-44b3-a5d1-893e3dd8dc8c\",\r\n        \"customerId\": \"62b3d6ba-b064-446e-5063-08dd56ef0d0e\",\r\n        \"totalPrice\": 60000\r\n  },\r\n  \"cartItems\": [\r\n    {\r\n        \"cartHeaderId\": \"7fcd9c4e-4f65-44b3-a5d1-893e3dd8dc8c\",\r\n        \"productId\": \"6c48ba52-7c01-4cd5-9cad-cee4f5de4a29\",\r\n        \"quantity\": 3,\r\n        \"price\": 60000\r\n    }\r\n  ]\r\n}\r\n",
+							"raw": "{\r\n    \"customerId\": \"62b3d6ba-b064-446e-5063-08dd56ef0d0e\",\r\n    \"productId\": \"332fc7da-b0be-4533-bf67-2909020ff689\",\r\n    \"quantity\": 4\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1365,19 +1462,29 @@
 					"response": []
 				},
 				{
-					"name": "[Anonymous] Delete from Cart",
+					"name": "[Customer] Delete from Cart",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{gateway_url}}/cart/item/18e5bd9c-722d-444c-9b76-036497abd54d",
+							"raw": "{{gateway_url}}/cart/item/982a718e-8add-4871-a3bb-e64d86317f6e",
 							"host": [
 								"{{gateway_url}}"
 							],
 							"path": [
 								"cart",
 								"item",
-								"18e5bd9c-722d-444c-9b76-036497abd54d"
+								"982a718e-8add-4871-a3bb-e64d86317f6e"
 							]
 						}
 					},
@@ -1387,7 +1494,44 @@
 		},
 		{
 			"name": "Orders API",
-			"item": []
+			"item": [
+				{
+					"name": "[Customer] Create Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"cartHeader\": {\r\n            \"id\": \"4b0cf0fe-1db7-4132-8162-ab14c851db91\",\r\n            \"customerId\": \"62b3d6ba-b064-446e-5063-08dd56ef0d0e\",\r\n            \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n            \"totalPrice\": 315000\r\n        },\r\n        \"cartItems\": [\r\n            {\r\n                \"id\": \"7cbd37e4-2d8e-4b78-bace-b11190c1bfab\",\r\n                \"cartHeaderId\": \"4b0cf0fe-1db7-4132-8162-ab14c851db91\",\r\n                \"productId\": \"332fc7da-b0be-4533-bf67-2909020ff689\",\r\n                \"quantity\": 4,\r\n                \"price\": 59000,\r\n                \"product\": {\r\n                    \"id\": \"332fc7da-b0be-4533-bf67-2909020ff689\",\r\n                    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n                    \"name\": \"Combo Cơm Trưa Phi-lê Gà Quay\",\r\n                    \"description\": \"1 Cơm Phi-lê Gà Quay/Cơm Phi-lê Gà Quay Tiêu + 1 ly Pepsi (Vừa)\",\r\n                    \"availableStock\": 0,\r\n                    \"bookingCount\": 0,\r\n                    \"rateCount\": 0,\r\n                    \"rating\": 0,\r\n                    \"coverImagePath\": \"/stores/906bf960-417d-4697-9bbb-5d351e455bfe/products/332fc7da-b0be-4533-bf67-2909020ff689/cover-img.jpg\",\r\n                    \"price\": 59000,\r\n                    \"discount\": 0.00,\r\n                    \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\",\r\n                    \"state\": 0,\r\n                    \"createdAt\": \"2025-03-27T08:20:21.3722984\",\r\n                    \"lastUpdatedAt\": null,\r\n                    \"menus\": []\r\n                },\r\n                \"cartHeader\": null\r\n            },\r\n            {\r\n                \"id\": \"cd86a166-f098-46ca-97f9-c40f54db3304\",\r\n                \"cartHeaderId\": \"4b0cf0fe-1db7-4132-8162-ab14c851db91\",\r\n                \"productId\": \"2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c\",\r\n                \"quantity\": 1,\r\n                \"price\": 79000,\r\n                \"product\": {\r\n                    \"id\": \"2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c\",\r\n                    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\",\r\n                    \"name\": \"Combo Deal Hời 55k\",\r\n                    \"description\": \"01 miếng Gà/01 Mì Ý Gà Viên + 01 Khoai Tây Chiên (Vừa)/01 Bắp Cải Trộn (Lớn) + 01 Bánh Trứng/02 Viên Khoai Môn Kim Sa\",\r\n                    \"availableStock\": 0,\r\n                    \"bookingCount\": 0,\r\n                    \"rateCount\": 0,\r\n                    \"rating\": 0,\r\n                    \"coverImagePath\": \"/stores/906bf960-417d-4697-9bbb-5d351e455bfe/products/2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c/cover-img.jpg\",\r\n                    \"price\": 79000,\r\n                    \"discount\": 24000.00,\r\n                    \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\",\r\n                    \"state\": 0,\r\n                    \"createdAt\": \"2025-03-27T08:40:48.8698677\",\r\n                    \"lastUpdatedAt\": \"2025-03-27T08:40:48.8698687\",\r\n                    \"menus\": []\r\n                },\r\n                \"cartHeader\": null\r\n            }\r\n        ]\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/orders",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

@@ -8,6 +8,7 @@ global using Microsoft.EntityFrameworkCore;
 global using AutoMapper;
 
 global using ShopeeFoodClone.WebApi.Orders.Application.Models.Dtos;
+global using ShopeeFoodClone.WebApi.Orders.Application.Models.Enums;
 global using ShopeeFoodClone.WebApi.Orders.Application.Models.Requests;
 global using ShopeeFoodClone.WebApi.Orders.Application.Models.Responses;
 global using ShopeeFoodClone.WebApi.Orders.Application.Interfaces;

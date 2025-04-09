@@ -1,4 +1,6 @@
-﻿namespace ShopeeFoodClone.WebApi.Cart.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace ShopeeFoodClone.WebApi.Cart.Application.Services;
 
 public class CartService : ICartService
 {
@@ -48,7 +50,10 @@ public class CartService : ICartService
             
             cart.CartItems = _mapper
                 .Map<ICollection<CartItemDto>>(
-                    await _cartItemRepository.GetAllAsync(i => i.CartHeaderId == cart.CartHeader.Id, tracked: false));
+                    await _cartItemRepository.GetAllAsync(
+                        filter: i => i.CartHeaderId == cart.CartHeader.Id,
+                        include: query => query.Include(i => i.CartHeader),
+                        tracked: false));
             
             foreach (var item in cart.CartItems)
             {
@@ -59,7 +64,8 @@ public class CartService : ICartService
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                 
                 item.Product = productDto;
-                cart.CartHeader.TotalPrice += (item.Quantity * item.Product!.Price);
+                cart.CartHeader.TotalPrice += (item.Quantity * (item.Product!.Price - item.Product!.Discount));
+                item.CartHeader!.TotalPrice += (item.Quantity * (item.Product!.Price - item.Product!.Discount));
             }
             
             response.Body = cart;
@@ -78,40 +84,41 @@ public class CartService : ICartService
     /// <summary>
     /// Add an item to cart
     /// </summary>
-    /// <param name="cartDto">Info of item to add</param>
+    /// <param name="request">Info of item to add</param>
     /// <returns>The updated cart</returns>
-    public async Task<Response> AddToCartAsync(CartDto cartDto)
+    public async Task<Response> AddToCartAsync(AddToCartRequest request)
     {
         var response = new Response();
 
         try
         {
-            var cartItemDto = cartDto.CartItems.First();
             var cartHeaderFromDb = await _cartHeaderRepository.GetAsync(
-                c => c.CustomerId == cartDto.CartHeader!.CustomerId);
+                c => c.CustomerId == request.CustomerId);
 
             // Fix: Create cart header and ensure it's not null
             if (cartHeaderFromDb is null)
             {
-                cartHeaderFromDb = _mapper.Map<CartHeader>(cartDto.CartHeader);
+                cartHeaderFromDb = new CartHeader
+                {
+                    CustomerId = request.CustomerId,
+                };
+                
                 await _cartHeaderRepository.CreateAsync(cartHeaderFromDb);
             }
 
             // Check if item already exists in the cart
             var cartItemFromDb = await _cartItemRepository.GetAsync(
-                i => i.ProductId == cartItemDto.ProductId && i.CartHeaderId == cartHeaderFromDb.Id);
+                i => i.ProductId == request.ProductId && i.CartHeaderId == cartHeaderFromDb.Id);
 
             if (cartItemFromDb is null)
             {
-                var responseFromProductApi = await _productService.GetProductAsync(cartItemDto.ProductId);
+                var responseFromProductApi = await _productService.GetProductAsync(request.ProductId);
                 
                 var productDto = JsonSerializer.Deserialize<ProductDto>(
                     Convert.ToString(responseFromProductApi!.Body)!,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                
-                cartItemDto.Product = productDto;
 
-                if (cartItemDto.Product!.StoreId != cartHeaderFromDb.StoreId)
+                if (productDto!.StoreId != cartHeaderFromDb.StoreId)
                 {
                     var oldCartItems =
                         await _cartItemRepository.GetAllAsync(i => i.CartHeaderId == cartHeaderFromDb.Id);
@@ -120,25 +127,33 @@ public class CartService : ICartService
                     {
                         await _cartItemRepository.RemoveAsync(item);
                     }
-
-                    cartDto.CartHeader!.StoreId = cartItemDto.Product!.StoreId;
-                    cartHeaderFromDb.StoreId = cartItemDto.Product!.StoreId;
+                    
+                    cartHeaderFromDb.StoreId = productDto!.StoreId;
                     
                     await _cartHeaderRepository.UpdateAsync(cartHeaderFromDb);
                 }
+
+                var newCartItem = new CartItem
+                {
+                    CartHeader = cartHeaderFromDb,
+                    ProductId = request.ProductId,
+                    Quantity = request.Quantity,
+                    Price = productDto!.Price,
+                };
                 
-                var newCartItem = _mapper.Map<CartItem>(cartItemDto);
                 newCartItem.CartHeaderId = cartHeaderFromDb.Id;
                 newCartItem.Id = Guid.NewGuid();
+                
                 await _cartItemRepository.CreateAsync(newCartItem);
             }
             else
             {
-                cartItemFromDb.Quantity += cartItemDto.Quantity;
+                cartItemFromDb.Quantity += request.Quantity;
+                
                 await _cartItemRepository.UpdateAsync(cartItemFromDb);
             }
 
-            response.Body = cartDto;
+            response.Message = "The cart has been updated successfully!";
             
             return response;
         }
@@ -188,7 +203,7 @@ public class CartService : ICartService
                 await _cartHeaderRepository.RemoveAsync(cartHeader);
             }
 
-            response.Body = true;
+            response.Message = "The cart has been updated successfully!";
         }
         catch (Exception ex)
         {

@@ -7,5 +7,5 @@ public class CartHeaderDto
     public Guid StoreId { get; set; }
     [Required]
     [Range(1, double.MaxValue)]
-    public decimal TotalPrice { get; set; }
+    public decimal TotalPrice { get; set; } = 0;
 }

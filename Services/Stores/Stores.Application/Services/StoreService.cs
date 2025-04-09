@@ -370,4 +370,12 @@ public class StoreService : IStoreService
             return response;
         }
     }
+
+    public Response GetStoresCount()
+    {
+        var response = new Response();
+        response.Body = _storeRepository.GetCount();
+        
+        return response;
+    }
 }
