@@ -23,6 +23,10 @@ try
                 policy.WithOrigins("https://localhost:44351")
                     .WithMethods("POST", "GET")
                     .AllowAnyHeader();
+                
+                policy.WithOrigins("https://localhost:7001")
+                    .WithMethods("POST", "GET")
+                    .AllowAnyHeader();
             });
     });
     

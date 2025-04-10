@@ -7,15 +7,18 @@ public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderHeaderRepository;
     private readonly IOrderDetailRepository _orderDetailRepository;
+    private readonly ICartService _cartService;
     private readonly IMapper _mapper;
 
     public OrderService(
         IOrderRepository orderHeaderRepository,
         IOrderDetailRepository orderDetailRepository,
+        ICartService cartService,
         IMapper mapper)
     {
         _orderHeaderRepository = orderHeaderRepository;
         _orderDetailRepository = orderDetailRepository;
+        _cartService = cartService;
         _mapper = mapper;
     }
 
@@ -108,16 +111,29 @@ public class OrderService : IOrderService
             var cartHeader = request.Cart!.CartHeader;
             var cartItems = request.Cart!.CartItems;
             var address = request.Address!;
+            var customerName = request.CustomerName!;
+            var phoneNumber = request.PhoneNumber!;
             
             var orderHeaderDto = _mapper.Map<OrderDto>(cartHeader);
+            orderHeaderDto.CustomerName = customerName;
+            orderHeaderDto.PhoneNumber = phoneNumber;
+            orderHeaderDto.StoreId = cartHeader!.StoreId;
             orderHeaderDto.OrderDate = DateTime.UtcNow;
             orderHeaderDto.OrderStatus = OrderStatus.Pending;
             orderHeaderDto.OrderDetails = _mapper.Map<ICollection<OrderDetailDto>>(cartItems);
             orderHeaderDto.Address = address;
             
             await _orderHeaderRepository.CreateAsync(_mapper.Map<Order>(orderHeaderDto));
+
+            var emptyCartSuccess = await _cartService.EmptyCart(orderHeaderDto.CustomerId);
+
+            if (!emptyCartSuccess)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Error occurred when creating a new order!";
+            }
             
-            response.Body = orderHeaderDto;
+            response.Message = "Order created successfully!";
         }
         catch (Exception ex)
         {

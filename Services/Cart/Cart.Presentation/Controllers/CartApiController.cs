@@ -57,6 +57,30 @@ public class CartApiController : ControllerBase
         }
     }
 
+    [HttpDelete("empty-cart/{customerId:guid}")]
+    public async Task<IActionResult> EmptyCart([FromRoute] Guid customerId)
+    {
+        try
+        {
+            _logger.LogInformation("Emptying the cart...");
+            
+            _response = await _service.EmptyCartAsync(customerId);
+            
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound(_response.Message);
+            }
+            
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when emptying the cart!");
+        }
+    }
+
     [HttpDelete("item/{itemId:guid}")]
     public async Task<IActionResult> RemoveFromCart([FromRoute] Guid itemId)
     {

@@ -63,8 +63,8 @@ public class OrdersApiController : ControllerBase
             _logger.LogInformation($"Creating the order...");
 
             _response = await _service.CreateOrderAsync(request);
-            
-            return Ok(_response);
+
+            return Created();
         }
         catch (Exception ex)
         {
