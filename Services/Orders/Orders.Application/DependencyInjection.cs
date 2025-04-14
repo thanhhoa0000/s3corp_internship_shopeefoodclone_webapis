@@ -4,6 +4,15 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services
+            .AddHttpClient("InternalShopeeFoodClone_OrderToCart")
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+            });
         
         services.AddHttpClient<ICartService, CartService>();
         

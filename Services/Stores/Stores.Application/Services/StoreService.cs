@@ -371,10 +371,33 @@ public class StoreService : IStoreService
         }
     }
 
-    public Response GetStoresCount()
+    public Response GetStoresCount(GetStoresCountRequest request)
     {
         var response = new Response();
-        response.Body = _storeRepository.GetCount();
+        if (request.LocationRequest is not null)
+        {
+            var province = request.LocationRequest.Province;
+            var districts = request.LocationRequest.Districts;
+            var wards = request.LocationRequest.Wards;
+            var categoryName = request.CategoryName;
+            var subCategoryNames = request.SubCategoryNames;
+
+            Expression<Func<Store, bool>> filter = x =>
+                (wards == null || !wards.Any() || wards.Contains(x.Ward!.Code)) &&
+                (districts == null || !districts.Any() || districts.Contains(x.Ward!.District!.Code)) &&
+                (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
+                (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName)) &&
+                (subCategoryNames == null || !subCategoryNames.Any() || x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName))) &&
+                (!request.IsPromoted || x.IsPromoted);
+            
+            response.Body = _storeRepository.GetCount(filter);
+        }
+        else
+        {
+            Expression<Func<Store, bool>> filter = x => !request.IsPromoted || x.IsPromoted;
+            
+            response.Body = _storeRepository.GetCount(filter);
+        }
         
         return response;
     }

@@ -9,4 +9,5 @@ public interface ICategoryService
     Task<Response> RemoveAsync(Guid cateId);
     Task<Response> DeleteAsync(Guid cateId);
     Task<Response> UpdateAsync(CategoryDto categoryDto);
+    Task<Response> GetNamesListWithSubCategoriesNameAsync(int pageSize = 0, int pageNumber = 1);
 }

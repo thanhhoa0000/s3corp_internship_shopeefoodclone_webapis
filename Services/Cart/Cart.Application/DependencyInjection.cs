@@ -5,7 +5,7 @@ public static class DependencyInjection
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services
-            .AddHttpClient("InternalShopeeFoodClone")
+            .AddHttpClient("InternalShopeeFoodClone_CartToProduct")
             .ConfigurePrimaryHttpMessageHandler(() =>
             {
                 return new HttpClientHandler

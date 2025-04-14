@@ -167,7 +167,7 @@
       ],
       "UpstreamPathTemplate": "/stores/get-count",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DangerousAcceptAnyServerCertificateValidator": true
     },
@@ -374,6 +374,21 @@
         }
       ],
       "UpstreamPathTemplate": "/collections/{collectionId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/categories/with-sub-categories-name-list",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/categories/with-sub-categories-name-list",
       "UpstreamHttpMethod": [
         "GET"
       ],

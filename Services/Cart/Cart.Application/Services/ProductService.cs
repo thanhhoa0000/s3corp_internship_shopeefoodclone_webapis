@@ -10,7 +10,7 @@ public class ProductService : IProductService
     public ProductService(IHttpClientFactory clientFactory, IConfiguration configuration)
     {
         _configuration = configuration;
-        _client = clientFactory.CreateClient("InternalShopeeFoodClone");
+        _client = clientFactory.CreateClient("InternalShopeeFoodClone_CartToProduct");
     }
 
     public async Task<Response?> GetProductAsync(Guid productId)

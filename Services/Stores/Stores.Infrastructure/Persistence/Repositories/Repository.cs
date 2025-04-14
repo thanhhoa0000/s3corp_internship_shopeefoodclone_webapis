@@ -115,9 +115,14 @@ public class Repository<T, TContext> : IRepository<T>
 
     }
 
-    public int GetCount()
+    public int GetCount(Expression<Func<T, bool>>? filter = null)
     {
-        return _dbSet.AsNoTracking().ToList().Count;
+        IQueryable<T> query = _dbSet;
+        
+        if (filter is not null)
+            query = query.Where(filter);
+        
+        return query.AsNoTracking().ToList().Count;
     }
 
     public async Task SaveAsync()
