@@ -46,7 +46,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"admin1\",\r\n    \"password\": \"Aa@123456\"\r\n}",
+									"raw": "{\r\n    \"username\": \"supermainadmin\",\r\n    \"password\": \"Aa@123456\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -147,7 +147,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"vendor4\",\r\n    \"password\": \"Aa@123456\"\r\n}",
+									"raw": "{\r\n    \"username\": \"vendor1\",\r\n    \"password\": \"Aa@123456\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -238,7 +238,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"customerNo1\",\r\n    \"password\": \"Aa@123456\"\r\n}",
+									"raw": "{\r\n    \"username\": \"customer1\",\r\n    \"password\": \"Aa@123456\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -309,7 +309,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\": \"vendor5\",\r\n    \"email\": \"vendor5@example.com\",\r\n    \"password\": \"Aa@123456\",\r\n    \"confirmPassword\": \"Aa@123456\",\r\n    \"phoneNumber\": \"0236445476\",\r\n    \"firstName\": \"Jim\",\r\n    \"lastName\": \"Bunny\",\r\n    \"role\": 2\r\n}",
+							"raw": "{\r\n    \"userName\": \"vendor1\",\r\n    \"email\": \"vendor1@example.com\",\r\n    \"password\": \"Aa@123456\",\r\n    \"confirmPassword\": \"Aa@123456\",\r\n    \"phoneNumber\": \"0254879963\",\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Greg\",\r\n    \"role\": 2\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -379,13 +379,13 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_url}}/users/1872863a-ba3c-4f1e-711e-08dd7360d6a8",
+									"raw": "{{gateway_url}}/users/5d99bc4e-5b9d-4659-5f8b-08dd7b3f5063",
 									"host": [
 										"{{gateway_url}}"
 									],
 									"path": [
 										"users",
-										"1872863a-ba3c-4f1e-711e-08dd7360d6a8"
+										"5d99bc4e-5b9d-4659-5f8b-08dd7b3f5063"
 									]
 								}
 							},
@@ -596,7 +596,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"store\": {\r\n        \"userId\": \"46e132c8-5514-4e6b-6def-08dd62cbcedf\",\r\n        \"name\": \"Trà trái cây 130 Nguyễn Thị Minh Khai\",\r\n        \"streetName\": \"130 Nguyễn Thị Minh Khai\",\r\n        \"openingHour\": \"14:00:00\",\r\n        \"closingHour\": \"18:00:00\",\r\n        \"isPromoted\": true\r\n    },\r\n    \"subCateIds\": [\r\n        \"237daf77-f667-43ad-81c0-9fbcc9bf3582\"\r\n    ],\r\n    \"WardCode\": \"27139\"\r\n}",
+									"raw": "{\r\n    \"store\": {\r\n        \"userId\": \"c4330029-35c4-4ba1-67be-08dd78aa5700\",\r\n        \"name\": \"Texas Chicken - Phan Xích Long\",\r\n        \"streetName\": \"274 - 276 Phan Xích Long\",\r\n        \"openingHour\": \"10:00:00\",\r\n        \"closingHour\": \"22:00:00\"\r\n    },\r\n    \"subCateIds\": [\r\n        \"4233b3e8-b473-4fc2-843d-589d053cb2c3\"\r\n    ],\r\n    \"WardCode\": \"27052\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -694,7 +694,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n        \"id\": \"7d659c05-1b4c-483f-a681-072045b3b213\",\r\n        \"wardCode\": \"27139\",\r\n        \"streetName\": \"130 Nguyễn Thị Minh Khai\",\r\n        \"name\": \"Trà trái cây 130 Nguyễn Thị Minh Khai\",\r\n        \"openingHour\": \"14:00:00\",\r\n        \"closingHour\": \"17:00:00\",\r\n        \"coverImagePath\": \"/stores/7d659c05-1b4c-483f-a681-072045b3b213/cover-img.jpg\",    \r\n        \"concurrencyStamp\": \"bfe66b6a-12bb-4954-a5cb-20759e1626e4\"\r\n    }",
+									"raw": "{\r\n            \"id\": \"b30bf4f2-54a0-415d-9308-6dabb7777f02\",\r\n            \"userId\": \"00000000-0000-0000-0000-000000000000\",\r\n            \"wardCode\": \"26977\",\r\n            \"streetName\": \"335A Lê Văn Sỹ\",\r\n            \"name\": \"Domino's Pizza Lê Văn Sỹ\",\r\n            \"openingHour\": \"10:00:00\",\r\n            \"closingHour\": \"22:00:00\",\r\n            \"coverImagePath\": \"/stores/b30bf4f2-54a0-415d-9308-6dabb7777f02/cover-img.jpg\",\r\n            \"rating\": 0,\r\n            \"sold\": 0,\r\n            \"isPromoted\": true,\r\n            \"state\": 0,\r\n            \"concurrencyStamp\": \"66ba327d-c72b-41c5-afd1-a1adf319898f\",\r\n            \"createdAt\": \"2025-04-11T03:55:37.4642827\",\r\n            \"lastUpdatedAt\": \"2025-04-11T03:55:37.4642834\",\r\n            \"ward\": {\r\n                \"code\": \"26977\",\r\n                \"districtCode\": \"766\",\r\n                \"name\": \"1\",\r\n                \"nameEng\": \"1\",\r\n                \"fullName\": \"Phường 1\",\r\n                \"fullNameEng\": \"Ward 1\",\r\n                \"codeName\": \"1\",\r\n                \"administrativeUnitId\": 8,\r\n                \"district\": {\r\n                    \"code\": \"766\",\r\n                    \"provinceCode\": \"79\",\r\n                    \"name\": \"Tân Bình\",\r\n                    \"nameEng\": \"Tan Binh\",\r\n                    \"fullName\": \"Quận Tân Bình\",\r\n                    \"fullNameEng\": \"Tan Binh District\",\r\n                    \"codeName\": \"tan_binh\",\r\n                    \"administrativeUnitId\": 5,\r\n                    \"province\": {\r\n                        \"code\": \"79\",\r\n                        \"name\": \"Hồ Chí Minh\",\r\n                        \"nameEng\": \"Ho Chi Minh\",\r\n                        \"fullName\": \"Thành phố Hồ Chí Minh\",\r\n                        \"fullNameEng\": \"Ho Chi Minh City\",\r\n                        \"codeName\": \"ho_chi_minh\",\r\n                        \"administrativeUnitId\": 1,\r\n                        \"administrativeRegionId\": 7,\r\n                        \"administrativeRegion\": null,\r\n                        \"administrativeUnit\": null\r\n                    },\r\n                    \"administrativeUnit\": null\r\n                },\r\n                \"administrativeUnit\": null\r\n            },\r\n            \"subCategories\": [\r\n                {\r\n                    \"id\": \"c95a95b5-95ac-42b4-8624-d6f0bc043def\",\r\n                    \"categoryId\": \"eeab6f01-dee7-48d8-b050-d48e90fe74a3\",\r\n                    \"name\": \"Pizza\",\r\n                    \"codeName\": \"pizza\",\r\n                    \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\",\r\n                    \"state\": 0,\r\n                    \"category\": null,\r\n                    \"stores\": [\r\n                        null\r\n                    ]\r\n                }\r\n            ],\r\n            \"collections\": []\r\n        }",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -715,7 +715,7 @@
 							"response": []
 						},
 						{
-							"name": "[Admin] Update a Store Copy",
+							"name": "[Admin] Update a Store",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -731,7 +731,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"id\": \"7d659c05-1b4c-483f-a681-072045b3b213\",\r\n    \"isPromoted\": true,\r\n    \"state\": 0,\r\n    \"concurrencyStamp\": \"10df7ac5-b27b-4d09-8ad5-21d8b670b271\"\r\n}",
+									"raw": "{\r\n    \"id\": \"3e7d2b56-371b-406c-9c76-faa4b7006a1a\",\r\n    \"isPromoted\": true,\r\n    \"state\": 0,\r\n    \"concurrencyStamp\": \"00000000-0000-0000-0000-000000000000\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -772,8 +772,17 @@
 						{
 							"name": "[Anonymous] Get Count",
 							"request": {
-								"method": "GET",
+								"method": "POST",
 								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"locationReqeust\": {\r\n        \"province\": \"79\"\r\n    },\r\n    \"isPromoted\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
 								"url": {
 									"raw": "{{gateway_url}}/stores/get-count",
 									"host": [
@@ -981,6 +990,24 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "[Anonymous] Get Categories Name List",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/categories/with-sub-categories-name-list",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"categories",
+										"with-sub-categories-name-list"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -1010,12 +1037,18 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_url}}/wards",
+									"raw": "{{gateway_url}}/wards?district=760",
 									"host": [
 										"{{gateway_url}}"
 									],
 									"path": [
 										"wards"
+									],
+									"query": [
+										{
+											"key": "district",
+											"value": "760"
+										}
 									]
 								}
 							},
@@ -1412,14 +1445,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{gateway_url}}/cart/user/3192d0e3-5b84-4941-7120-08dd7360d6a8",
+							"raw": "{{gateway_url}}/cart/user/8d018a26-28b6-4767-11cb-08dd772ff774",
 							"host": [
 								"{{gateway_url}}"
 							],
 							"path": [
 								"cart",
 								"user",
-								"3192d0e3-5b84-4941-7120-08dd7360d6a8"
+								"8d018a26-28b6-4767-11cb-08dd772ff774"
 							]
 						}
 					},
@@ -1442,7 +1475,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"customerId\": \"62b3d6ba-b064-446e-5063-08dd56ef0d0e\",\r\n    \"productId\": \"332fc7da-b0be-4533-bf67-2909020ff689\",\r\n    \"quantity\": 4\r\n}",
+							"raw": "{\r\n    \"customerId\": \"8d018a26-28b6-4767-11cb-08dd772ff774\",\r\n    \"productId\": \"2f5dbe05-3b35-4b1f-9e37-9c46f2cb473c\",\r\n    \"quantity\": -1\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1489,6 +1522,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "[Customer] Empty Cart",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/cart/empty-cart/8d018a26-28b6-4767-11cb-08dd772ff774",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"cart",
+								"empty-cart",
+								"8d018a26-28b6-4767-11cb-08dd772ff774"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -1526,6 +1588,71 @@
 							],
 							"path": [
 								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Customer] Get Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customerId\": \"8d018a26-28b6-4767-11cb-08dd772ff774\",\r\n    \"status\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}/orders/get",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"orders",
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Customer] Get Order by ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gateway_url}}/orders/da729d55-af16-471e-976c-6f6302213c9f",
+							"host": [
+								"{{gateway_url}}"
+							],
+							"path": [
+								"orders",
+								"da729d55-af16-471e-976c-6f6302213c9f"
 							]
 						}
 					},

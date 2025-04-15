@@ -14,10 +14,22 @@ public static class DependencyInjection
                 };
             });
         
+        services
+            .AddHttpClient("InternalShopeeFoodClone_OrderToProducts")
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+            });
+        
         services.AddHttpClient<ICartService, CartService>();
+        services.AddHttpClient<IProductService, ProductService>();
         
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<ICartService, CartService>();
+        services.AddScoped<IProductService, ProductService>();
         services.AddAutoMapper(typeof(OrdersMappingProfile));
         
         return services;

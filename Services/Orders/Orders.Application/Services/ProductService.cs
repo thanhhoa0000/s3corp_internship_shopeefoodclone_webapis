@@ -1,4 +1,4 @@
-﻿namespace ShopeeFoodClone.WebApi.Cart.Application.Services;
+﻿namespace ShopeeFoodClone.WebApi.Orders.Application.Services;
 
 public class ProductService : IProductService
 {
@@ -8,7 +8,7 @@ public class ProductService : IProductService
     public ProductService(IHttpClientFactory clientFactory, IConfiguration configuration)
     {
         _configuration = configuration;
-        _client = clientFactory.CreateClient("InternalShopeeFoodClone_CartToProduct");
+        _client = clientFactory.CreateClient("InternalShopeeFoodClone_OrderToProducts");
     }
 
     public async Task<Response?> GetProductAsync(Guid productId)
