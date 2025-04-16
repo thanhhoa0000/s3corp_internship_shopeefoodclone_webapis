@@ -559,7 +559,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"locationRequest\": { \r\n        \"province\": \"79\"\r\n    },\r\n    \"categoryName\": \"food\"\r\n}",
+									"raw": "{\r\n    \"locationRequest\": { \r\n        \"province\": \"79\"\r\n    },\r\n    \"categoryName\": \"food\",\r\n    \"isPromoted\": true\r\n    }",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -763,6 +763,25 @@
 									],
 									"path": [
 										"stores",
+										"7d659c05-1b4c-483f-a681-072045b3b213"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Anonymous] Get A Store's Name",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/stores/get-name/7d659c05-1b4c-483f-a681-072045b3b213",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"stores",
+										"get-name",
 										"7d659c05-1b4c-483f-a681-072045b3b213"
 									]
 								}
@@ -1646,13 +1665,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{gateway_url}}/orders/da729d55-af16-471e-976c-6f6302213c9f",
+							"raw": "{{gateway_url}}/orders/e3c1ef28-6ab9-44e5-a8ae-15a6cdf70cf2",
 							"host": [
 								"{{gateway_url}}"
 							],
 							"path": [
 								"orders",
-								"da729d55-af16-471e-976c-6f6302213c9f"
+								"e3c1ef28-6ab9-44e5-a8ae-15a6cdf70cf2"
 							]
 						}
 					},

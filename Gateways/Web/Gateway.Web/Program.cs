@@ -7,35 +7,60 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddCors(options =>
+    if (builder.Environment.IsDevelopment())
     {
-        options.AddPolicy("AllowFrontend",
-            policy =>
-            {
-                policy.WithOrigins("http://thanhhoa.shopeefood.s3corp.vn")
-                    .WithMethods("POST", "GET")
-                    .AllowAnyHeader();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend",
+                policy =>
+                {
+                    // Client.Customers
+                    policy.WithOrigins("https://thanhhoa.shopeefood.s3corp.vn:7001")
+                        .WithMethods("POST", "GET")
+                        .AllowAnyHeader();
+                
+                    policy.WithOrigins("https://localhost:44351")
+                        .WithMethods("POST", "GET")
+                        .AllowAnyHeader();
+                
+                    policy.WithOrigins("https://localhost:7001")
+                        .WithMethods("POST", "GET")
+                        .AllowAnyHeader();
+                    
+                    // Client.Administrators
+                    policy.WithOrigins("https://localhost:8001")
+                        .WithMethods("POST", "GET")
+                        .AllowAnyHeader();
+                    
+                    policy.WithOrigins("https://localhost:44302")
+                        .WithMethods("POST", "GET")
+                        .AllowAnyHeader();
+                });
+        });
+        
+        builder.Configuration.AddJsonFile("ocelot.Development.json", optional: false, reloadOnChange: true);
+    }
+    else
+    {
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowFrontend",
+                policy =>
+                {
+                    policy.WithOrigins("http://thanhhoa.shopeefood.s3corp.vn")
+                        .WithMethods("POST", "GET")
+                        .AllowAnyHeader();
+                });
+        });
+        
+        builder.Configuration.AddJsonFile("ocelot.Development.json", optional: false, reloadOnChange: true);
+    }
 
-                policy.WithOrigins("https://thanhhoa.shopeefood.s3corp.vn:7001")
-                    .WithMethods("POST", "GET")
-                    .AllowAnyHeader();
-                
-                policy.WithOrigins("https://localhost:44351")
-                    .WithMethods("POST", "GET")
-                    .AllowAnyHeader();
-                
-                policy.WithOrigins("https://localhost:7001")
-                    .WithMethods("POST", "GET")
-                    .AllowAnyHeader();
-            });
-    });
-    
     // Use NLog
     builder.Logging.ClearProviders();
     builder.Host.UseNLog();
 
     // Add services to the container.
-    builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
     builder.Configuration.AddJsonFile("jwt_properties.json", optional: false, reloadOnChange: true);
 
     builder.Services.AddOcelot();

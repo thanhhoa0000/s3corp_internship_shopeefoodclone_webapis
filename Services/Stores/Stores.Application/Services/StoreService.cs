@@ -50,8 +50,11 @@ public class StoreService : IStoreService
                 (districts == null || !districts.Any() || districts.Contains(x.Ward!.District!.Code)) &&
                 (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
                 (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName)) &&
-                (subCategoryNames == null || !subCategoryNames.Any() || x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName)));
-            
+                (subCategoryNames == null || !subCategoryNames.Any() ||
+                 x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName))) &&
+                (!request.IsPromoted || x.IsPromoted);
+            ;
+
             Func<IQueryable<Store>, IOrderedQueryable<Store>> orderBy = query =>
                 query.OrderByDescending(s => s.IsPromoted);
 
@@ -89,7 +92,7 @@ public class StoreService : IStoreService
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
 
-            Expression<Func<Store, bool>> filter = x => x.UserId == vendorId;
+            Expression<Func<Store, bool>> filter = x => x.UserId == vendorId && (!request.IsPromoted || x.IsPromoted);
 
             var stores =
                 await _storeRepository
@@ -124,7 +127,7 @@ public class StoreService : IStoreService
                     .Include(s => s.Ward)
                     .ThenInclude(w => w!.District)
                     .ThenInclude(d => d!.Province);
-            
+
             var store = await _storeRepository.GetAsync(s => s.Id == storeId, include: include, tracked: false);
 
             response.Body = _mapper.Map<StoreDto>(store);
@@ -138,6 +141,29 @@ public class StoreService : IStoreService
 
             return response;
         }
+    }
+
+    /// <summary>
+    /// Get a store's name
+    /// </summary>
+    /// <param name="storeId">The ID of the store</param>
+    /// <returns>The store's name</returns>
+    public async Task<Response> GetNameAsync(Guid storeId)
+    {
+        var response = new Response();
+        try
+        {
+            var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
+            
+            response.Body = store!.Name;
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+        }
+
+        return response;
     }
 
     /// <summary>
@@ -183,7 +209,7 @@ public class StoreService : IStoreService
             return response;
         }
     }
-    
+
     /// <summary>
     /// Update the store's metadata by vendor (store's owner)
     /// </summary>
@@ -196,12 +222,12 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == request.Id);
-            
+
             if (store is null)
             {
                 response.IsSuccessful = false;
                 response.Message = "Store not found!";
-                
+
                 return response;
             }
 
@@ -209,20 +235,20 @@ public class StoreService : IStoreService
             {
                 response.IsSuccessful = false;
                 response.Message = "Store is not in active state!";
-                
+
                 return response;
             }
-            
+
             if (store.ConcurrencyStamp != request.ConcurrencyStamp)
             {
                 response.IsSuccessful = false;
                 response.Message = "Concurrency conflict! Data was modified by another user!";
-                
+
                 return response;
             }
-            
+
             var storeToUpdate = _mapper.Map<Store>(request);
-            
+
             // TODO: track user who update
             storeToUpdate.LastUpdatedAt = DateTime.UtcNow;
             storeToUpdate.ConcurrencyStamp = Guid.NewGuid();
@@ -241,7 +267,7 @@ public class StoreService : IStoreService
             return response;
         }
     }
-    
+
     /// <summary>
     /// Update the store's state by admin
     /// </summary>
@@ -254,27 +280,27 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == request.Id);
-            
+
             if (store is null)
             {
                 response.IsSuccessful = false;
                 response.Message = "Store not found!";
-                
+
                 return response;
             }
-            
+
             if (store.ConcurrencyStamp != request.ConcurrencyStamp)
             {
                 response.IsSuccessful = false;
                 response.Message = "Concurrency conflict! Data was modified by another user!";
-                
+
                 return response;
             }
-            
+
             // TODO: Cannot map
             // Cons: Mismatch Datatype, Prop Name,...
             var storeToUpdate = _mapper.Map<StoreDto>(store);
-            
+
             storeToUpdate.IsPromoted = request.IsPromoted;
             storeToUpdate.State = request.State;
             storeToUpdate.LastUpdatedAt = DateTime.UtcNow;
@@ -294,7 +320,7 @@ public class StoreService : IStoreService
             return response;
         }
     }
-    
+
     /// <summary>
     /// Deleted the store (Vendor)
     /// </summary>
@@ -307,16 +333,16 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
-            
+
             if (store is null)
             {
                 response.IsSuccessful = false;
                 response.Message = "Store not found!";
-                
+
                 return response;
             }
 
-            
+
             store.State = StoreState.Deleted;
             store.LastUpdatedAt = DateTime.UtcNow;
 
@@ -347,12 +373,12 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
-            
+
             if (store is null)
             {
                 response.IsSuccessful = false;
                 response.Message = "Store not found!";
-                
+
                 return response;
             }
 
@@ -387,18 +413,19 @@ public class StoreService : IStoreService
                 (districts == null || !districts.Any() || districts.Contains(x.Ward!.District!.Code)) &&
                 (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
                 (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName)) &&
-                (subCategoryNames == null || !subCategoryNames.Any() || x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName))) &&
+                (subCategoryNames == null || !subCategoryNames.Any() ||
+                 x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName))) &&
                 (!request.IsPromoted || x.IsPromoted);
-            
+
             response.Body = _storeRepository.GetCount(filter);
         }
         else
         {
             Expression<Func<Store, bool>> filter = x => !request.IsPromoted || x.IsPromoted;
-            
+
             response.Body = _storeRepository.GetCount(filter);
         }
-        
+
         return response;
     }
 }

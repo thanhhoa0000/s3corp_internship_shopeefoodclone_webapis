@@ -94,6 +94,25 @@ public class StoresApiController : ControllerBase
         }
     }
     
+    [HttpGet("get-name/{storeId:guid}")]
+    public async Task<IActionResult> GetNameById([FromRoute] Guid storeId)
+    {
+        try
+        {
+            _logger.LogInformation("Getting the store's name...");
+            
+            _response = await _service.GetNameAsync(storeId);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the store's name!");
+        }
+    }
+    
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "VendorOnly")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateStoreRequest request)
