@@ -2,14 +2,17 @@
 
 public class CategoryService : ICategoryService
 {
-    private readonly ICategoryRepository _repository;
+    private readonly ICategoryRepository _categoryRepository;
+    private readonly ISubCategoryRepository _subCategoryRepository;
     private readonly IMapper _mapper;
 
     public CategoryService(
-        ICategoryRepository repository,
+        ICategoryRepository categoryRepository,
+        ISubCategoryRepository subCategoryRepository,
         IMapper mapper)
     {
-        _repository = repository;
+        _categoryRepository = categoryRepository;
+        _subCategoryRepository = subCategoryRepository;
         _mapper = mapper;
     }
     
@@ -25,7 +28,7 @@ public class CategoryService : ICategoryService
 
         try
         {
-            var categories = await _repository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var categories = await _categoryRepository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
             
             response.Body = _mapper.Map<IEnumerable<CategoryDto>>(categories);
             
@@ -51,7 +54,7 @@ public class CategoryService : ICategoryService
 
         try
         {
-            var category = await _repository.GetAsync(s => s.Id == cateId, tracked: false);
+            var category = await _categoryRepository.GetAsync(s => s.Id == cateId, tracked: false);
             
             response.Body = _mapper.Map<CategoryDto>(category);
             
@@ -77,7 +80,7 @@ public class CategoryService : ICategoryService
 
         try
         {
-            var category = await _repository.GetAsync(s => s.CodeName == name, tracked: false);
+            var category = await _categoryRepository.GetAsync(s => s.CodeName == name, tracked: false);
             
             response.Body = _mapper.Map<CategoryDto>(category);
             
@@ -105,7 +108,7 @@ public class CategoryService : ICategoryService
         {
             var category = _mapper.Map<Category>(categoryDto);
             
-            await _repository.CreateAsync(category);
+            await _categoryRepository.CreateAsync(category);
             
             response.Body = _mapper.Map<CategoryDto>(category);
             
@@ -131,7 +134,7 @@ public class CategoryService : ICategoryService
 
         try
         {
-            var category = await _repository.GetAsync(s => s.Id == categoryDto.Id, tracked: false);
+            var category = await _categoryRepository.GetAsync(s => s.Id == categoryDto.Id, tracked: false);
 
             if (category is null)
             {
@@ -153,7 +156,7 @@ public class CategoryService : ICategoryService
             
             categoryToUpdate.ConcurrencyStamp = Guid.NewGuid();
             
-            await _repository.UpdateAsync(categoryToUpdate);
+            await _categoryRepository.UpdateAsync(categoryToUpdate);
             
             response.Body = _mapper.Map<CategoryDto>(categoryToUpdate);
             
@@ -179,7 +182,7 @@ public class CategoryService : ICategoryService
 
         try
         {
-            var category = await _repository.GetAsync(s => s.Id == cateId, tracked: false);
+            var category = await _categoryRepository.GetAsync(s => s.Id == cateId, tracked: false);
             
             if (category is null)
             {
@@ -189,7 +192,7 @@ public class CategoryService : ICategoryService
                 return response;
             }
             
-            await _repository.RemoveAsync(category);
+            await _categoryRepository.RemoveAsync(category);
             
             response.Body = _mapper.Map<CategoryDto>(category);
             
@@ -215,7 +218,7 @@ public class CategoryService : ICategoryService
 
         try
         {
-            var category = await _repository.GetAsync(s => s.Id == cateId, tracked: false);
+            var category = await _categoryRepository.GetAsync(s => s.Id == cateId, tracked: false);
             
             if (category is null)
             {
@@ -226,7 +229,7 @@ public class CategoryService : ICategoryService
             }
 
             category.State = CategoryState.Deleted;
-            await _repository.UpdateAsync(category);
+            await _categoryRepository.UpdateAsync(category);
             
             response.Body = _mapper.Map<CategoryDto>(category);
             
@@ -239,5 +242,49 @@ public class CategoryService : ICategoryService
             
             return response;
         }
+    }
+
+    public async Task<Response> GetNamesListWithSubCategoriesNameAsync(int pageSize = 0, int pageNumber = 1)
+    {
+        var response = new Response();
+
+        try
+        {
+            var categories = 
+                await _categoryRepository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            
+            var returnObjects = new List<object>();
+
+            foreach (var category in categories.OrderBy(c => c.CodeName != "food").ToList())
+            {
+                var subCategories = 
+                    await _subCategoryRepository
+                        .GetAllAsync(s => s.Category!.CodeName == category.CodeName, tracked: false);
+                
+                var subCategoriesToReturn = subCategories
+                    .Select(s => new 
+                    {
+                        s.Name,
+                        s.CodeName
+                    })
+                    .ToList();
+
+                returnObjects.Add(new
+                {
+                    Name = category.Name,
+                    CodeName = category.CodeName,
+                    SubCategories = subCategoriesToReturn
+                });
+
+                response.Body = returnObjects;
+            }
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+        }
+        
+        return response;
     }
 }

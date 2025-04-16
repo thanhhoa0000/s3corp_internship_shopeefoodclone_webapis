@@ -6,6 +6,10 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
     {
         builder.HasKey(x => x.Id);
         
-        builder.HasOne(i => i.CartHeader).WithMany().HasForeignKey(i => i.CartHeaderId).IsRequired();
+        builder.HasOne(i => i.CartHeader)
+            .WithMany()
+            .HasForeignKey(i => i.CartHeaderId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

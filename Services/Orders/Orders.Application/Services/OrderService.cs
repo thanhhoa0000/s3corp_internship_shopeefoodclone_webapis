@@ -7,15 +7,21 @@ public class OrderService : IOrderService
 {
     private readonly IOrderRepository _orderHeaderRepository;
     private readonly IOrderDetailRepository _orderDetailRepository;
+    private readonly ICartService _cartService;
+    private readonly IProductService _productService;
     private readonly IMapper _mapper;
 
     public OrderService(
         IOrderRepository orderHeaderRepository,
         IOrderDetailRepository orderDetailRepository,
+        ICartService cartService,
+        IProductService productService,
         IMapper mapper)
     {
         _orderHeaderRepository = orderHeaderRepository;
         _orderDetailRepository = orderDetailRepository;
+        _cartService = cartService;
+        _productService = productService;
         _mapper = mapper;
     }
 
@@ -55,8 +61,25 @@ public class OrderService : IOrderService
                     tracked: false,
                     pageSize: pageSize,
                     pageNumber: pageNumber);
+
+
+            var ordersToReturn = _mapper.Map<IEnumerable<OrderDto>>(orders);
             
-            response.Body = _mapper.Map<IEnumerable<OrderDto>>(orders);
+            foreach (var order in ordersToReturn)
+            {
+                foreach (var detail in order.OrderDetails)
+                {
+                    var responseFromProductApi = await _productService.GetProductAsync(detail.ProductId);
+                
+                    var productDto = JsonSerializer.Deserialize<ProductDto>(
+                        Convert.ToString(responseFromProductApi!.Body)!,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                    detail.Product = productDto;
+                }
+            }
+            
+            response.Body = ordersToReturn;
         }
         catch (Exception ex)
         {
@@ -82,8 +105,21 @@ public class OrderService : IOrderService
                 filter: o => o.Id == orderId,
                 include: q => q.Include(o => o.OrderDetails),
                 tracked: false);
+
+            var orderToReturn = _mapper.Map<OrderDto>(order);
             
-            response.Body = _mapper.Map<OrderDto>(order);
+            foreach (var detail in orderToReturn.OrderDetails)
+            {
+                var responseFromProductApi = await _productService.GetProductAsync(detail.ProductId);
+                
+                var productDto = JsonSerializer.Deserialize<ProductDto>(
+                    Convert.ToString(responseFromProductApi!.Body)!,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                
+                detail.Product = productDto;
+            }
+            
+            response.Body = orderToReturn;
         }
         catch (Exception ex)
         {
@@ -108,16 +144,29 @@ public class OrderService : IOrderService
             var cartHeader = request.Cart!.CartHeader;
             var cartItems = request.Cart!.CartItems;
             var address = request.Address!;
+            var customerName = request.CustomerName!;
+            var phoneNumber = request.PhoneNumber!;
             
             var orderHeaderDto = _mapper.Map<OrderDto>(cartHeader);
+            orderHeaderDto.CustomerName = customerName;
+            orderHeaderDto.PhoneNumber = phoneNumber;
+            orderHeaderDto.StoreId = cartHeader!.StoreId;
             orderHeaderDto.OrderDate = DateTime.UtcNow;
             orderHeaderDto.OrderStatus = OrderStatus.Pending;
             orderHeaderDto.OrderDetails = _mapper.Map<ICollection<OrderDetailDto>>(cartItems);
             orderHeaderDto.Address = address;
             
             await _orderHeaderRepository.CreateAsync(_mapper.Map<Order>(orderHeaderDto));
+
+            var emptyCartSuccess = await _cartService.EmptyCart(orderHeaderDto.CustomerId);
+
+            if (!emptyCartSuccess)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Error occurred when creating a new order!";
+            }
             
-            response.Body = orderHeaderDto;
+            response.Message = "Order created successfully!";
         }
         catch (Exception ex)
         {

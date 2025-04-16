@@ -55,9 +55,10 @@ public class ProvinceService : IProvinceService
 
         try
         {
-            var provinces = await _provinceRepository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            var provinces = 
+                await _provinceRepository.GetAllAsync(tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+            
             var returnObjects = new List<object>();
-
 
             foreach (var province in provinces)
             {

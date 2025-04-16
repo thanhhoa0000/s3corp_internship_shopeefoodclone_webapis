@@ -149,8 +149,21 @@ public class CartService : ICartService
             else
             {
                 cartItemFromDb.Quantity += request.Quantity;
-                
-                await _cartItemRepository.UpdateAsync(cartItemFromDb);
+
+                if (!(cartItemFromDb.Quantity > 0))
+                {
+                    var cartItemsQuantity = (await _cartItemRepository
+                            .GetAllAsync(i => i.CartHeaderId == cartHeaderFromDb.Id)).Count();
+                    
+                    await _cartItemRepository.RemoveAsync(cartItemFromDb);
+                    
+                    if (cartItemsQuantity == 1)
+                    {
+                        await _cartHeaderRepository.RemoveAsync(cartHeaderFromDb);
+                    }
+                }
+                else
+                    await _cartItemRepository.UpdateAsync(cartItemFromDb);
             }
 
             response.Message = "The cart has been updated successfully!";
@@ -166,6 +179,11 @@ public class CartService : ICartService
         }
     }
 
+    /// <summary>
+    /// Remove an item from cart
+    /// </summary>
+    /// <param name="cartItemId">Item to remove</param>
+    /// <returns>The updated cart</returns>
     public async Task<Response> RemoveFromCartAsync(Guid cartItemId)
     {
         var response = new Response();
@@ -204,6 +222,41 @@ public class CartService : ICartService
             }
 
             response.Message = "The cart has been updated successfully!";
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+        }
+
+        return response;
+    }
+
+    /// <summary>
+    /// Empty the cart
+    /// </summary>
+    /// <param name="customerId">The ID of the cart owner to empty</param>
+    /// <returns>The empty cart</returns>
+    public async Task<Response> EmptyCartAsync(Guid customerId)
+    {
+        var response = new Response();
+
+        try
+        {
+            var cartHeader = await _cartHeaderRepository
+                .GetAsync(c => c.CustomerId == customerId, tracked: false);
+
+            if (cartHeader is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Cart header not found!";
+                
+                return response;
+            }
+            
+            await _cartHeaderRepository.RemoveAsync(cartHeader);
+            
+            response.Message = "The cart has been emptied successfully!";
         }
         catch (Exception ex)
         {

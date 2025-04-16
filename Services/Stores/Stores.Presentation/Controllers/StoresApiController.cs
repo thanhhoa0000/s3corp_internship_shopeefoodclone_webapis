@@ -194,14 +194,14 @@ public class StoresApiController : ControllerBase
         }
     }
 
-    [HttpGet("get-count")]
-    public IActionResult GetStoresCount()
+    [HttpPost("get-count")]
+    public IActionResult GetStoresCount([FromBody] GetStoresCountRequest request)
     {
         try
         {
             _logger.LogInformation($"Getting stores count...");
             
-            return Ok(_service.GetStoresCount());
+            return Ok(_service.GetStoresCount(request));
         }
         catch (Exception ex)
         {

@@ -10,6 +10,7 @@ public class OrderDetailConfiguration : IEntityTypeConfiguration<OrderDetail>
             .HasOne(d => d.Order)
             .WithMany(p => p.OrderDetails)
             .HasForeignKey(d => d.OrderId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

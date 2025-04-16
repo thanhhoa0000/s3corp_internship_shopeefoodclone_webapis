@@ -343,4 +343,26 @@ public class CategoriesApiController : ControllerBase
             return BadRequest("Error(s) occurred when deleting the sub-category!");
         }
     }
+
+    [AllowAnonymous]
+    [HttpGet("with-sub-categories-name-list")]
+    public async Task<IActionResult> GetNamesWithSubCategoriesNameList(
+        [FromQuery] int pageSize = 0,
+        [FromQuery] int pageNumber = 1)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting categories' name list with sub-categories...");
+
+            _response = await _categoryService.GetNamesListWithSubCategoriesNameAsync(pageSize: pageSize, pageNumber: pageNumber);
+
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting categories' name list!");
+        }
+    }
 }
