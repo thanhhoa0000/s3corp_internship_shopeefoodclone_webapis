@@ -152,7 +152,28 @@
         "AuthenticationProviderKey": "Bearer"
       },
       "RouteClaimsRequirement": {
-        "Role": "Vendor,Admin"
+        "Role": "Vendor"
+      },
+      "DangerousAcceptAnyServerCertificateValidator": true
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/stores/vendor/{vendorId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "stores-api",
+          "Port": 5031
+        }
+      ],
+      "UpstreamPathTemplate": "/stores/vendor/{vendorId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      },
+      "RouteClaimsRequirement": {
+        "Role": "Admin"
       },
       "DangerousAcceptAnyServerCertificateValidator": true
     },
