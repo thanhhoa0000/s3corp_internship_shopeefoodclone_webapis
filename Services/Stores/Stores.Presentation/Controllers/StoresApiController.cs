@@ -54,7 +54,7 @@ public class StoresApiController : ControllerBase
     {
         try
         {
-            _logger.LogInformation($"Getting the stores of user {vendorId}...");
+            _logger.LogInformation($"Getting the stores of vendor {vendorId}...");
 
             var request = new GetStoresByVendorIdRequest()
             {
