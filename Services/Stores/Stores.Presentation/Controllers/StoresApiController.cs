@@ -45,9 +45,39 @@ public class StoresApiController : ControllerBase
         }
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminAndVendorOnly")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "VendorOnly")]
     [HttpGet("vendor/{vendorId}")]
-    public async Task<IActionResult> GetAllByUserId(
+    public async Task<IActionResult> GetAllByVendorId(
+        [FromRoute] Guid vendorId, 
+        [FromQuery] int pageSize = 12,
+        [FromQuery] int pageNumber = 1)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting the stores of vendor {vendorId}...");
+
+            var request = new GetStoresByVendorIdRequest()
+            {
+                VendorId = vendorId,
+                PageSize = pageSize,
+                PageNumber = pageNumber
+            };
+            
+            _response = await _service.GetAllByVendorIdAsync(request);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the stores!");
+        }
+    }
+    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
+    [HttpGet("of-vendor/{vendorId}")]
+    public async Task<IActionResult> AdminGetAllByVendorId(
         [FromRoute] Guid vendorId, 
         [FromQuery] int pageSize = 12,
         [FromQuery] int pageNumber = 1)
