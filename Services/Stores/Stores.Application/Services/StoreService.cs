@@ -37,6 +37,7 @@ public class StoreService : IStoreService
             var subCategoryNames = request.SubCategoryNames;
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
+            var searchText = request.SearchText.ToLower().Trim();
 
             Func<IQueryable<Store>, IQueryable<Store>> include = query =>
                 query
@@ -52,8 +53,14 @@ public class StoreService : IStoreService
                 (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName)) &&
                 (subCategoryNames == null || !subCategoryNames.Any() ||
                  x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName))) &&
-                (!request.IsPromoted || x.IsPromoted);
-            ;
+                (!request.IsPromoted || x.IsPromoted) &&
+                (
+                    searchText.IsNullOrEmpty() ||
+                    EF.Functions.Collate(x.Name, "Latin1_General_CI_AI").ToLower().Contains(searchText) ||
+                    x.SubCategories.Any(sc =>
+                        EF.Functions.Collate(sc.Name, "Latin1_General_CI_AI").ToLower().Contains(searchText)
+                    )
+                );
 
             Func<IQueryable<Store>, IOrderedQueryable<Store>> orderBy = query =>
                 query.OrderByDescending(s => s.IsPromoted);
@@ -154,7 +161,7 @@ public class StoreService : IStoreService
         try
         {
             var store = await _storeRepository.GetAsync(s => s.Id == storeId, tracked: false);
-            
+
             response.Body = store!.Name;
         }
         catch (Exception ex)
@@ -189,8 +196,7 @@ public class StoreService : IStoreService
             }
 
             store.SubCategories = existingSubCategories;
-            var ward = await _wardRepository.GetByCodeAsync(
-                w => w.Code == request.WardCode);
+            var ward = await _wardRepository.GetByCodeAsync(w => w.Code == request.WardCode);
             store.Ward = ward;
             store.WardCode = ward.Code;
             store.Id = Guid.NewGuid();
@@ -400,6 +406,8 @@ public class StoreService : IStoreService
     public Response GetStoresCount(GetStoresCountRequest request)
     {
         var response = new Response();
+        var searchText = request.SearchText.ToLower().Trim();
+
         if (request.LocationRequest is not null)
         {
             var province = request.LocationRequest.Province;
@@ -415,13 +423,29 @@ public class StoreService : IStoreService
                 (categoryName.IsNullOrEmpty() || x.SubCategories.Any(c => c.Category!.CodeName == categoryName)) &&
                 (subCategoryNames == null || !subCategoryNames.Any() ||
                  x.SubCategories.Any(c => subCategoryNames.Contains(c.CodeName))) &&
-                (!request.IsPromoted || x.IsPromoted);
+                (!request.IsPromoted || x.IsPromoted) &&
+                (
+                    searchText.IsNullOrEmpty() ||
+                    EF.Functions.Collate(x.Name, "Latin1_General_CI_AI").ToLower().Contains(searchText) ||
+                    x.SubCategories.Any(sc =>
+                        EF.Functions.Collate(sc.Name, "Latin1_General_CI_AI").ToLower().Contains(searchText)
+                    )
+                );
 
             response.Body = _storeRepository.GetCount(filter);
         }
         else
         {
-            Expression<Func<Store, bool>> filter = x => !request.IsPromoted || x.IsPromoted;
+            Expression<Func<Store, bool>> filter = x =>
+                (!request.IsPromoted || x.IsPromoted) &&
+                (
+                    searchText.IsNullOrEmpty() ||
+                    EF.Functions.Collate(x.Name, "Latin1_General_CI_AI").ToLower().Contains(searchText) ||
+                    x.SubCategories.Any(sc =>
+                        EF.Functions.Collate(sc.Name, "Latin1_General_CI_AI").ToLower().Contains(searchText)
+                    )
+                );
+
 
             response.Body = _storeRepository.GetCount(filter);
         }
