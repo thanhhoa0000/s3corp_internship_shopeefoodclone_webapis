@@ -46,22 +46,12 @@ public class StoresApiController : ControllerBase
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "VendorOnly")]
-    [HttpGet("vendor/{vendorId}")]
-    public async Task<IActionResult> GetAllByVendorId(
-        [FromRoute] Guid vendorId, 
-        [FromQuery] int pageSize = 12,
-        [FromQuery] int pageNumber = 1)
+    [HttpPost("vendor")]
+    public async Task<IActionResult> GetAllByVendorId(GetStoresByVendorIdRequest request)
     {
         try
         {
-            _logger.LogInformation($"Getting the stores of vendor {vendorId}...");
-
-            var request = new GetStoresByVendorIdRequest()
-            {
-                VendorId = vendorId,
-                PageSize = pageSize,
-                PageNumber = pageNumber
-            };
+            _logger.LogInformation($"Getting the stores of vendor {request.VendorId}...");
             
             _response = await _service.GetAllByVendorIdAsync(request);
             
@@ -76,22 +66,12 @@ public class StoresApiController : ControllerBase
     }
     
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
-    [HttpGet("of-vendor/{vendorId}")]
-    public async Task<IActionResult> AdminGetAllByVendorId(
-        [FromRoute] Guid vendorId, 
-        [FromQuery] int pageSize = 12,
-        [FromQuery] int pageNumber = 1)
+    [HttpPost("of-vendor/")]
+    public async Task<IActionResult> AdminGetAllByVendorId(GetStoresByVendorIdRequest request)
     {
         try
         {
-            _logger.LogInformation($"Getting the stores of vendor {vendorId}...");
-
-            var request = new GetStoresByVendorIdRequest()
-            {
-                VendorId = vendorId,
-                PageSize = pageSize,
-                PageNumber = pageNumber
-            };
+            _logger.LogInformation($"Getting the stores of vendor {request.VendorId}...");
             
             _response = await _service.GetAllByVendorIdAsync(request);
             

@@ -136,7 +136,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate": "/api/v1/stores/vendor/{vendorId}",
+      "DownstreamPathTemplate": "/api/v1/stores/vendor",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -144,9 +144,9 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/stores/vendor/{vendorId}",
+      "UpstreamPathTemplate": "/stores/vendor",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"
@@ -157,7 +157,7 @@
       "DangerousAcceptAnyServerCertificateValidator": true
     },
     {
-      "DownstreamPathTemplate": "/api/v1/stores/of-vendor/{vendorId}",
+      "DownstreamPathTemplate": "/api/v1/stores/of-vendor",
       "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
@@ -165,9 +165,9 @@
           "Port": 5031
         }
       ],
-      "UpstreamPathTemplate": "/stores/of-vendor/{vendorId}",
+      "UpstreamPathTemplate": "/stores/of-vendor}",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer"

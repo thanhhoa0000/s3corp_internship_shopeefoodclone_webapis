@@ -98,12 +98,19 @@ public class StoreService : IStoreService
             var vendorId = request.VendorId;
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
+            
+            Func<IQueryable<Store>, IQueryable<Store>> include = query =>
+                query
+                    .Include(s => s.Ward)
+                    .ThenInclude(w => w!.District)
+                    .ThenInclude(d => d!.Province)
+                    .Include(s => s.SubCategories);
 
             Expression<Func<Store, bool>> filter = x => x.UserId == vendorId && (!request.IsPromoted || x.IsPromoted);
 
             var stores =
                 await _storeRepository
-                    .GetAllAsync(filter: filter, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
+                    .GetAllAsync(filter: filter, include: include, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
 
             response.Body = _mapper.Map<IEnumerable<StoreDto>>(stores);
 
