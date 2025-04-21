@@ -28,6 +28,10 @@ try
                         .AllowAnyHeader();
                     
                     // Client.Administrators
+                    policy.WithOrigins("https://thanhhoa.shopeefood.s3corp.vn:8001")
+                        .WithMethods("POST", "GET")
+                        .AllowAnyHeader();
+                    
                     policy.WithOrigins("https://localhost:8001")
                         .WithMethods("POST", "GET")
                         .AllowAnyHeader();

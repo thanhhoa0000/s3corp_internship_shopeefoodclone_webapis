@@ -133,7 +133,7 @@ public class StoresApiController : ControllerBase
             
             _response = await _service.CreateAsync(request);
             
-            return Ok(_response);
+            return Created();
         }
         catch (Exception ex)
         {
