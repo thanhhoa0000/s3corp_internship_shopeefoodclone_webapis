@@ -6,5 +6,5 @@ public class BaseSearchRequest
     public int PageSize { get; set; }
     [Required]
     public int PageNumber { get; set; }
-    public string? SearchText { get; set; }
+    public string SearchText { get; set; } = string.Empty;
 }

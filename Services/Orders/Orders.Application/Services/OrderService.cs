@@ -9,6 +9,7 @@ public class OrderService : IOrderService
     private readonly IOrderDetailRepository _orderDetailRepository;
     private readonly ICartService _cartService;
     private readonly IProductService _productService;
+    private readonly IStoreService _storeService;
     private readonly IMapper _mapper;
 
     public OrderService(
@@ -16,12 +17,14 @@ public class OrderService : IOrderService
         IOrderDetailRepository orderDetailRepository,
         ICartService cartService,
         IProductService productService,
+        IStoreService storeService,
         IMapper mapper)
     {
         _orderHeaderRepository = orderHeaderRepository;
         _orderDetailRepository = orderDetailRepository;
         _cartService = cartService;
         _productService = productService;
+        _storeService = storeService;
         _mapper = mapper;
     }
 
@@ -67,6 +70,11 @@ public class OrderService : IOrderService
             
             foreach (var order in ordersToReturn)
             {
+                
+                var responseFromStoreApi = await _storeService.GetStoreNameAsync(order.StoreId);
+
+                order.StoreName = Convert.ToString(responseFromStoreApi!.Body);
+                
                 foreach (var detail in order.OrderDetails)
                 {
                     var responseFromProductApi = await _productService.GetProductAsync(detail.ProductId);

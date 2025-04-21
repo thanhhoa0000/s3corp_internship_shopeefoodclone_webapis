@@ -122,7 +122,7 @@ public class Repository<T, TContext> : IRepository<T>
         if (filter is not null)
             query = query.Where(filter);
         
-        return query.AsNoTracking().ToList().Count;
+        return query.AsNoTracking().Count();
     }
 
     public async Task SaveAsync()

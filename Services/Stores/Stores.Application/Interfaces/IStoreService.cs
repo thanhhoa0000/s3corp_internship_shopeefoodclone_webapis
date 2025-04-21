@@ -5,6 +5,7 @@ public interface IStoreService
     Task<Response> GetByLocationAndCategoryAsync(GetStoresRequest request);
     Task<Response> GetAllByVendorIdAsync(GetStoresByVendorIdRequest request);
     Task<Response> GetAsync(Guid storeId);
+    Task<Response> GetNameAsync(Guid storeId);
     Task<Response> CreateAsync(CreateStoreRequest request);
     Task<Response> VendorDeleteAsync(Guid storeId);
     Task<Response> RemoveAsync(Guid storeId);

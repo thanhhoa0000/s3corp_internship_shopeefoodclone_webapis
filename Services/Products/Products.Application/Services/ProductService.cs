@@ -16,10 +16,10 @@ public class ProductService : IProductService
     }
     
     /// <summary>
-    /// Get list of products by store ID
+    /// Get a list of products by store ID
     /// </summary>
     /// <param name="request">The store ID to get products</param>
-    /// <returns>The products list</returns>
+    /// <returns>The products' list</returns>
     public async Task<Response> GetAllByStoreIdAsync(GetProductsRequest request)
     {
         var response = new Response();
@@ -176,7 +176,7 @@ public class ProductService : IProductService
     /// <summary>
     /// Update the product's state
     /// </summary>
-    /// <param name="request">The product state to update</param>
+    /// <param name="request">The product's state to update</param>
     /// <returns>The updated product</returns>
     public async Task<Response> VendorChangeProductStateAsync(VendorUpdateProductStateRequest request)
     {

@@ -1,3 +1,3 @@
 ﻿namespace ShopeeFoodClone.WebApi.Products.Application.Models.Requests;
 
-public class CreateProductRequest : BaseProductRequest;
+public sealed class CreateProductRequest : BaseProductRequest;

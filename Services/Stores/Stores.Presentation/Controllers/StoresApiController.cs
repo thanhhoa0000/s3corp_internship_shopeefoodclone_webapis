@@ -45,23 +45,33 @@ public class StoresApiController : ControllerBase
         }
     }
 
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminAndVendorOnly")]
-    [HttpGet("vendor/{vendorId}")]
-    public async Task<IActionResult> GetAllByUserId(
-        [FromRoute] Guid vendorId, 
-        [FromQuery] int pageSize = 12,
-        [FromQuery] int pageNumber = 1)
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "VendorOnly")]
+    [HttpPost("vendor")]
+    public async Task<IActionResult> GetAllByVendorId(GetStoresByVendorIdRequest request)
     {
         try
         {
-            _logger.LogInformation($"Getting the stores of user {vendorId}...");
-
-            var request = new GetStoresByVendorIdRequest()
-            {
-                VendorId = vendorId,
-                PageSize = pageSize,
-                PageNumber = pageNumber
-            };
+            _logger.LogInformation($"Getting the stores of vendor {request.VendorId}...");
+            
+            _response = await _service.GetAllByVendorIdAsync(request);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the stores!");
+        }
+    }
+    
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "AdminOnly")]
+    [HttpPost("of-vendor/")]
+    public async Task<IActionResult> AdminGetAllByVendorId(GetStoresByVendorIdRequest request)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting the stores of vendor {request.VendorId}...");
             
             _response = await _service.GetAllByVendorIdAsync(request);
             
@@ -94,6 +104,25 @@ public class StoresApiController : ControllerBase
         }
     }
     
+    [HttpGet("get-name/{storeId:guid}")]
+    public async Task<IActionResult> GetNameById([FromRoute] Guid storeId)
+    {
+        try
+        {
+            _logger.LogInformation("Getting the store's name...");
+            
+            _response = await _service.GetNameAsync(storeId);
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the store's name!");
+        }
+    }
+    
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "VendorOnly")]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateStoreRequest request)
@@ -104,7 +133,7 @@ public class StoresApiController : ControllerBase
             
             _response = await _service.CreateAsync(request);
             
-            return Ok(_response);
+            return Created();
         }
         catch (Exception ex)
         {
