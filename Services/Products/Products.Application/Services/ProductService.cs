@@ -99,7 +99,7 @@ public class ProductService : IProductService
 
             var product = new Product
             {
-                Id = Guid.NewGuid(),
+                Id = request.Id,
                 StoreId = request.StoreId,
                 Name = request.Name,
                 Description = request.Description,
