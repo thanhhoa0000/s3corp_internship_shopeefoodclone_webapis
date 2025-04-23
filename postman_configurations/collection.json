@@ -580,6 +580,47 @@
 							"response": []
 						},
 						{
+							"name": "[Anonymous] Get Store",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"locationRequest\": { \r\n        \"province\": \"79\"\r\n    },\r\n    \"categoryName\": \"food\",\r\n    \"isPromoted\": true\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/stores/vendor/c4330029-35c4-4ba1-67be-08dd78aa5700",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"stores",
+										"vendor",
+										"c4330029-35c4-4ba1-67be-08dd78aa5700"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[Vendor] Add a Store",
 							"request": {
 								"auth": {
@@ -795,7 +836,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"locationReqeust\": {\r\n        \"province\": \"79\"\r\n    },\r\n    \"isPromoted\": true\r\n}",
+									"raw": "{\r\n    \"locationRequest\": {\r\n        \"province\": \"08\"\r\n    },\r\n    \"searchText\": \"tex\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1214,7 +1255,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\"\r\n}",
+									"raw": "{\r\n    \"storeId\": \"3e7d2b56-371b-406c-9c76-faa4b7006a1a\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
