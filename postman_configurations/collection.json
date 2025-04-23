@@ -798,13 +798,13 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_url}}/stores/7d659c05-1b4c-483f-a681-072045b3b213",
+									"raw": "{{gateway_url}}/stores/906bf960-417d-4697-9bbb-5d351e455bfe",
 									"host": [
 										"{{gateway_url}}"
 									],
 									"path": [
 										"stores",
-										"7d659c05-1b4c-483f-a681-072045b3b213"
+										"906bf960-417d-4697-9bbb-5d351e455bfe"
 									]
 								}
 							},
@@ -1364,14 +1364,14 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "{{gateway_url}}/products/remove/581a5e9a-754a-4a2b-be87-79fda45cd7c8",
+									"raw": "{{gateway_url}}/products/remove/0a79dd16-92a3-4c04-944f-eaf25b876a2b",
 									"host": [
 										"{{gateway_url}}"
 									],
 									"path": [
 										"products",
 										"remove",
-										"581a5e9a-754a-4a2b-be87-79fda45cd7c8"
+										"0a79dd16-92a3-4c04-944f-eaf25b876a2b"
 									]
 								}
 							},
@@ -1399,7 +1399,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"title\": \"Món đang giảm\",\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\"\r\n}",
+									"raw": "{\r\n    \"title\": \"Trio Deal Chỉ 98K - Mua 2 Được 3\",\r\n    \"storeId\": \"3e7d2b56-371b-406c-9c76-faa4b7006a1a\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"

@@ -144,7 +144,7 @@ public class ProductsApiController : ControllerBase
             
             _response = await _service.RemoveAsync(productId);
             
-            return Ok(_response);
+            return NoContent();
         }
         catch (Exception ex)
         {
