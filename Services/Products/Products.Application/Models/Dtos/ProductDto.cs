@@ -5,9 +5,9 @@ public class ProductDto
     public Guid Id { get; set; } = Guid.NewGuid();
     public Guid StoreId { get; set; }
     [Required, MinLength(10), MaxLength(50)]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
     [Required, MinLength(20), MaxLength(200)]
-    public required string Description { get; set; }
+    public string? Description { get; set; }
 
     [Required] public int AvailableStock { get; set; } = 0;
 

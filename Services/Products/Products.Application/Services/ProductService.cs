@@ -153,14 +153,23 @@ public class ProductService : IProductService
                 
                 return response;
             }
+
+            var productToUpdate = new ProductDto();
             
-            var categoryToUpdate = _mapper.Map<Product>(request);
+            productToUpdate.LastUpdatedAt = DateTime.UtcNow;
+            productToUpdate.Id = request.Id;
+            productToUpdate.StoreId = request.StoreId;
+            productToUpdate.Name = request.Name;
+            productToUpdate.Description = request.Description;
+            productToUpdate.AvailableStock = request.AvailableStock;
+            productToUpdate.Price = request.Price;
+            productToUpdate.Discount = request.Discount;
+            productToUpdate.ConcurrencyStamp = Guid.NewGuid();
+            productToUpdate.CoverImagePath = request.CoverImagePath;
             
-            categoryToUpdate.LastUpdatedAt = DateTime.UtcNow;
+            await _repository.UpdateAsync(_mapper.Map<Product>(productToUpdate));
             
-            await _repository.UpdateAsync(categoryToUpdate);
-            
-            response.Body = _mapper.Map<ProductDto>(categoryToUpdate);
+            response.Message = "Product updated successfully!";
             
             return response;
         }
