@@ -36,7 +36,12 @@ public class MenuService : IMenuService
             Expression<Func<Menu, bool>> filter = p => p.StoreId == storeId;
             
             Func<IQueryable<Menu>, IOrderedQueryable<Menu>> orderBy = query =>
-                query.OrderBy(i => i.Title.Contains("Món đang giảm") ? 0 : 1);
+                query
+                    .OrderBy(i => i.Title.ToLower().Contains("bán chạy") ? 0 : 1)
+                    .ThenBy(i => i.Title.ToLower().Contains("hot deal") ? 0 : 1)
+                    .ThenBy(i => i.Title.ToLower().Contains("đang giảm") ? 0 : 1)
+                    .ThenBy(i => i.Products.Count == 0 ? 1 : 0);
+
 
             Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
                 query.Include(i => i.Products.Where(p => p.State != ProductState.Deleted));

@@ -14,7 +14,7 @@ public class ProductService : IProductService
         _repository = repository;
         _mapper = mapper;
     }
-    
+
     /// <summary>
     /// Get a list of products by store ID
     /// </summary>
@@ -29,18 +29,19 @@ public class ProductService : IProductService
             var storeId = request.StoreId;
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
-            
+
             Expression<Func<Product, bool>> filter = p => p.StoreId == storeId;
 
             Func<IQueryable<Product>, IQueryable<Product>> include = query =>
                 query.Include(p => p.Menus.Where(i => i.State != MenuState.Inactive));
-            
-            var products = 
+
+            var products =
                 await _repository
-                    .GetAllAsync(filter: filter, include: include, tracked: false, pageSize: pageSize, pageNumber: pageNumber);
-            
+                    .GetAllAsync(filter: filter, include: include, tracked: false, pageSize: pageSize,
+                        pageNumber: pageNumber);
+
             response.Body = _mapper.Map<IEnumerable<ProductDto>>(products);
-            
+
             return response;
         }
         catch (Exception ex)
@@ -63,17 +64,20 @@ public class ProductService : IProductService
 
         try
         {
-            var product = await _repository.GetAsync(s => s.Id == productId, tracked: false);
-            
+            Func<IQueryable<Product>, IQueryable<Product>> include = query =>
+                query.Include(p => p.Menus.Where(i => i.State != MenuState.Inactive));
+
+            var product = await _repository.GetAsync(s => s.Id == productId, include: include, tracked: false);
+
             response.Body = _mapper.Map<ProductDto>(product);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -93,7 +97,7 @@ public class ProductService : IProductService
             {
                 response.IsSuccessful = false;
                 response.Message = "Product already exists!";
-                
+
                 return response;
             }
 
@@ -106,21 +110,21 @@ public class ProductService : IProductService
                 AvailableStock = request.AvailableStock,
                 Price = request.Price,
             };
-            
+
             product.CoverImagePath = $"/stores/{product.StoreId}/products/{product.Id}/cover-img.jpg";
             product.ConcurrencyStamp = Guid.NewGuid();
-            
+
             await _repository.CreateAsync(product);
-            
+
             response.Body = _mapper.Map<ProductDto>(product);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -142,20 +146,20 @@ public class ProductService : IProductService
             {
                 response.IsSuccessful = false;
                 response.Message = "Product not found!";
-                
+
                 return response;
             }
-            
+
             if (product.ConcurrencyStamp != request.ConcurrencyStamp)
             {
                 response.IsSuccessful = false;
                 response.Message = "Concurrency conflict! Data was modified by another user!";
-                
+
                 return response;
             }
 
             var productToUpdate = new ProductDto();
-            
+
             productToUpdate.LastUpdatedAt = DateTime.UtcNow;
             productToUpdate.Id = request.Id;
             productToUpdate.StoreId = request.StoreId;
@@ -166,18 +170,18 @@ public class ProductService : IProductService
             productToUpdate.Discount = request.Discount;
             productToUpdate.ConcurrencyStamp = Guid.NewGuid();
             productToUpdate.CoverImagePath = request.CoverImagePath;
-            
+
             await _repository.UpdateAsync(_mapper.Map<Product>(productToUpdate));
-            
+
             response.Message = "Product updated successfully!";
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -199,34 +203,34 @@ public class ProductService : IProductService
             {
                 response.IsSuccessful = false;
                 response.Message = "Product not found!";
-                
+
                 return response;
             }
-            
+
             if (product.ConcurrencyStamp != request.ConcurrencyStamp)
             {
                 response.IsSuccessful = false;
                 response.Message = "Concurrency conflict! Data was modified by another user!";
-                
+
                 return response;
             }
-            
+
             var productToUpdate = _mapper.Map<ProductDto>(product);
-            
+
             productToUpdate.LastUpdatedAt = DateTime.UtcNow;
             productToUpdate.State = request.State;
-            
+
             await _repository.UpdateAsync(_mapper.Map<Product>(productToUpdate));
 
             response.Body = productToUpdate;
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -243,29 +247,29 @@ public class ProductService : IProductService
         try
         {
             var product = await _repository.GetAsync(s => s.Id == productId, tracked: false);
-            
+
             if (product is null)
             {
                 response.IsSuccessful = false;
                 response.Message = "Product not found!";
-                
+
                 return response;
             }
-            
+
             product.LastUpdatedAt = DateTime.UtcNow;
             product.State = ProductState.Deleted;
-            
+
             await _repository.UpdateAsync(product);
-            
+
             response.Body = _mapper.Map<ProductDto>(product);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
@@ -282,26 +286,26 @@ public class ProductService : IProductService
         try
         {
             var product = await _repository.GetAsync(s => s.Id == productId, tracked: false);
-            
+
             if (product is null)
             {
                 response.IsSuccessful = false;
                 response.Message = "Product not found!";
-                
+
                 return response;
             }
-            
+
             await _repository.RemoveAsync(product);
-            
+
             response.Body = _mapper.Map<ProductDto>(product);
-            
+
             return response;
         }
         catch (Exception ex)
         {
             response.IsSuccessful = false;
             response.Message = ex.Message;
-            
+
             return response;
         }
     }
