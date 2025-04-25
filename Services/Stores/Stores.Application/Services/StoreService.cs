@@ -260,13 +260,20 @@ public class StoreService : IStoreService
                 return response;
             }
 
-            var storeToUpdate = _mapper.Map<Store>(request);
+            var storeToUpdate = _mapper.Map<StoreDto>(store);
+            
+            storeToUpdate.WardCode = request.WardCode;
+            storeToUpdate.Name = request.Name;
+            storeToUpdate.StreetName = request.StreetName;
+            storeToUpdate.OpeningHour = request.OpeningHour;
+            storeToUpdate.ClosingHour = request.ClosingHour;
+            storeToUpdate.CoverImagePath = request.CoverImagePath;
 
             // TODO: track user who update
             storeToUpdate.LastUpdatedAt = DateTime.UtcNow;
             storeToUpdate.ConcurrencyStamp = Guid.NewGuid();
 
-            await _storeRepository.UpdateAsync(storeToUpdate);
+            await _storeRepository.UpdateAsync(_mapper.Map<Store>(storeToUpdate));
 
             response.Body = _mapper.Map<StoreDto>(store);
 
@@ -310,8 +317,6 @@ public class StoreService : IStoreService
                 return response;
             }
 
-            // TODO: Cannot map
-            // Cons: Mismatch Datatype, Prop Name,...
             var storeToUpdate = _mapper.Map<StoreDto>(store);
 
             storeToUpdate.IsPromoted = request.IsPromoted;

@@ -1,14 +1,14 @@
 ﻿namespace ShopeeFoodClone.WebApi.Stores.Application.Models.Requests;
 
-public class VendorUpdateStoreRequest
+public sealed class VendorUpdateStoreRequest
 {
-    public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid Id { get; set; }
     [MaxLength(20)]
     public string? WardCode { get; set; }
     [MaxLength(100)]
     public string? StreetName { get; set; }
     [Required, MinLength(10), MaxLength(50)]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
     [Required]
     public TimeOnly OpeningHour { get; set; }
     [Required]
