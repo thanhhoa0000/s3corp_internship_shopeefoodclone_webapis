@@ -19,6 +19,38 @@ public class MenuService : IMenuService
     }
 
     /// <summary>
+    /// Get menu by ID
+    /// </summary>
+    /// <param name="menuId">The menu ID to get</param>
+    /// <returns>The menu</returns>
+    public async Task<Response> GetAsync(Guid menuId)
+    {
+        var response = new Response();
+
+        try
+        {
+            var menu = await _menuRepository.GetAsync(p => p.Id == menuId);
+
+            if (menu is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Menu not found!";
+                
+                return response;
+            }
+            
+            response.Body = _mapper.Map<MenuDto>(menu);
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+        }
+        
+        return response;
+    }
+
+    /// <summary>
     /// Get list of menus by store ID
     /// </summary>
     /// <param name="request">The store ID to get products</param>
@@ -40,6 +72,7 @@ public class MenuService : IMenuService
                     .OrderBy(i => i.Title.ToLower().Contains("bán chạy") ? 0 : 1)
                     .ThenBy(i => i.Title.ToLower().Contains("hot deal") ? 0 : 1)
                     .ThenBy(i => i.Title.ToLower().Contains("đang giảm") ? 0 : 1)
+                    .ThenBy(i => i.Title.ToLower().Contains("món mới") ? 0 : 1)
                     .ThenBy(i => i.Products.Count == 0 ? 1 : 0);
 
 

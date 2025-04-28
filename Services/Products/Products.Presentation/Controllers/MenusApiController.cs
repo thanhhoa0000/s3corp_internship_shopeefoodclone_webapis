@@ -21,6 +21,31 @@ public class MenusApiController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpGet("{menuId:guid}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid menuId)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting the menu {menuId}...");
+            
+            _response = await _service.GetAsync(menuId);
+            
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Menu not found!");
+            }
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the menu!");
+        }
+    }
+
+    [AllowAnonymous]
     [HttpPost("get-from-store")]
     public async Task<IActionResult> GetMenusByStoreId([FromBody] GetMenusRequest request)
     {

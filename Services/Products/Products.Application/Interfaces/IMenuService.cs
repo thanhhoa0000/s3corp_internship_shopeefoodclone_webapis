@@ -2,6 +2,7 @@
 
 public interface IMenuService
 {
+    Task<Response> GetAsync(Guid menuId);
     Task<Response> GetMenusByStoreIdAsync(GetMenusRequest request);
     Task<Response> CreateAsync(CreateMenuRequest request);
     Task<Response> AddProductsToMenuAsync(AddProductsToMenuRequest request);
