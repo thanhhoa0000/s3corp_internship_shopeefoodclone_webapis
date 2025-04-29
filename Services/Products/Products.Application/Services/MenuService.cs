@@ -142,7 +142,7 @@ public class MenuService : IMenuService
     /// </summary>
     /// <param name="request">The product ID(s) to add</param>
     /// <returns>The menu with the added product(s)</returns>
-    public async Task<Response> AddProductsToMenuAsync(AddProductsToMenuRequest request)
+    public async Task<Response> AddProductsToMenuAsync(VendorAddProductsToMenuRequest request)
     {
         var response = new Response();
 

@@ -85,7 +85,7 @@ public class MenusApiController : ControllerBase
     }
 
     [HttpPost("add-products")]
-    public async Task<IActionResult> AddProducts([FromBody] AddProductsToMenuRequest request)
+    public async Task<IActionResult> AddProducts([FromBody] VendorAddProductsToMenuRequest request)
     {
         try
         {
