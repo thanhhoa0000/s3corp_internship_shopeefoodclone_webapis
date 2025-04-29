@@ -73,6 +73,9 @@ public class MenusApiController : ControllerBase
             _logger.LogInformation($"Creating menu {request.Title}...");
             
             _response = await _service.CreateAsync(request);
+            
+            if (!_response.IsSuccessful)
+                return BadRequest(_response.Message);
 
             return Created();
         }

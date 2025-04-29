@@ -30,9 +30,7 @@ public class MenuService : IMenuService
         try
         {
             Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
-                query
-                    .Include(i => i.Products)
-                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
+                query.Include(i => i.Products.Where(p => p.State != ProductState.Deleted));
             
             var menu = await _menuRepository.GetAsync(p => p.Id == menuId, include: include, tracked: false);
 
@@ -70,7 +68,7 @@ public class MenuService : IMenuService
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
 
-            Expression<Func<Menu, bool>> filter = p => p.StoreId == storeId;
+            Expression<Func<Menu, bool>> filter = m => m.StoreId == storeId;
             
             Func<IQueryable<Menu>, IOrderedQueryable<Menu>> orderBy = query =>
                 query
@@ -82,9 +80,7 @@ public class MenuService : IMenuService
 
 
             Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
-                query
-                    .Include(i => i.Products)
-                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
+                query.Include(i => i.Products.Where(p => p.State != ProductState.Deleted));
 
             var menus =
                 await _menuRepository
@@ -156,9 +152,7 @@ public class MenuService : IMenuService
         try
         {
             Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
-                query
-                    .Include(i => i.Products)
-                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
+                query.Include(i => i.Products.Where(p => p.State != ProductState.Deleted));
             
             var menu = await _menuRepository.GetAsync(p => p.Id == request.MenuId, include: include, tracked: true);
 
@@ -241,9 +235,7 @@ public class MenuService : IMenuService
         try 
         {
             Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
-                query
-                    .Include(i => i.Products)
-                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
+                query.Include(i => i.Products.Where(p => p.State != ProductState.Deleted));
             
             var menu = await _menuRepository.GetAsync(p => p.Id == request.MenuId, include: include, tracked: true);
 
