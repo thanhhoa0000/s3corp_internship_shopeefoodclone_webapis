@@ -3,6 +3,7 @@
 public class AdminUpdateStoreRequest
 {
     public Guid Id { get; set; } = Guid.NewGuid();
+    public Guid VendorId { get; set; }
     public bool IsPromoted { get; set; } = false;
     public StoreState State { get; set; } = StoreState.Active;
     public Guid ConcurrencyStamp { get; set; }

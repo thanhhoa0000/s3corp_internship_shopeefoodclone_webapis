@@ -21,6 +21,31 @@ public class MenusApiController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpGet("{menuId:guid}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid menuId)
+    {
+        try
+        {
+            _logger.LogInformation($"Getting the menu {menuId}...");
+            
+            _response = await _service.GetAsync(menuId);
+            
+            if (_response.Message.Contains("not found"))
+            {
+                return NotFound("Menu not found!");
+            }
+            
+            return Ok(_response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
+            
+            return BadRequest("Error(s) occurred when getting the menu!");
+        }
+    }
+
+    [AllowAnonymous]
     [HttpPost("get-from-store")]
     public async Task<IActionResult> GetMenusByStoreId([FromBody] GetMenusRequest request)
     {
@@ -60,15 +85,34 @@ public class MenusApiController : ControllerBase
     }
 
     [HttpPost("add-products")]
-    public async Task<IActionResult> AddProducts([FromBody] AddProductsToMenuRequest request)
+    public async Task<IActionResult> AddProducts([FromBody] VendorAddProductsToMenuRequest request)
     {
         try
         {
             _logger.LogInformation($"Add product(s) to menu {request.MenuId}...");
             
             _response = await _service.AddProductsToMenuAsync(request);
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
             
-            return Ok(_response);
+            return BadRequest("Error(s) occurred when updating the menu!");
+        }
+    }
+    
+    [HttpPost("remove-products")]
+    public async Task<IActionResult> RemoveProducts([FromBody] VendorRemoveProductsFromMenuRequest request)
+    {
+        try
+        {
+            _logger.LogInformation($"Remove product(s) to menu {request.MenuId}...");
+            
+            _response = await _service.RemoveProductsFromMenuAsync(request);
+            
+            return NoContent();
         }
         catch (Exception ex)
         {

@@ -321,6 +321,7 @@ public class StoreService : IStoreService
 
             storeToUpdate.IsPromoted = request.IsPromoted;
             storeToUpdate.State = request.State;
+            storeToUpdate.UserId = request.VendorId;
             storeToUpdate.LastUpdatedAt = DateTime.UtcNow;
             storeToUpdate.ConcurrencyStamp = Guid.NewGuid();
 
@@ -419,6 +420,7 @@ public class StoreService : IStoreService
     {
         var response = new Response();
         var searchText = request.SearchText.ToLower().Trim();
+        var vendorId = request.VendorId;
 
         if (request.LocationRequest is not null)
         {
@@ -429,6 +431,7 @@ public class StoreService : IStoreService
             var subCategoryNames = request.SubCategoryNames;
 
             Expression<Func<Store, bool>> filter = x =>
+                (vendorId == Guid.Empty || x.UserId == vendorId) &&
                 (wards == null || !wards.Any() || wards.Contains(x.Ward!.Code)) &&
                 (districts == null || !districts.Any() || districts.Contains(x.Ward!.District!.Code)) &&
                 (province.IsNullOrEmpty() || x.Ward!.District!.Province!.Code == province) &&
@@ -449,6 +452,7 @@ public class StoreService : IStoreService
         else
         {
             Expression<Func<Store, bool>> filter = x =>
+                (vendorId == Guid.Empty || x.UserId == vendorId) &&
                 (!request.IsPromoted || x.IsPromoted) &&
                 (
                     searchText.IsNullOrEmpty() ||
