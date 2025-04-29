@@ -836,7 +836,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"locationRequest\": {\r\n        \"province\": \"08\"\r\n    },\r\n    \"searchText\": \"tex\"\r\n}",
+									"raw": "{\r\n    \"vendorId\": \"c4330029-35c4-4ba1-67be-08dd78aa5700\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -851,6 +851,43 @@
 									"path": [
 										"stores",
 										"get-count"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Vendor] Get Stores List by Vendor ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/stores/vendor",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"stores",
+										"vendor"
 									]
 								}
 							},
@@ -1399,7 +1436,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"title\": \"Trio Deal Chỉ 98K - Mua 2 Được 3\",\r\n    \"storeId\": \"3e7d2b56-371b-406c-9c76-faa4b7006a1a\"\r\n}",
+									"raw": "{\r\n    \"title\": \"Món Ăn Kèm\",\r\n    \"storeId\": \"3e7d2b56-371b-406c-9c76-faa4b7006a1a\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1435,7 +1472,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"menuId\": \"9b2ea81a-d1b8-4079-86c0-912dc49afea9\",\r\n    \"concurrencyStamp\": \"71b06fd7-d82b-4714-9e56-ea378bfb67c6\",\r\n    \"productIds\": [\r\n        \"332fc7da-b0be-4533-bf67-2909020ff689\"\r\n    ]\r\n}",
+									"raw": "{\r\n    \"menuId\": \"12ccf311-67f7-4250-aa22-715b88eb45ed\",\r\n    \"concurrencyStamp\": \"7eecdecb-0ec2-4163-8d4c-9b8b2aa2c417\",\r\n    \"productIds\": [\r\n        \"98c82a05-f06a-430f-9ac9-64e1afbee619\"\r\n    ]\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1456,13 +1493,50 @@
 							"response": []
 						},
 						{
+							"name": "[Vendor] Remove products from Menu Item",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"menuId\": \"bc53e082-8db9-45b7-a24e-cf0be4ffd733\",\r\n    \"concurrencyStamp\": \"f04bd75d-03b4-4c43-ad7a-f477530ec094\",\r\n    \"productIds\": [\r\n        \"98c82a05-f06a-430f-9ac9-64e1afbee619\",\r\n        \"64140c4c-1d9f-47b7-a1f2-6ca306631d3f\"\r\n    ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{gateway_url}}/menus/remove-products",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"menus",
+										"remove-products"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "[Anonymous] Get Menu Items",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"storeId\": \"906bf960-417d-4697-9bbb-5d351e455bfe\"\r\n}",
+									"raw": "{\r\n    \"storeId\": \"3e7d2b56-371b-406c-9c76-faa4b7006a1a\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1477,6 +1551,24 @@
 									"path": [
 										"menus",
 										"get-from-store"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Anonymous] Get a Menu",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{gateway_url}}/menus/bc53e082-8db9-45b7-a24e-cf0be4ffd733",
+									"host": [
+										"{{gateway_url}}"
+									],
+									"path": [
+										"menus",
+										"bc53e082-8db9-45b7-a24e-cf0be4ffd733"
 									]
 								}
 							},

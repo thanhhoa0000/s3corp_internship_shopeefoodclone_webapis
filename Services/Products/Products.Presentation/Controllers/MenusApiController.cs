@@ -92,8 +92,27 @@ public class MenusApiController : ControllerBase
             _logger.LogInformation($"Add product(s) to menu {request.MenuId}...");
             
             _response = await _service.AddProductsToMenuAsync(request);
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Error(s) occurred: \n---\n{error}", ex);
             
-            return Ok(_response);
+            return BadRequest("Error(s) occurred when updating the menu!");
+        }
+    }
+    
+    [HttpPost("remove-products")]
+    public async Task<IActionResult> RemoveProducts([FromBody] VendorRemoveProductsFromMenuRequest request)
+    {
+        try
+        {
+            _logger.LogInformation($"Remove product(s) to menu {request.MenuId}...");
+            
+            _response = await _service.RemoveProductsFromMenuAsync(request);
+            
+            return NoContent();
         }
         catch (Exception ex)
         {

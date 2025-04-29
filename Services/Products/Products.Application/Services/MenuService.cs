@@ -29,7 +29,12 @@ public class MenuService : IMenuService
 
         try
         {
-            var menu = await _menuRepository.GetAsync(p => p.Id == menuId);
+            Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
+                query
+                    .Include(i => i.Products)
+                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
+            
+            var menu = await _menuRepository.GetAsync(p => p.Id == menuId, include: include, tracked: false);
 
             if (menu is null)
             {
@@ -77,7 +82,9 @@ public class MenuService : IMenuService
 
 
             Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
-                query.Include(i => i.Products.Where(p => p.State != ProductState.Deleted));
+                query
+                    .Include(i => i.Products)
+                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
 
             var menus =
                 await _menuRepository
@@ -148,7 +155,12 @@ public class MenuService : IMenuService
 
         try
         {
-            var menu = await _menuRepository.GetAsync(p => p.Id == request.MenuId);
+            Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
+                query
+                    .Include(i => i.Products)
+                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
+            
+            var menu = await _menuRepository.GetAsync(p => p.Id == request.MenuId, include: include, tracked: true);
 
             if (menu is null)
             {
@@ -174,22 +186,115 @@ public class MenuService : IMenuService
                 return response;
             }
             
-            var existingProducts =
-                (await _productRepository.GetAllAsync(p => request.ProductIds!.Contains(p.Id))).ToList();
-
-            if (existingProducts.Count != request.ProductIds!.Count)
+            var existingProductIdsInMenu = menu.Products.Select(p => p.Id).ToHashSet();
+            
+            var newProductIds = request.ProductIds!
+                .Where(id => !existingProductIdsInMenu.Contains(id))
+                .ToList();
+            
+            if (!newProductIds.Any())
             {
-                response.IsSuccessful = false;
-                response.Message = "One or more categories do not exist!";
+                response.IsSuccessful = true;
+                response.Message = "No new products to add. Menu already contains all specified products.";
+                return response;
             }
             
-            menu.Products = existingProducts;
+            var newProducts = (await _productRepository.GetAllAsync(p => newProductIds.Contains(p.Id))).ToList();
+
+            if (newProducts.Count != newProductIds.Count)
+            {
+                response.IsSuccessful = false;
+                response.Message = "One or more new products do not exist!";
+                return response;
+            }
+            
+            foreach (var product in newProducts)
+            {
+                menu.Products.Add(product);
+            }
+            
             menu.LastUpdatedAt = DateTime.UtcNow;
             menu.ConcurrencyStamp = Guid.NewGuid();
 
             await _menuRepository.UpdateAsync(menu);
             
             response.Message = "Product(s) added to menu successfully!";
+        }
+        catch (Exception ex)
+        {
+            response.IsSuccessful = false;
+            response.Message = ex.Message;
+        }
+        
+        return response;
+    }
+
+    /// <summary>
+    /// Remove product(s) from the menu
+    /// </summary>
+    /// <param name="request">The product ID(s) to remove</param>
+    /// <returns>The menu with the removed product(s)</returns>
+    public async Task<Response> RemoveProductsFromMenuAsync(VendorRemoveProductsFromMenuRequest request)
+    {
+        var response = new Response();
+        
+        try 
+        {
+            Func<IQueryable<Menu>, IQueryable<Menu>> include = query =>
+                query
+                    .Include(i => i.Products)
+                    .Where(menu => menu.Products.Any(p => p.State != ProductState.Deleted));
+            
+            var menu = await _menuRepository.GetAsync(p => p.Id == request.MenuId, include: include, tracked: true);
+
+            if (menu is null)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Menu not found!";
+                
+                return response;
+            }
+            
+            if (menu.ConcurrencyStamp != request.ConcurrencyStamp)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Concurrency conflict! Data was modified by another user!";
+                
+                return response;
+            }
+
+            if (menu.State != MenuState.Active)
+            {
+                response.IsSuccessful = false;
+                response.Message = "Menu is not active!";
+                
+                return response;
+            }
+            
+            var productIdsToRemove = request.ProductIds?.ToHashSet() ?? new HashSet<Guid>();
+
+            var productsToRemove = menu.Products
+                .Where(p => productIdsToRemove.Contains(p.Id))
+                .ToList();
+
+            if (!productsToRemove.Any())
+            {
+                response.IsSuccessful = true;
+                response.Message = "No products to remove. None of the specified products are in the menu.";
+                return response;
+            }
+
+            foreach (var product in productsToRemove)
+            {
+                menu.Products.Remove(product);
+            }
+
+            menu.LastUpdatedAt = DateTime.UtcNow;
+            menu.ConcurrencyStamp = Guid.NewGuid();
+
+            await _menuRepository.UpdateAsync(menu);
+
+            response.Message = "Product(s) removed from menu successfully!";
         }
         catch (Exception ex)
         {
@@ -263,7 +368,7 @@ public class MenuService : IMenuService
     /// <summary>
     /// Update the menu's state
     /// </summary>
-    /// <param name="request">The menu state to update</param>
+    /// <param name="request">The menu's state to update</param>
     /// <returns>The updated menu</returns>
     public async Task<Response> UpdateMenuStateAsync(VendorUpdateMenuStateRequest request)
     {
