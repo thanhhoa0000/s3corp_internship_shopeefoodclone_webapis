@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://go.microsoft.com/fwlink/?LinkID=208121. -->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\Internship\Code\Demo\ShopeeFood_Clone\WebApis\Services\Identity\Identity.Presentation\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2025-05-02T02:59:17.1798185Z||;True|2025-05-02T09:54:53.7428778+07:00||;True|2025-05-02T09:18:34.5947577+07:00||;True|2025-05-02T09:18:14.5929210+07:00||;</History>
+    <LastFailureDetails />
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="UsersDB">
+      <Value>Server=localhost,14331%3bDatabase=spf_users_db%3bUser Id=sa%3bPassword=MyPa55w0rd%3bTrustServerCertificate=True%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

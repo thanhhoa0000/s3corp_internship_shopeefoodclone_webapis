@@ -15,10 +15,10 @@ try
                 policy =>
                 {
                     // Client.Customers
-                    policy.WithOrigins("https://thanhhoa.shopeefood.s3corp.vn:7001")
+                    policy.WithOrigins("http://thanhhoa.s3corp.shopeefood.vn")
                         .WithMethods("POST", "GET")
                         .AllowAnyHeader();
-                
+
                     policy.WithOrigins("https://localhost:44351")
                         .WithMethods("POST", "GET")
                         .AllowAnyHeader();
@@ -26,12 +26,12 @@ try
                     policy.WithOrigins("https://localhost:7001")
                         .WithMethods("POST", "GET")
                         .AllowAnyHeader();
-                    
+
                     // Client.Administrators
-                    policy.WithOrigins("https://thanhhoa.shopeefood.s3corp.vn:8001")
+                    policy.WithOrigins("http://administrator.thanhhoa.s3corp.shopeefood.vn:70")
                         .WithMethods("POST", "GET")
                         .AllowAnyHeader();
-                    
+
                     policy.WithOrigins("https://localhost:8001")
                         .WithMethods("POST", "GET")
                         .AllowAnyHeader();
@@ -51,13 +51,13 @@ try
             options.AddPolicy("AllowFrontend",
                 policy =>
                 {
-                    policy.WithOrigins("http://thanhhoa.shopeefood.s3corp.vn")
+                    policy.WithOrigins("http://thanhhoa.s3corp.shopeefood.vn/")
                         .WithMethods("POST", "GET")
                         .AllowAnyHeader();
                 });
         });
         
-        builder.Configuration.AddJsonFile("ocelot.Development.json", optional: false, reloadOnChange: true);
+        builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
     }
 
     // Use NLog
