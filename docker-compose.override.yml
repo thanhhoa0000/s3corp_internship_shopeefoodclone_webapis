@@ -61,3 +61,12 @@ services:
       ASPNETCORE_Kestrel__Certificates__Default__Path: "/home/app/.aspnet/https/Products.API.pfx"
     volumes:
       - ./certs/.aspnet/https/Products.API.pfx:/home/app/.aspnet/https/Products.API.pfx:ro
+  
+  payment-api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
+      ASPNETCORE_URLS: "https://+:5071;http://+:5070"
+      ASPNETCORE_Kestrel__Certificates__Default__Password: ${HTTPS_DEV_CERTS_PASSWORD}
+      ASPNETCORE_Kestrel__Certificates__Default__Path: "/home/app/.aspnet/https/Payment.API.pfx"
+    volumes:
+      - ./certs/.aspnet/https/Payment.API.pfx:/home/app/.aspnet/https/Payment.API.pfx:ro
