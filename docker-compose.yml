@@ -87,6 +87,19 @@ services:
     networks:
       shopeefood-clone-net:
         
+  payment-api:
+    image: ${DOCKER_REGISTRY-}products-api
+    build:
+      context: .
+      dockerfile: Services/Payment/Payment.Presentation/Dockerfile
+    ports:
+      - "5070:5070"
+      - "5071:5071"
+    depends_on:
+      - payment-db
+    networks:
+      shopeefood-clone-net:
+        
   users-api:
     image: ${DOCKER_REGISTRY-}users-api
     build:
@@ -169,6 +182,20 @@ services:
     networks:
       shopeefood-clone-net:
     restart: unless-stopped
+    
+  payment-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=${SA_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "14337:1433"
+    volumes:
+      - payment_data:/var/opt/mssql
+    networks:
+      shopeefood-clone-net:
+    restart: unless-stopped
 
 volumes:
   users_data:
@@ -176,8 +203,10 @@ volumes:
   products_data:
   cart_data:
   orders_data:
+  payment_data:
     
 networks:
   shopeefood-clone-net:
     driver: bridge
     external: true
+
