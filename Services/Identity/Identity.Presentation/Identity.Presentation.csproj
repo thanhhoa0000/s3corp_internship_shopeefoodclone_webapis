@@ -39,6 +39,9 @@
       <Content Include="..\..\..\jwt_properties.json">
         <Link>jwt_properties.json</Link>
       </Content>
+      <Content Update="appsettings.Development.json">
+        <DependentUpon>appsettings.json</DependentUpon>
+      </Content>
     </ItemGroup>
 
     <ItemGroup>

@@ -23,7 +23,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="NUnit.Framework"/>
+      <ProjectReference Include="..\..\..\Services\Identity\Identity.Application\Identity.Application.csproj" />
+      <ProjectReference Include="..\..\..\Services\Identity\Identity.Domain\Identity.Domain.csproj" />
+      <ProjectReference Include="..\..\..\Services\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

@@ -88,7 +88,7 @@ services:
       shopeefood-clone-net:
         
   payment-api:
-    image: ${DOCKER_REGISTRY-}products-api
+    image: ${DOCKER_REGISTRY-}payment-api
     build:
       context: .
       dockerfile: Services/Payment/Payment.Presentation/Dockerfile

@@ -88,6 +88,7 @@ public class IdentityService : IIdentityService
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"EXCEPTION in LoginAsync: {ex}");
             response.IsSuccessful = false;
             response.Message = ex.Message;
             
@@ -96,7 +97,7 @@ public class IdentityService : IIdentityService
     }
 
     /// <summary>
-    /// Authenticates a user using refresh token.
+    /// Authenticates a user using their refresh token.
     /// </summary>
     /// <param name="request">The login request containing refresh token.</param>
     /// <param name="refreshTokenExpirationTimeInDays">The expiration time for the refresh token in days.</param>
@@ -151,7 +152,7 @@ public class IdentityService : IIdentityService
         catch (Exception ex)
         {
             response.IsSuccessful = false;
-            response.Message = ex.ToString();
+            response.Message = ex.Message;
             
             return response;
         }
